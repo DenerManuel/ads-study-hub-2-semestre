@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADS Study Hub — Guias de Estudos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/study-guide.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="header">
+        <div class="header-tag">ADS · Faculdade Donaduzzi · Hub de Estudos</div>
+        <h1>Guias Interativos de Estudo</h1>
+        <p>
+          Resumos diretos ao ponto, código comentado, simuladores visuais e quizzes explicados alternativa por
+          alternativa. Escolha uma disciplina abaixo para começar.
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="section-title">Disciplinas Disponíveis</div>
+
+      <div class="hub-grid">
+        <a class="hub-card" href="disciplinas/banco-de-dados.html">
+          <span class="hub-card-tag">ADS · 2º Semestre</span>
+          <h2>Banco de Dados (PostgreSQL)</h2>
+          <p>
+            SQL sem enrolação: DDL, chaves, DML, anatomia do <code>SELECT</code>, agregações, <code>JOINs</code> e
+            subconsultas com simulador visual e 20 questões comentadas.
+          </p>
+          <div class="hub-tags">
+            <span class="hub-tag">SQL</span>
+            <span class="hub-tag">Simulador de JOINs</span>
+            <span class="hub-tag">Quiz (20)</span>
+          </div>
+          <div class="hub-card-cta">
+            <span>Abrir guia completo</span>
+            <span>→</span>
+          </div>
+        </a>
+
+        <a class="hub-card" href="disciplinas/estrutura-de-dados.html">
+          <span class="hub-card-tag">ADS · Aulas 6 a 10</span>
+          <h2>Estrutura de Dados</h2>
+          <p>
+            Grafos, Listas Simples e Duplamente Ligadas, Árvores ABB e AVL em C explicadas passo a passo, com 3
+            simuladores interativos e 25 questões comentadas.
+          </p>
+          <div class="hub-tags">
+            <span class="hub-tag">Linguagem C</span>
+            <span class="hub-tag">3 Simuladores</span>
+            <span class="hub-tag">Quiz (25)</span>
+          </div>
+          <div class="hub-card-cta">
+            <span>Abrir guia completo</span>
+            <span>→</span>
+          </div>
+        </a>
+
+        <!--
+          Para adicionar uma nova disciplina:
+          1. Copie disciplinas/_template.html para disciplinas/nova-disciplina.html
+          2. Duplique um bloco <a class="hub-card" href="disciplinas/nova-disciplina.html">...</a> aqui.
+        -->
+      </div>
+
+      <footer class="hub-footer">
+        ADS Study Hub · Guias organizados com CSS e JS compartilhados
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1483 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banco de Dados — ADS (PostgreSQL)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/study-guide.css" />
+  </head>
+  <body data-lang="sql">
+    <div class="topbar">
+      <div class="header">
+        <div class="header-top-row">
+          <a class="hub-back" href="../index.html">← Voltar ao Hub</a>
+          <div class="header-tag">ADS · 2º Semestre · Banco de Dados (PostgreSQL)</div>
+        </div>
+        <h1>SQL Sem Enrolação: DDL, DML, SELECT, JOINs e Subconsultas</h1>
+        <p>
+          Bora direto ao que cai na prova — linguagem simples, foco pesado em
+          <code>SELECT</code>, simulador de JOINs e quiz comentado alternativa por alternativa.
+        </p>
+      </div>
+
+      <div class="nav-container">
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" onclick="showTab('teoria', this)">📚 Teoria</button>
+          <button class="tab-btn" onclick="showTab('exemplos', this)">💡 Exemplos</button>
+          <button class="tab-btn" onclick="showTab('resumo', this)">📋 Resumo</button>
+          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (20)</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- =================== TEORIA =================== -->
+      <div id="teoria" class="tab-panel active">
+        <div class="subtabs" id="teoria-subtabs">
+          <button class="subtab-btn active" onclick="showSubtab('teoria', 't-ddl', this)">
+            1. DDL &amp; Chaves
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-dml', this)">
+            2. DML &amp; Transações
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-select', this)">
+            3. SELECT &amp; Filtros ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-grupo', this)">
+            4. Agregação &amp; GROUP BY ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-joins', this)">
+            5. JOINs ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-sub', this)">
+            6. Subconsultas ⭐
+          </button>
+        </div>
+
+        <!-- SUB 1: DDL -->
+        <div id="t-ddl" class="subpanel active">
+          <div class="card">
+            <h2>1. Os 3 Grupos da SQL (DDL, DML e DQL)</h2>
+            <p>
+              Pensa no banco de dados como uma planilha organizada. Os comandos SQL se dividem em 3
+              grupos bem fáceis de separar na cabeça:
+            </p>
+
+            <div class="grid-3">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">🏗️ DDL (Estrutura)</h4>
+                <p>
+                  Cria, muda ou apaga a <strong>estrutura</strong> da tabela (o esqueleto).<br /><em
+                    >Comandos: CREATE, ALTER, DROP.</em
+                  >
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--amber)">
+                <h4 style="color: var(--amber)">✏️ DML (Dados)</h4>
+                <p>
+                  Coloca, altera ou apaga as <strong>linhas</strong> lá dentro.<br /><em
+                    >Comandos: INSERT, UPDATE, DELETE.</em
+                  >
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">🔍 DQL (Leitura)</h4>
+                <p>
+                  Só <strong>lê e busca</strong> informação sem mexer em nada.<br /><em
+                    >Comando: SELECT.</em
+                  >
+                </p>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Se liga nessa armadilha</div>
+                <p>
+                  Tem professor que coloca <code>UPDATE produtos SET preco = 10 WHERE id = 3;</code>
+                  na prova e pergunta o grupo. Mesmo usando <code>WHERE</code>, continua sendo
+                  <strong>DML</strong> porque altera dado gravado!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Tipos de Dados que Você Precisa Saber</h2>
+            <p>Na hora de montar o <code>CREATE TABLE</code>, cada coluna ganha um tipo:</p>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Quando usar</th>
+                    <th>Exemplo direto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>INT</code> / <code>SERIAL</code></td>
+                    <td>
+                      Número inteiro. No PostgreSQL, <code>SERIAL</code> numera sozinho (1, 2, 3…).
+                    </td>
+                    <td><code>id SERIAL PRIMARY KEY</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>CHAR(n)</code></td>
+                    <td>
+                      Texto de <strong>tamanho fixo</strong>. Segura zeros à esquerda!
+                    </td>
+                    <td><code>cpf CHAR(11)</code> → guarda <code>'01234567890'</code> inteiro</td>
+                  </tr>
+                  <tr>
+                    <td><code>VARCHAR(n)</code></td>
+                    <td>Texto que varia de tamanho até o limite <code>n</code>.</td>
+                    <td><code>nome VARCHAR(100)</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>DECIMAL(p, s)</code></td>
+                    <td>
+                      Dinheiro ou número quebrado exato. <code>p</code> = total de dígitos;
+                      <code>s</code> = casas após a vírgula.
+                    </td>
+                    <td>
+                      <code>DECIMAL(10,2)</code> → 8 dígitos antes + 2 depois (máx.
+                      <code>99.999.999,99</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>DATE</code> / <code>BOOLEAN</code></td>
+                    <td>Data (<code>'2026-02-10'</code>) e verdadeiro/falso.</td>
+                    <td><code>criado_em DATE</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="box box-analogia">
+              <div class="box-icon">🪪</div>
+              <div class="box-content">
+                <div class="box-label">Por que CPF nunca é INT?</div>
+                <p>
+                  Primeiro porque você não faz conta de somar CPF. Segundo porque se o CPF começar
+                  com zero (<code>01234567890</code>), o <code>INT</code> arranca o zero da frente.
+                  Por isso CPF sempre vai em <code>CHAR(11)</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Restrições e Chave Estrangeira (FK)</h2>
+            <ul>
+              <li>
+                <code>PRIMARY KEY</code>: RG da linha. Junta <strong><code>NOT NULL</code> +
+                <code>UNIQUE</code></strong> (não pode faltar e não pode repetir).
+              </li>
+              <li><code>NOT NULL</code>: Campo obrigatório.</li>
+              <li><code>UNIQUE</code>: Não deixa cadastrar repetido (ex.: email ou CPF).</li>
+              <li>
+                <code>CHECK (...)</code>: Trava de segurança (ex.:
+                <code>CHECK (salario &gt;= 1000)</code>).
+              </li>
+              <li>
+                <code>DEFAULT valor</code>: Se você não mandar nada no <code>INSERT</code>, o banco
+                preenche sozinho (ex.: <code>estoque INT DEFAULT 0</code>).
+              </li>
+              <li>
+                <code>FOREIGN KEY</code>: Amarra uma tabela na outra. Impede cadastrar um pedido
+                para um cliente que nem existe.
+              </li>
+            </ul>
+
+            <h3>E se eu tentar apagar o "pai" que tem "filhos"? (<code>ON DELETE</code>)</h3>
+            <ul>
+              <li>
+                <strong>Sem nada (padrão / <code>RESTRICT</code> / <code>NO ACTION</code>):</strong>
+                O banco <strong>trava e dá erro</strong>. Não deixa apagar cliente com pedido.
+              </li>
+              <li>
+                <strong><code>ON DELETE CASCADE</code>:</strong> Apagou o cliente? O banco passa o
+                rodo e apaga os pedidos dele junto.
+              </li>
+              <li>
+                <strong><code>ON DELETE SET NULL</code>:</strong> Apagou o cliente? Os pedidos ficam,
+                mas o <code>id_cliente</code> deles vira <code>NULL</code>. <em>Detalhe:</em> se a
+                coluna tiver <code>NOT NULL</code>, dá conflito e erro!
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SUB 2: DML -->
+        <div id="t-dml" class="subpanel">
+          <div class="card">
+            <h2>INSERT, UPDATE e DELETE sem Mistério</h2>
+
+            <div class="box box-conceito">
+              <div class="box-icon">📌</div>
+              <div class="box-content">
+                <div class="box-label">Regra do INSERT</div>
+                <p>
+                  O número de colunas e o número de valores em <code>VALUES</code> têm que bater
+                  certinho, na mesma ordem. Declarou 4 colunas e mandou 3 valores? Erro na hora.
+                </p>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>-- Inserindo registro
+INSERT INTO funcionarios (nome, cargo) VALUES ('Maria', 'Gerente');
+
+-- Alterando só quem interessa (NUNCA esqueça o WHERE)
+UPDATE funcionarios SET salario = salario * 1.10 WHERE departamento_id = 10;
+
+-- Apagando linhas específicas
+DELETE FROM funcionarios WHERE departamento_id = 20;</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">💣</div>
+              <div class="box-content">
+                <div class="box-label">Cuidado mortal no UPDATE e DELETE</div>
+                <p>
+                  Se você rodar <code>UPDATE funcionarios SET cargo = 'Analista';</code> sem
+                  <code>WHERE</code>, o banco <strong>não reclama</strong>: ele muda a tabela
+                  inteira! E no <code>DELETE FROM funcionarios;</code> sem <code>WHERE</code>, ele
+                  apaga todas as linhas, mas a tabela vazia continua existindo no banco.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Transações: BEGIN, COMMIT e ROLLBACK</h2>
+            <p>
+              Transação é um pacote de "ou vai tudo, ou não vai nada". Pense numa transferência Pix:
+              tira R$ 100 da conta 1 e bota R$ 100 na conta 2.
+            </p>
+            <div class="box box-analogia">
+              <div class="box-icon">💸</div>
+              <div class="box-content">
+                <div class="box-label">Os 3 comandos da transação</div>
+                <p>
+                  • <code>BEGIN;</code> → Abre o rascunho seguro.<br />
+                  • <code>COMMIT;</code> → Bate o martelo e salva tudo no banco.<br />
+                  • <code>ROLLBACK;</code> → Deu ruim ou desistiu? Volta tudo exatamente como estava
+                  antes do <code>BEGIN</code>!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 3: SELECT & FILTROS -->
+        <div id="t-select" class="subpanel">
+          <div class="card">
+            <h2>O Coração da Prova: Ordem do SELECT</h2>
+            <p>
+              No SQL você é obrigado a escrever as cláusulas nessa ordem exata. Se inverter
+              <code>WHERE</code> com <code>FROM</code>, ou <code>HAVING</code> com
+              <code>GROUP BY</code>, o banco barra na hora:
+            </p>
+            <pre class="code-block"><code>SELECT   colunas          -- 5º: escolhe o que mostrar na tela
+FROM     tabela           -- 1º: abre a tabela
+WHERE    filtro_linhas    -- 2º: filtra linha por linha
+GROUP BY colunas_grupo    -- 3º: junta em grupos
+HAVING   filtro_grupos    -- 4º: filtra os grupos prontos
+ORDER BY colunas_ordem;   -- 6º: ordena a resposta final</code></pre>
+
+            <div class="box box-dica">
+              <div class="box-icon">💡</div>
+              <div class="box-content">
+                <div class="box-label">Conta no SELECT não muda a tabela</div>
+                <p>
+                  Se você fizer <code>SELECT nome, salario + 500 AS ajustado FROM funcionarios;</code>,
+                  isso só faz a conta pra exibir na tela. Lá no banco, o salário continua igualzinho.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Filtros do WHERE que Mais Caem</h2>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Operador</th>
+                    <th>O que faz</th>
+                    <th>Ponto de atenção</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>BETWEEN a AND b</code></td>
+                    <td>Pega valores entre <code>a</code> e <code>b</code>.</td>
+                    <td><strong>Inclui as pontas!</strong> (<code>3000 AND 5000</code> pega 3000 e 5000).</td>
+                  </tr>
+                  <tr>
+                    <td><code>IN (a, b, c)</code></td>
+                    <td>Checa se está dentro da lista.</td>
+                    <td>Muito mais limpo que vários <code>OR</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>LIKE</code> / <code>ILIKE</code></td>
+                    <td>
+                      Busca pedaço de texto.<br />
+                      <code>%</code> = qualquer coisa (0 ou mais letras).<br />
+                      <code>_</code> = <strong>1 letra exata</strong>.
+                    </td>
+                    <td>
+                      No PostgreSQL: <code>LIKE</code> diferencia maiúscula de minúscula;
+                      <code>ILIKE</code> ignora!
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>IS NULL</code></td>
+                    <td>Acha campos vazios (nulos).</td>
+                    <td>
+                      <strong>Nunca escreva <code>= NULL</code>!</strong> Isso sempre dá falso e
+                      retorna 0 linhas.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">AND sempre fura a fila do OR!</div>
+                <p>
+                  Igual na matemática (vezes antes de mais), o SQL resolve
+                  <strong><code>AND</code> antes de <code>OR</code></strong>.<br />
+                  Em <code>WHERE cargo = 'Gerente' OR cargo = 'Analista' AND salario &gt; 5500</code>,
+                  o banco entende: <code>cargo = 'Gerente' OR (cargo = 'Analista' AND salario &gt; 5500)</code>.
+                  Quer mudar a ordem? Bote parênteses!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 4: AGREGAÇÃO -->
+        <div id="t-grupo" class="subpanel">
+          <div class="card">
+            <h2>Funções Agregadas (Resumindo Linhas)</h2>
+            <p>Elas pegam várias linhas e devolvem um número só:</p>
+            <ul>
+              <li>
+                <code>COUNT(*)</code>: Conta <strong>todas as linhas</strong> da tabela (até quem
+                tem campo vazio).
+              </li>
+              <li>
+                <code>COUNT(coluna)</code>: Conta só onde aquela coluna <strong>não é
+                <code>NULL</code></strong>!
+              </li>
+              <li><code>SUM(col)</code>: Soma tudo.</li>
+              <li><code>AVG(col)</code>: Faz a média.</li>
+              <li><code>MAX(col)</code> / <code>MIN(col)</code>: Pega o maior e o menor valor.</li>
+            </ul>
+
+            <div class="box box-analogia">
+              <div class="box-icon">📦</div>
+              <div class="box-content">
+                <div class="box-label">Como pensar no GROUP BY</div>
+                <p>
+                  Imagina separar as fichas dos funcionários em montinhos na mesa por departamento:
+                  um monte pro dept 10, um pro 20 e um monte separado pra quem tem
+                  <code>NULL</code>. Depois, o <code>COUNT</code> ou <code>AVG</code> faz a conta
+                  dentro de cada montinho.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>WHERE × HAVING (E a Trava do PostgreSQL)</h2>
+            <div class="grid-2">
+              <div class="mini-card" style="border-left: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">WHERE</h4>
+                <p>
+                  Filtra <strong>linha por linha</strong> antes de montar os grupos. Não aceita
+                  <code>AVG()</code>, <code>SUM()</code> nem <code>COUNT()</code>.
+                </p>
+              </div>
+              <div class="mini-card" style="border-left: 3px solid var(--green)">
+                <h4 style="color: var(--green)">HAVING</h4>
+                <p>
+                  Filtra <strong>os grupos já prontos</strong> depois do <code>GROUP BY</code>. É
+                  aqui que vai <code>HAVING AVG(salario) &gt; 4000</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Erro clássico de SELECT + GROUP BY</div>
+                <p>
+                  <code>SELECT departamento_id, nome, COUNT(*) FROM funcionarios GROUP BY departamento_id;</code>
+                  <br />Isso dá erro no PostgreSQL! Se você agrupou por departamento, tem várias
+                  pessoas dentro do mesmo grupo — o banco não adivinha qual <code>nome</code>
+                  mostrar. Toda coluna solta no <code>SELECT</code> tem que estar no
+                  <code>GROUP BY</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 5: JOINS -->
+        <div id="t-joins" class="subpanel">
+          <div class="card">
+            <h2>JOINs: Colando Duas Tabelas Lado a Lado</h2>
+            <p>
+              Os dados ficam separados em tabelas (ex.: <code>clientes</code> e
+              <code>pedidos</code>). O <code>JOIN</code> junta as duas usando o campo que liga uma
+              na outra (PK com FK).
+            </p>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Tipo de JOIN</th>
+                    <th>Quem aparece no resultado?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>INNER JOIN</code></td>
+                    <td>Só quem deu <strong>match dos dois lados</strong>. Quem ficou sozinho some.</td>
+                  </tr>
+                  <tr>
+                    <td><code>LEFT JOIN</code></td>
+                    <td>Traz <strong>todo mundo da esquerda</strong>. Se não tiver par na direita, completa com <code>NULL</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>RIGHT JOIN</code></td>
+                    <td>Traz <strong>todo mundo da direita</strong>. Se não tiver par na esquerda, completa com <code>NULL</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>FULL OUTER JOIN</code></td>
+                    <td>Traz <strong>todo mundo dos dois lados</strong>, botando <code>NULL</code> onde faltar par.</td>
+                  </tr>
+                  <tr>
+                    <td><code>CROSS JOIN</code></td>
+                    <td>Cruza cada linha de uma tabela com todas da outra (4 × 4 = 16 linhas). Sem <code>ON</code>.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="box box-dica">
+              <div class="box-icon">💡</div>
+              <div class="box-content">
+                <div class="box-label">2 macetes que salvam questão</div>
+                <p>
+                  <strong>1. Coluna com nome repetido:</strong> Se as duas tabelas têm coluna
+                  <code>nome</code>, você é obrigado a dizer de qual é (<code>f.nome, d.nome</code>),
+                  senão dá erro de ambiguidade.<br />
+                  <strong>2. Achar quem NÃO tem pedido:</strong> Faz um <code>LEFT JOIN</code> de
+                  <code>clientes</code> com <code>pedidos</code> e bota
+                  <code>WHERE pedidos.produto IS NULL</code>!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 6: SUBCONSULTAS -->
+        <div id="t-sub" class="subpanel">
+          <div class="card">
+            <h2>Subconsultas (Um SELECT Dentro de Outro)</h2>
+            <p>
+              Sem segredo: é um <code>SELECT</code> entre parênteses dentro de outro comando. O
+              banco sempre resolve o de dentro primeiro e joga a resposta pro de fora.
+            </p>
+
+            <div class="grid-2">
+              <div class="mini-card">
+                <h4>1. Devolve 1 único valor (Escalar)</h4>
+                <p>
+                  Vai com <code>=</code>, <code>&gt;</code>, <code>&lt;</code>.<br />
+                  Ex.: <code>WHERE salario &gt; (SELECT AVG(salario) FROM funcionarios)</code>
+                </p>
+              </div>
+              <div class="mini-card">
+                <h4>2. Devolve uma lista (Várias linhas)</h4>
+                <p>
+                  Vai com <code>IN</code> ou <code>NOT IN</code>.<br />
+                  Ex.: <code>WHERE id IN (SELECT cliente_id FROM pedidos)</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Erro clássico: usar = com várias linhas</div>
+                <p>
+                  <code>WHERE id = (SELECT cliente_id FROM pedidos)</code> dá <strong>erro</strong>!
+                  O sinal de <code>=</code> só aceita 1 valor. Quando a subconsulta devolve várias
+                  linhas, tem que usar <code>IN</code>.
+                </p>
+              </div>
+            </div>
+
+            <h3>Diferença prática: <code>IN</code> × <code>INNER JOIN</code></h3>
+            <p>
+              Se o Bruno fez 2 pedidos:<br />
+              • No <code>WHERE id IN (SELECT cliente_id FROM pedidos)</code>, o Bruno aparece
+              <strong>1 vez só</strong> (estamos só filtrando a tabela <code>clientes</code>).<br />
+              • No <code>INNER JOIN pedidos</code>, o Bruno aparece <strong>2 vezes</strong> (uma
+              linha para cada pedido dele).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== EXEMPLOS =================== -->
+      <div id="exemplos" class="tab-panel">
+        <div class="subtabs" id="exemplos-subtabs">
+          <button class="subtab-btn active" onclick="showSubtab('exemplos', 'e-joins', this)">
+            Simulador de JOINs ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('exemplos', 'e-select', this)">
+            SELECT, Filtros &amp; Grupos
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('exemplos', 'e-sub', this)">
+            Subconsultas na Prática
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('exemplos', 'e-ddldml', this)">
+            DDL &amp; DML na Prática
+          </button>
+        </div>
+
+        <!-- EXEMPLO 1: SIMULADOR DE JOINS -->
+        <div id="e-joins" class="subpanel active">
+          <div class="card">
+            <h2>Simulador Visual de JOINs</h2>
+            <p>
+              Olha essas duas tabelas: <strong>Carla</strong> e <strong>Daniel</strong> nunca
+              compraram nada, e o pedido <strong>4 (Monitor)</strong> está com
+              <code>cliente_id = 5</code> (que não existe). Clica nos botões pra ver na hora o que
+              o banco devolve:
+            </p>
+
+            <div class="data-tables">
+              <div class="data-wrap">
+                <table class="data-table">
+                  <caption>clientes (esquerda)</caption>
+                  <thead>
+                    <tr><th>id</th><th>nome</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>Ana</td></tr>
+                    <tr><td>2</td><td>Bruno</td></tr>
+                    <tr><td>3</td><td>Carla</td></tr>
+                    <tr><td>4</td><td>Daniel</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="data-wrap">
+                <table class="data-table">
+                  <caption>pedidos (direita)</caption>
+                  <thead>
+                    <tr><th>id</th><th>cliente_id</th><th>produto</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>1</td><td>Notebook</td></tr>
+                    <tr><td>2</td><td>2</td><td>Smartphone</td></tr>
+                    <tr><td>3</td><td>2</td><td>Tablet</td></tr>
+                    <tr><td>4</td><td>5</td><td>Monitor</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="join-controls">
+              <button class="join-btn active" data-join="inner" onclick="renderJoin('inner', this)">INNER JOIN</button>
+              <button class="join-btn" data-join="left" onclick="renderJoin('left', this)">LEFT JOIN</button>
+              <button class="join-btn" data-join="right" onclick="renderJoin('right', this)">RIGHT JOIN</button>
+              <button class="join-btn" data-join="full" onclick="renderJoin('full', this)">FULL OUTER JOIN</button>
+              <button class="join-btn" data-join="cross" onclick="renderJoin('cross', this)">CROSS JOIN</button>
+            </div>
+
+            <pre class="code-block"><code id="join-sql"></code></pre>
+            <div class="data-wrap" id="join-result"></div>
+            <div class="join-explain" id="join-explain"></div>
+          </div>
+        </div>
+
+        <!-- EXEMPLO 2: SELECT, FILTROS & GRUPOS -->
+        <div id="e-select" class="subpanel">
+          <div class="card">
+            <h2>Tabela Base: <code>funcionarios</code></h2>
+            <div class="data-wrap">
+              <table class="data-table">
+                <caption>funcionarios</caption>
+                <thead>
+                  <tr>
+                    <th>id</th><th>nome</th><th>cargo</th><th>salario</th><th>departamento_id</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Ana</td><td>Analista</td><td>3000.00</td><td>10</td></tr>
+                  <tr><td>2</td><td>Bruno</td><td>Gerente</td><td>6000.00</td><td>10</td></tr>
+                  <tr><td>3</td><td>Carla</td><td>Analista</td><td>3500.00</td><td>20</td></tr>
+                  <tr><td>4</td><td>Diego</td><td>Vendedor</td><td>2000.00</td><td>20</td></tr>
+                  <tr><td>5</td><td>Elisa</td><td>Gerente</td><td>5000.00</td><td>20</td></tr>
+                  <tr><td>6</td><td>Hugo</td><td>Estagiário</td><td>1200.00</td><td class="is-null">NULL</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Exemplo A — <code>COUNT(*)</code> × <code>COUNT(departamento_id)</code></h3>
+            <pre class="code-block"><code>SELECT COUNT(*), COUNT(departamento_id) FROM funcionarios;</code></pre>
+            <p>
+              <strong>Resposta:</strong> <code>6</code> e <code>5</code>. O <code>COUNT(*)</code>
+              conta todas as 6 linhas; já <code>COUNT(departamento_id)</code> pula o Hugo porque o
+              departamento dele é <code>NULL</code>.
+            </p>
+
+            <h3>Exemplo B — <code>GROUP BY</code> + <code>HAVING</code></h3>
+            <pre class="code-block"><code>SELECT departamento_id, AVG(salario) AS media
+FROM funcionarios
+GROUP BY departamento_id
+HAVING AVG(salario) &gt; 4000;</code></pre>
+            <p>
+              <strong>Passo a passo na mão:</strong><br />
+              • Dept 10: (3000 + 6000) / 2 = <strong>4500.00</strong> → passa no
+              <code>HAVING</code>!<br />
+              • Dept 20: (3500 + 2000 + 5000) / 3 = <strong>3500.00</strong> → cai fora.<br />
+              • Dept NULL: <strong>1200.00</strong> → cai fora.<br />
+              <strong>Resultado:</strong> Só volta <code>10 | 4500.00</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- EXEMPLO 3: SUBCONSULTAS -->
+        <div id="e-sub" class="subpanel">
+          <div class="card">
+            <h2>Subconsultas na Prática</h2>
+
+            <h3>1. Quem ganha acima da média?</h3>
+            <pre class="code-block"><code>SELECT nome, salario
+FROM funcionarios
+WHERE salario &gt; (SELECT AVG(salario) FROM funcionarios);</code></pre>
+            <p>
+              <strong>Como o banco pensa:</strong><br />
+              1º) Resolve o parêntese: soma 20.700 ÷ 6 = <strong>3450.00</strong>.<br />
+              2º) Fica <code>WHERE salario &gt; 3450.00</code>.<br />
+              3º) Traz <strong>Bruno (6000), Carla (3500) e Elisa (5000)</strong>.
+            </p>
+
+            <h3>2. Quem não fez nenhum pedido? (<code>NOT IN</code>)</h3>
+            <pre class="code-block"><code>SELECT nome FROM clientes
+WHERE id NOT IN (SELECT cliente_id FROM pedidos);</code></pre>
+            <p>
+              <strong>Como o banco pensa:</strong><br />
+              1º) A lista de dentro dá <code>(1, 2, 5)</code>.<br />
+              2º) Dos clientes (1, 2, 3, 4), quem não está nessa lista são <strong>Carla (3) e
+              Daniel (4)</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- EXEMPLO 4: DDL & DML -->
+        <div id="e-ddldml" class="subpanel">
+          <div class="card">
+            <h2>DDL e DML na Prática</h2>
+            <h3>Exemplo 1: <code>DEFAULT</code> preenchendo sozinho</h3>
+            <pre class="code-block"><code>CREATE TABLE produtos (
+    id_produto INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10,2) CHECK (preco &gt;= 0),
+    categoria VARCHAR(50) DEFAULT 'Geral',
+    estoque INT DEFAULT 0 CHECK (estoque &gt;= 0)
+);
+
+INSERT INTO produtos (id_produto, nome, preco) VALUES (7, 'Caneta', 2.50);</code></pre>
+            <p>
+              Como você não mandou <code>categoria</code> nem <code>estoque</code>, o banco preenche
+              automaticamente com <code>'Geral'</code> e <code>0</code>.
+            </p>
+
+            <h3>Exemplo 2: <code>ON DELETE CASCADE</code></h3>
+            <pre class="code-block"><code>-- Se pedidos tem ON DELETE CASCADE apontando para clientes:
+DELETE FROM clientes WHERE id_cliente = 1;</code></pre>
+            <p>Apagou o cliente 1? Os pedidos dele somem junto em cascata.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== RESUMO =================== -->
+      <div id="resumo" class="tab-panel">
+        <div class="card">
+          <h2>🗺️ Cola Rápida Antes da Prova</h2>
+
+          <div class="section-title">1. ORDEM OBRIGATÓRIA DE ESCRITA DO SELECT</div>
+          <div class="flow-grid">
+            <div class="flow-step" style="background: var(--blue-soft); border-color: var(--blue); color: var(--blue)">
+              <span class="flow-num" style="background: var(--blue)">1</span> SELECT
+            </div>
+            <div class="flow-step" style="background: var(--blue-soft); border-color: var(--blue); color: var(--blue)">
+              <span class="flow-num" style="background: var(--blue)">2</span> FROM
+            </div>
+            <div class="flow-step" style="background: var(--green-soft); border-color: var(--green); color: var(--green)">
+              <span class="flow-num" style="background: var(--green)">3</span> WHERE
+            </div>
+            <div class="flow-step" style="background: var(--amber-soft); border-color: var(--amber); color: var(--amber)">
+              <span class="flow-num" style="background: var(--amber)">4</span> GROUP BY
+            </div>
+            <div class="flow-step" style="background: var(--purple-soft); border-color: var(--purple); color: var(--purple)">
+              <span class="flow-num" style="background: var(--purple)">5</span> HAVING
+            </div>
+            <div class="flow-step" style="background: var(--accent-soft); border-color: var(--accent); color: var(--accent)">
+              <span class="flow-num" style="background: var(--accent)">6</span> ORDER BY
+            </div>
+          </div>
+
+          <div class="section-title">2. REGRAS DE OURO</div>
+          <div class="table-scroll">
+            <table class="resumo-table">
+              <thead>
+                <tr>
+                  <th>Comparação</th>
+                  <th>Resumo direto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>WHERE</code> × <code>HAVING</code></td>
+                  <td><code>WHERE</code> filtra <strong>linhas</strong> antes de agrupar; <code>HAVING</code> filtra <strong>grupos</strong> depois do <code>GROUP BY</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>COUNT(*)</code> × <code>COUNT(col)</code></td>
+                  <td><code>COUNT(*)</code> conta tudo; <code>COUNT(col)</code> pula os <code>NULL</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>LIKE</code> × <code>ILIKE</code></td>
+                  <td>No PostgreSQL, <code>LIKE</code> diferencia maiúscula/minúscula; <code>ILIKE</code> ignora.</td>
+                </tr>
+                <tr>
+                  <td><code>%</code> × <code>_</code></td>
+                  <td><code>%</code> = qualquer tamanho; <code>_</code> = 1 caractere exato.</td>
+                </tr>
+                <tr>
+                  <td><code>=</code> × <code>IN</code> (Subconsulta)</td>
+                  <td><code>=</code> aceita 1 valor só; <code>IN</code> aceita lista com vários valores.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section-title">3. AS 6 ARMADILHAS CLÁSSICAS DE PROVA</div>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong><code>WHERE col = NULL</code> retorna 0 linhas.</strong> Tem que usar <code>IS NULL</code>.</p>
+              </div>
+            </div>
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong><code>AND</code> manda antes do <code>OR</code>.</strong> Resolva os <code>AND</code> primeiro se não tiver parênteses.</p>
+              </div>
+            </div>
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong><code>ON DELETE SET NULL</code> não combina com <code>NOT NULL</code>.</strong> Se a FK for <code>NOT NULL</code>, dá conflito.</p>
+              </div>
+            </div>
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong><code>GROUP BY</code> no PostgreSQL:</strong> colocou coluna solta no <code>SELECT</code> fora de agregação? Ela precisa estar no <code>GROUP BY</code>.</p>
+              </div>
+            </div>
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong>Nome repetido no <code>JOIN</code>:</strong> sempre indique a tabela (<code>f.nome</code>, <code>d.nome</code>).</p>
+              </div>
+            </div>
+            <div class="box box-pegadinha" style="margin: 0">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <p><strong><code>ROLLBACK</code> zera tudo desde o <code>BEGIN</code>.</strong> E <code>UPDATE</code> sem <code>WHERE</code> altera a tabela inteira.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== QUIZ =================== -->
+      <div id="quiz" class="tab-panel">
+        <div class="score-bar">
+          <div class="score-top">
+            <div class="score-stats">
+              <div class="score-display" id="scoreDisplay">0/20</div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text)">
+                  Seu placar no simulado
+                </div>
+                <div class="score-label" id="scoreSubtitle" data-subtitle="Foco pesado em SELECT">
+                  0 de 20 respondidas · Foco pesado em SELECT
+                </div>
+              </div>
+            </div>
+            <button class="reset-btn" onclick="resetQuiz()">↺ Reiniciar Tudo</button>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="subtabs" id="quiz-filters">
+          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (20)</button>
+          <button class="subtab-btn" onclick="filterQuiz('SELECT & Filtros', this)">
+            SELECT &amp; Filtros (5)
+          </button>
+          <button class="subtab-btn" onclick="filterQuiz('Agregação & GROUP BY', this)">
+            Agregação (4)
+          </button>
+          <button class="subtab-btn" onclick="filterQuiz('JOINs', this)">JOINs (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Subconsultas', this)">
+            Subconsultas (4)
+          </button>
+          <button class="subtab-btn" onclick="filterQuiz('DDL & DML', this)">DDL &amp; DML (3)</button>
+        </div>
+
+        <div id="quiz-container"></div>
+      </div>
+    </div>
+
+    <script src="../assets/js/study-guide.js"></script>
+    <script>
+      // ====== SIMULADOR DE JOINS ======
+      const joinData = {
+        inner: {
+          sql: `SELECT clientes.nome, pedidos.produto\nFROM clientes\nINNER JOIN pedidos ON clientes.id = pedidos.cliente_id;`,
+          rows: [
+            ['Ana', 'Notebook'],
+            ['Bruno', 'Smartphone'],
+            ['Bruno', 'Tablet'],
+          ],
+          explain:
+            '<strong>INNER JOIN (3 linhas):</strong> Só entra quem tem par dos dois lados. Carla (3), Daniel (4) e o Monitor (cliente_id 5) ficam de fora.',
+        },
+        left: {
+          sql: `SELECT clientes.nome, pedidos.produto\nFROM clientes\nLEFT JOIN pedidos ON clientes.id = pedidos.cliente_id;`,
+          rows: [
+            ['Ana', 'Notebook'],
+            ['Bruno', 'Smartphone'],
+            ['Bruno', 'Tablet'],
+            ['Carla', null],
+            ['Daniel', null],
+          ],
+          explain:
+            '<strong>LEFT JOIN (5 linhas):</strong> Segura todos os clientes (esquerda). Carla e Daniel entram com produto <code>NULL</code>. O Monitor continua fora porque o cliente 5 não existe.',
+        },
+        right: {
+          sql: `SELECT clientes.nome, pedidos.produto\nFROM clientes\nRIGHT JOIN pedidos ON clientes.id = pedidos.cliente_id;`,
+          rows: [
+            ['Ana', 'Notebook'],
+            ['Bruno', 'Smartphone'],
+            ['Bruno', 'Tablet'],
+            [null, 'Monitor'],
+          ],
+          explain:
+            '<strong>RIGHT JOIN (4 linhas):</strong> Segura todos os pedidos (direita). O Monitor entra com nome <code>NULL</code> porque não existe cliente 5.',
+        },
+        full: {
+          sql: `SELECT clientes.nome, pedidos.produto\nFROM clientes\nFULL OUTER JOIN pedidos ON clientes.id = pedidos.cliente_id;`,
+          rows: [
+            ['Ana', 'Notebook'],
+            ['Bruno', 'Smartphone'],
+            ['Bruno', 'Tablet'],
+            ['Carla', null],
+            ['Daniel', null],
+            [null, 'Monitor'],
+          ],
+          explain:
+            '<strong>FULL OUTER JOIN (6 linhas):</strong> Junta os dois lados inteiros. Quem não tem par ganha <code>NULL</code> do lado que faltou.',
+        },
+        cross: {
+          sql: `SELECT clientes.nome, pedidos.produto\nFROM clientes\nCROSS JOIN pedidos;`,
+          rows: [
+            ['Ana', 'Notebook'],
+            ['Ana', 'Smartphone'],
+            ['Ana', 'Tablet'],
+            ['Ana', 'Monitor'],
+            ['Bruno', 'Notebook'],
+            ['Bruno', 'Smartphone'],
+            ['Bruno', 'Tablet'],
+            ['Bruno', 'Monitor'],
+            ['Carla', 'Notebook'],
+            ['Carla', 'Smartphone'],
+            ['Carla', 'Tablet'],
+            ['Carla', 'Monitor'],
+            ['Daniel', 'Notebook'],
+            ['Daniel', 'Smartphone'],
+            ['Daniel', 'Tablet'],
+            ['Daniel', 'Monitor'],
+          ],
+          explain:
+            '<strong>CROSS JOIN (16 linhas):</strong> Multiplica tudo com tudo: 4 clientes × 4 pedidos = 16 combinações. Nem usa <code>ON</code>.',
+        },
+      };
+
+      function renderJoin(type, btn) {
+        const info = joinData[type];
+        if (!info) return;
+        document.querySelectorAll('.join-btn').forEach((b) => {
+          b.classList.toggle('active', btn ? b === btn : b.dataset.join === type);
+        });
+        const sqlEl = document.getElementById('join-sql');
+        sqlEl.innerHTML = StudyGuide.highlightCode(info.sql, 'sql');
+        document.getElementById('join-explain').innerHTML = info.explain;
+
+        let html = `<table class="data-table"><caption>Resultado (${info.rows.length} linhas)</caption><thead><tr><th>clientes.nome</th><th>pedidos.produto</th></tr></thead><tbody>`;
+        info.rows.forEach(([nome, prod]) => {
+          const nomeCell = nome === null ? 'NULL' : escapeHtml(nome);
+          const prodCell = prod === null ? 'NULL' : escapeHtml(prod);
+          html += `<tr><td class="${nome === null ? 'is-null' : ''}">${nomeCell}</td><td class="${prod === null ? 'is-null' : ''}">${prodCell}</td></tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('join-result').innerHTML = html;
+      }
+
+      // ====== TABELAS DO QUIZ ======
+      const TBL_FUNCIONARIOS = `
+        <div class="data-tables"><div class="data-wrap"><table class="data-table">
+          <caption>funcionarios</caption>
+          <thead><tr><th>id</th><th>nome</th><th>cargo</th><th>salario</th><th>departamento_id</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Ana</td><td>Analista</td><td>3000.00</td><td>10</td></tr>
+            <tr><td>2</td><td>Bruno</td><td>Gerente</td><td>6000.00</td><td>10</td></tr>
+            <tr><td>3</td><td>Carla</td><td>Analista</td><td>3500.00</td><td>20</td></tr>
+            <tr><td>4</td><td>Diego</td><td>Vendedor</td><td>2000.00</td><td>20</td></tr>
+            <tr><td>5</td><td>Elisa</td><td>Gerente</td><td>5000.00</td><td>20</td></tr>
+            <tr><td>6</td><td>Hugo</td><td>Estagiário</td><td>1200.00</td><td class="is-null">NULL</td></tr>
+          </tbody>
+        </table></div></div>`;
+
+      const TBL_CLIENTES_PEDIDOS = `
+        <div class="data-tables">
+          <div class="data-wrap"><table class="data-table">
+            <caption>clientes</caption>
+            <thead><tr><th>id</th><th>nome</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Ana</td></tr>
+              <tr><td>2</td><td>Bruno</td></tr>
+              <tr><td>3</td><td>Carla</td></tr>
+              <tr><td>4</td><td>Daniel</td></tr>
+            </tbody>
+          </table></div>
+          <div class="data-wrap"><table class="data-table">
+            <caption>pedidos</caption>
+            <thead><tr><th>id</th><th>cliente_id</th><th>produto</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>1</td><td>Notebook</td></tr>
+              <tr><td>2</td><td>2</td><td>Smartphone</td></tr>
+              <tr><td>3</td><td>2</td><td>Tablet</td></tr>
+              <tr><td>4</td><td>5</td><td>Monitor</td></tr>
+            </tbody>
+          </table></div>
+        </div>`;
+
+      // ====== 20 QUESTÕES OBJETIVAS ======
+      const quizQuestions = [
+        {
+          id: 'q1',
+          topic: 'DDL & DML',
+          title:
+            'Uma coluna vai guardar o CPF com exatamente 11 dígitos, que pode começar com zero (ex.: 01234567890) e não será usado em cálculos. Qual tipo é o mais adequado?',
+          extraHtml: '',
+          options: ['INT', 'DECIMAL(11,0)', 'CHAR(11)', 'BOOLEAN', 'DATE'],
+          correct: 2,
+          correctExplain:
+            '<code>CHAR(11)</code> guarda texto fixo de 11 caracteres e segura o zero à esquerda.',
+          wrongReasons: {
+            0: '<strong>A) INT:</strong> Tipo numérico arranca o zero da frente (<code>0123...</code> vira <code>123...</code>) e nem cabe CPF grande.',
+            1: '<strong>B) DECIMAL(11,0):</strong> Também é número — joga fora o zero da frente e não faz sentido pra documento.',
+            3: '<strong>D) BOOLEAN:</strong> Só guarda verdadeiro ou falso (<code>TRUE</code>/<code>FALSE</code>).',
+            4: '<strong>E) DATE:</strong> Só serve para data de calendário.',
+          },
+        },
+        {
+          id: 'q2',
+          topic: 'DDL & DML',
+          title: 'Qual é o problema na definição da tabela abaixo?',
+          extraHtml: `<pre class="code-block"><code>CREATE TABLE pedidos (
+    id_pedido INT PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL CHECK (valor_total &gt;= 0),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE SET NULL
+);</code></pre>`,
+          options: [
+            'ON DELETE SET NULL só pode ser usado com chave primária composta.',
+            'valor_total não pode ter CHECK e NOT NULL juntos.',
+            'Não há problema: o SGBD ignora o NOT NULL quando necessário.',
+            'FOREIGN KEY não pode ter ON DELETE quando declarada no final da tabela.',
+            'SET NULL precisa que a FK aceite NULL, mas id_cliente foi declarado NOT NULL.',
+          ],
+          correct: 4,
+          correctExplain:
+            'Você mandou o banco colocar <code>NULL</code> em <code>id_cliente</code> quando apagar o cliente, mas na linha de cima proibiu <code>NULL</code> com <code>NOT NULL</code>. Bate de frente.',
+          wrongReasons: {
+            0: '<strong>A:</strong> <code>ON DELETE SET NULL</code> funciona normal com chave primária simples.',
+            1: '<strong>B:</strong> Pode juntar <code>NOT NULL</code> e <code>CHECK</code> na mesma coluna sem problema nenhum.',
+            2: '<strong>C:</strong> O banco nunca ignora <code>NOT NULL</code> por conta própria; ele barra.',
+            3: '<strong>D:</strong> Declarar <code>FOREIGN KEY ... ON DELETE ...</code> no final do <code>CREATE TABLE</code> é o jeito padrão.',
+          },
+        },
+        {
+          id: 'q3',
+          topic: 'DDL & DML',
+          title:
+            'As contas começam com os saldos abaixo. Quais são os saldos das contas 1 e 2 ao final do script?',
+          extraHtml: `
+            <div class="data-tables"><div class="data-wrap"><table class="data-table">
+              <caption>contas</caption>
+              <thead><tr><th>id</th><th>saldo</th></tr></thead>
+              <tbody><tr><td>1</td><td>500.00</td></tr><tr><td>2</td><td>200.00</td></tr></tbody>
+            </table></div></div>
+            <pre class="code-block"><code>BEGIN;
+UPDATE contas SET saldo = saldo - 100 WHERE id = 1;
+UPDATE contas SET saldo = saldo + 100 WHERE id = 2;
+ROLLBACK;</code></pre>`,
+          options: [
+            '400.00 e 300.00',
+            '400.00 e 200.00',
+            '500.00 e 300.00',
+            '500.00 e 200.00',
+            'Erro: não se pode usar ROLLBACK depois de UPDATE.',
+          ],
+          correct: 3,
+          correctExplain:
+            'O <code>ROLLBACK;</code> desfaz tudo que rolou desde o <code>BEGIN;</code>. Volta tudo pro zero: 500.00 e 200.00.',
+          wrongReasons: {
+            0: '<strong>A (400.00 e 300.00):</strong> Isso só aconteceria se terminasse com <code>COMMIT;</code>.',
+            1: '<strong>B (400.00 e 200.00):</strong> O <code>ROLLBACK</code> desfaz a transação inteira, não só a última linha.',
+            2: '<strong>C (500.00 e 300.00):</strong> Mesma coisa — ele volta os dois <code>UPDATE</code>s atrás.',
+            4: '<strong>E:</strong> <code>ROLLBACK</code> existe exatamente para desfazer <code>INSERT</code>, <code>UPDATE</code> e <code>DELETE</code>.',
+          },
+        },
+        {
+          id: 'q4',
+          topic: 'SELECT & Filtros',
+          title: 'Qual sequência de cláusulas respeita a sintaxe do SELECT?',
+          extraHtml: '',
+          options: [
+            'SELECT … FROM … WHERE … GROUP BY … HAVING … ORDER BY',
+            'SELECT … WHERE … FROM … GROUP BY … HAVING … ORDER BY',
+            'SELECT … FROM … WHERE … HAVING … GROUP BY … ORDER BY',
+            'SELECT … FROM … GROUP BY … WHERE … ORDER BY … HAVING',
+            'FROM … SELECT … WHERE … ORDER BY … GROUP BY … HAVING',
+          ],
+          correct: 0,
+          correctExplain:
+            'Ordem obrigatória: <code>SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY</code>.',
+          wrongReasons: {
+            1: '<strong>B:</strong> <code>FROM</code> sempre vem antes do <code>WHERE</code>.',
+            2: '<strong>C:</strong> Primeiro você agrupa (<code>GROUP BY</code>), depois filtra o grupo (<code>HAVING</code>).',
+            3: '<strong>D:</strong> <code>WHERE</code> vem antes de <code>GROUP BY</code>, e <code>ORDER BY</code> fecha o comando.',
+            4: '<strong>E:</strong> Nenhum comando de consulta em SQL começa com <code>FROM</code>.',
+          },
+        },
+        {
+          id: 'q5',
+          topic: 'SELECT & Filtros',
+          title:
+            'Quantas linhas o SELECT retorna? (Cada _ representa exatamente um caractere.)',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT nome
+FROM funcionarios
+WHERE nome LIKE '_____';</code></pre>`,
+          options: ['0', '1', '2', '4', '6'],
+          correct: 3,
+          correctExplain:
+            'Tem 5 traços (<code>_____</code>), então só entra quem tem exatamente 5 letras: <strong>Bruno</strong>, <strong>Carla</strong>, <strong>Diego</strong> e <strong>Elisa</strong> (4 nomes).',
+          wrongReasons: {
+            0: '<strong>A (0):</strong> Temos 4 funcionários com nome de 5 letras.',
+            1: '<strong>B (1):</strong> Tem bem mais que 1 nome com 5 letras na tabela.',
+            2: '<strong>C (2):</strong> Ana (3) e Hugo (4) ficam fora; os outros 4 entram.',
+            4: '<strong>E (6):</strong> Só daria 6 se usasse <code>%</code>. Com 5 <code>_</code>, Ana e Hugo não passam.',
+          },
+        },
+        {
+          id: 'q6',
+          topic: 'SELECT & Filtros',
+          title:
+            'No PostgreSQL, qual é a diferença entre os resultados das duas consultas sobre a tabela pessoas?',
+          extraHtml: `
+            <div class="data-tables"><div class="data-wrap"><table class="data-table">
+              <caption>pessoas</caption>
+              <thead><tr><th>nome</th></tr></thead>
+              <tbody><tr><td>Ana</td></tr><tr><td>ANA</td></tr><tr><td>Joana</td></tr><tr><td>Mariana</td></tr><tr><td>Daniel</td></tr></tbody>
+            </table></div></div>
+            <pre class="code-block"><code>-- (1)
+SELECT nome FROM pessoas WHERE nome LIKE '%ana%';
+
+-- (2)
+SELECT nome FROM pessoas WHERE nome ILIKE '%ana%';</code></pre>`,
+          options: [
+            'Nenhuma: as duas retornam os 5 nomes.',
+            '(1) retorna Ana, Joana e Mariana; (2) retorna os 5 nomes.',
+            '(1) retorna Joana e Mariana; (2) retorna Ana, ANA, Joana e Mariana.',
+            '(1) retorna Ana e ANA; (2) retorna Joana e Mariana.',
+            '(2) gera erro: ILIKE não existe.',
+          ],
+          correct: 2,
+          correctExplain:
+            'No PostgreSQL, <code>LIKE</code> liga para maiúscula/minúscula (só <code>Joana</code> e <code>Mariana</code> têm <code>ana</code> minúsculo). <code>ILIKE</code> ignora o tamanho da letra e pega <code>Ana</code> e <code>ANA</code> também.',
+          wrongReasons: {
+            0: '<strong>A:</strong> <code>Daniel</code> não tem "ana" em lugar nenhum e <code>LIKE</code> diferencia maiúsculas.',
+            1: '<strong>B:</strong> Em (1), <code>Ana</code> tem A maiúsculo, então não bate com <code>%ana%</code>; e <code>Daniel</code> nunca entra.',
+            3: '<strong>D:</strong> Trocou tudo: justamente <code>Ana</code> e <code>ANA</code> falham no <code>LIKE</code> minúsculo.',
+            4: '<strong>E:</strong> <code>ILIKE</code> é comando oficial do PostgreSQL.',
+          },
+        },
+        {
+          id: 'q7',
+          topic: 'SELECT & Filtros',
+          title: 'Quantas linhas a consulta retorna?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT nome
+FROM funcionarios
+WHERE departamento_id = NULL;</code></pre>`,
+          options: ['0', '1', '5', '6', 'Erro de sintaxe.'],
+          correct: 0,
+          correctExplain:
+            'Pegadinha clássica: <code>= NULL</code> nunca dá verdadeiro no SQL e devolve <strong>0 linhas</strong>. O certo para achar o Hugo seria <code>IS NULL</code>.',
+          wrongReasons: {
+            1: '<strong>B (1):</strong> Só voltaria 1 (Hugo) se estivesse escrito <code>IS NULL</code>.',
+            2: '<strong>C (5):</strong> 5 são os funcionários que têm departamento preenchido.',
+            3: '<strong>D (6):</strong> A tabela tem 6 linhas, mas o filtro <code>= NULL</code> barra todas.',
+            4: '<strong>E:</strong> O SQL não dá erro de sintaxe nisso — ele só devolve vazio silenciosamente.',
+          },
+        },
+        {
+          id: 'q8',
+          topic: 'SELECT & Filtros',
+          title:
+            'Atenção à precedência: AND é avaliado antes de OR. Quais nomes são retornados?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT nome
+FROM funcionarios
+WHERE cargo = 'Gerente'
+   OR cargo = 'Analista' AND salario &gt; 5500;</code></pre>`,
+          options: [
+            'Bruno',
+            'Nenhum',
+            'Bruno, Elisa e Carla',
+            'Bruno e Elisa',
+            'Ana, Bruno, Carla e Elisa',
+          ],
+          correct: 3,
+          correctExplain:
+            "O banco resolve o <code>AND</code> primeiro: <code>(cargo = 'Analista' AND salario &gt; 5500)</code> dá zero pessoas (Ana ganha 3000, Carla ganha 3500). Sobra <code>cargo = 'Gerente'</code>: <strong>Bruno e Elisa</strong>.",
+          wrongReasons: {
+            0: '<strong>A (Bruno):</strong> Só daria Bruno se tivesse parênteses em <code>(Gerente OR Analista) AND salario &gt; 5500</code>.',
+            1: '<strong>B (Nenhum):</strong> Bruno e Elisa são gerentes e entram pela primeira parte do <code>OR</code>.',
+            2: '<strong>C (Bruno, Elisa e Carla):</strong> Carla ganha 3500, não passa de 5500.',
+            4: '<strong>E (Ana, Bruno, Carla e Elisa):</strong> Ana (3000) e Carla (3500) não batem com <code>salario &gt; 5500</code>.',
+          },
+        },
+        {
+          id: 'q9',
+          topic: 'Agregação & GROUP BY',
+          title: 'Quais valores a consulta retorna, respectivamente?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT COUNT(*), COUNT(departamento_id)
+FROM funcionarios;</code></pre>`,
+          options: ['6 e 6', '6 e 5', '5 e 5', '5 e 6', '6 e 3'],
+          correct: 1,
+          correctExplain:
+            '<code>COUNT(*)</code> conta as 6 linhas da tabela. <code>COUNT(departamento_id)</code> pula o Hugo (<code>NULL</code>) e conta 5.',
+          wrongReasons: {
+            0: '<strong>A (6 e 6):</strong> <code>COUNT(coluna)</code> sempre ignora <code>NULL</code>.',
+            2: '<strong>C (5 e 5):</strong> <code>COUNT(*)</code> conta a linha inteira, não pula o Hugo.',
+            3: '<strong>D (5 e 6):</strong> Números trocados de lugar.',
+            4: '<strong>E (6 e 3):</strong> <code>COUNT(coluna)</code> conta não-nulos, não valores únicos (isso seria <code>COUNT(DISTINCT ...)</code>).',
+          },
+        },
+        {
+          id: 'q10',
+          topic: 'Agregação & GROUP BY',
+          title: 'Quantas linhas (grupos) o resultado tem?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT departamento_id, COUNT(*) AS total
+FROM funcionarios
+GROUP BY departamento_id;</code></pre>`,
+          options: ['2', '3', '4', '6', '1'],
+          correct: 1,
+          correctExplain:
+            'O <code>GROUP BY</code> junta em <strong>3 grupos</strong>: departamento <code>10</code>, departamento <code>20</code> e o grupo do <code>NULL</code> (Hugo).',
+          wrongReasons: {
+            0: '<strong>A (2):</strong> Muita gente esquece, mas <code>NULL</code> também vira um grupo no <code>GROUP BY</code>.',
+            2: '<strong>C (4):</strong> Só existem 3 valores diferentes na coluna: 10, 20 e NULL.',
+            3: '<strong>D (6):</strong> 6 é o total de linhas antes de agrupar.',
+            4: '<strong>E (1):</strong> Só voltaria 1 linha se não tivesse <code>GROUP BY</code>.',
+          },
+        },
+        {
+          id: 'q11',
+          topic: 'Agregação & GROUP BY',
+          title: 'Qual é o resultado da consulta?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT departamento_id, AVG(salario) AS media
+FROM funcionarios
+GROUP BY departamento_id
+HAVING AVG(salario) &gt; 4000;</code></pre>`,
+          options: [
+            '10 | 4500.00 e 20 | 3500.00',
+            '10 | 4500.00',
+            '20 | 3500.00',
+            'Nenhuma linha',
+            'Bruno | 6000.00 e Elisa | 5000.00',
+          ],
+          correct: 1,
+          correctExplain:
+            'Dept 10: média (3000+6000)/2 = <strong>4500.00</strong> (passa!). Dept 20: média 3500.00 (cai fora). NULL: 1200.00 (cai fora).',
+          wrongReasons: {
+            0: '<strong>A:</strong> A média do dept 20 é 3500.00 — não passa de 4000.',
+            2: '<strong>C:</strong> 3500.00 é menor que 4000, então o <code>HAVING</code> corta ele fora.',
+            3: '<strong>D:</strong> O dept 10 tem média 4500.00 e passa sim.',
+            4: '<strong>E:</strong> O <code>SELECT</code> pediu <code>departamento_id</code> e <code>media</code>, não nomes individuais.',
+          },
+        },
+        {
+          id: 'q12',
+          topic: 'Agregação & GROUP BY',
+          title: 'Por que a consulta abaixo gera erro no PostgreSQL?',
+          extraHtml: `<pre class="code-block"><code>SELECT departamento_id, nome, COUNT(*)
+FROM funcionarios
+GROUP BY departamento_id;</code></pre>`,
+          options: [
+            'Porque a coluna nome não está no GROUP BY nem em uma função agregada.',
+            'Porque COUNT(*) não pode ser usado com GROUP BY.',
+            'Porque GROUP BY deveria vir antes de FROM.',
+            'Porque falta a cláusula HAVING.',
+            'Porque departamento_id tem valores NULL.',
+          ],
+          correct: 0,
+          correctExplain:
+            'Dentro de um departamento tem vários funcionários. Como o banco não sabe qual <code>nome</code> mostrar, o PostgreSQL exige que <code>nome</code> esteja no <code>GROUP BY</code> ou numa função agregada.',
+          wrongReasons: {
+            1: '<strong>B:</strong> <code>COUNT(*)</code> com <code>GROUP BY</code> é o pão com manteiga da agregação.',
+            2: '<strong>C:</strong> <code>GROUP BY</code> sempre vem depois de <code>FROM</code> e <code>WHERE</code>.',
+            3: '<strong>D:</strong> <code>HAVING</code> é opcional; você só usa se quiser filtrar grupos.',
+            4: '<strong>E:</strong> Ter <code>NULL</code> no <code>GROUP BY</code> funciona normalmente sem erro.',
+          },
+        },
+        {
+          id: 'q13',
+          topic: 'JOINs',
+          title: 'Quantas linhas o INNER JOIN retorna?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>SELECT clientes.nome, pedidos.produto
+FROM clientes
+INNER JOIN pedidos ON clientes.id = pedidos.cliente_id;</code></pre>`,
+          options: ['2', '3', '4', '5', '16'],
+          correct: 1,
+          correctExplain:
+            'Só quem tem par dos dois lados: Ana (Notebook), Bruno (Smartphone) e Bruno (Tablet) = <strong>3 linhas</strong>.',
+          wrongReasons: {
+            0: '<strong>A (2):</strong> Bruno tem 2 pedidos, então aparece 2 vezes (1 da Ana + 2 do Bruno = 3).',
+            2: '<strong>C (4):</strong> O pedido 4 (Monitor) tem <code>cliente_id = 5</code>, que não existe em <code>clientes</code>.',
+            3: '<strong>D (5):</strong> 5 linhas seria no <code>LEFT JOIN</code>.',
+            4: '<strong>E (16):</strong> 16 linhas seria no <code>CROSS JOIN</code> (4 × 4).',
+          },
+        },
+        {
+          id: 'q14',
+          topic: 'JOINs',
+          title: 'Quantas linhas o LEFT JOIN retorna, e o que aparece para Carla?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>SELECT clientes.nome, pedidos.produto
+FROM clientes
+LEFT JOIN pedidos ON clientes.id = pedidos.cliente_id;</code></pre>`,
+          options: [
+            '4 linhas; Carla não aparece.',
+            '5 linhas; Carla aparece com produto NULL.',
+            "5 linhas; Carla aparece com produto 'Monitor'.",
+            '6 linhas; Carla aparece com produto NULL.',
+            '3 linhas; igual ao INNER JOIN.',
+          ],
+          correct: 1,
+          correctExplain:
+            '<code>LEFT JOIN</code> segura todos da esquerda (clientes): Ana (1) + Bruno (2) + Carla (1 com NULL) + Daniel (1 com NULL) = <strong>5 linhas</strong>.',
+          wrongReasons: {
+            0: '<strong>A:</strong> Carla está na tabela da esquerda, então ela não pode sumir.',
+            2: '<strong>C:</strong> Monitor é do <code>cliente_id = 5</code>, não da Carla (id 3).',
+            3: '<strong>D:</strong> 6 linhas seria no <code>FULL OUTER JOIN</code> (incluindo o Monitor).',
+            4: '<strong>E:</strong> <code>INNER JOIN</code> joga Carla e Daniel fora; <code>LEFT JOIN</code> mantém os dois.',
+          },
+        },
+        {
+          id: 'q15',
+          topic: 'JOINs',
+          title: 'O que a consulta abaixo retorna?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>SELECT clientes.nome
+FROM clientes
+LEFT JOIN pedidos ON clientes.id = pedidos.cliente_id
+WHERE pedidos.produto IS NULL;</code></pre>`,
+          options: [
+            'Ana e Bruno',
+            'Todos os clientes',
+            'Somente o Monitor',
+            'Nenhuma linha, pois produto nunca é NULL na tabela pedidos.',
+            'Carla e Daniel',
+          ],
+          correct: 4,
+          correctExplain:
+            'O <code>LEFT JOIN</code> bota <code>NULL</code> nos campos do pedido para quem não comprou nada. Aí o <code>WHERE pedidos.produto IS NULL</code> pesca exatamente <strong>Carla e Daniel</strong>.',
+          wrongReasons: {
+            0: '<strong>A (Ana e Bruno):</strong> Eles têm produtos comprados, então o campo não é <code>NULL</code>.',
+            1: '<strong>B (Todos):</strong> O <code>WHERE IS NULL</code> corta quem tem pedido.',
+            2: '<strong>C (Monitor):</strong> Monitor nem entra no <code>LEFT JOIN</code> partindo de <code>clientes</code>.',
+            3: '<strong>D (Nenhuma linha):</strong> Na tabela original não tem produto nulo, mas o <code>LEFT JOIN</code> gera <code>NULL</code> antes de o <code>WHERE</code> rodar.',
+          },
+        },
+        {
+          id: 'q16',
+          topic: 'JOINs',
+          title: 'Por que a consulta abaixo gera erro?',
+          extraHtml: `<pre class="code-block"><code>SELECT nome
+FROM funcionarios
+INNER JOIN departamentos
+  ON funcionarios.departamento_id = departamentos.id;</code></pre>`,
+          options: [
+            'Porque INNER JOIN exige alias nas tabelas.',
+            'Porque a coluna nome existe nas duas tabelas e não foi indicado de qual delas é.',
+            'Porque departamento_id pode ser NULL.',
+            'Porque o ON deveria comparar nome com nome.',
+            'Porque não se pode usar JOIN entre funcionarios e departamentos.',
+          ],
+          correct: 1,
+          correctExplain:
+            'As duas tabelas têm coluna chamada <code>nome</code>. Se você escreve só <code>SELECT nome</code>, o banco não sabe qual escolher e dá erro de coluna ambígua. O certo é <code>funcionarios.nome</code> (ou <code>f.nome</code>).',
+          wrongReasons: {
+            0: '<strong>A:</strong> Apelido (alias) é opcional se você escrever o nome inteiro da tabela.',
+            2: '<strong>C:</strong> <code>INNER JOIN</code> roda normal mesmo com FK aceitando <code>NULL</code>.',
+            3: '<strong>D:</strong> O <code>ON</code> tem que comparar FK com PK (<code>departamento_id = id</code>), está certinho.',
+            4: '<strong>E:</strong> As duas tabelas têm ligação direta e podem ser juntadas normalmente.',
+          },
+        },
+        {
+          id: 'q17',
+          topic: 'Subconsultas',
+          title: 'Quais funcionários são retornados?',
+          extraHtml: `${TBL_FUNCIONARIOS}<pre class="code-block"><code>SELECT nome, salario
+FROM funcionarios
+WHERE salario &gt; (SELECT AVG(salario) FROM funcionarios);</code></pre>`,
+          options: [
+            'Bruno e Elisa',
+            'Erro: não se pode comparar com AVG no WHERE.',
+            'Ana, Bruno, Carla e Elisa',
+            'Somente Bruno',
+            'Bruno, Carla e Elisa',
+          ],
+          correct: 4,
+          correctExplain:
+            'Soma dos salários = 20.700 ÷ 6 = média de <strong>3.450,00</strong>. Quem ganha mais que 3.450,00 é <strong>Bruno (6000), Carla (3500) e Elisa (5000)</strong>.',
+          wrongReasons: {
+            0: '<strong>A (Bruno e Elisa):</strong> Olha a Carla com 3500.00! 3500 é maior que 3450.00.',
+            1: '<strong>B (Erro):</strong> Não pode botar <code>AVG()</code> direto no <code>WHERE</code>, mas dentro de uma subconsulta <code>(SELECT AVG...)</code> pode sim!',
+            2: '<strong>C (Ana, Bruno, Carla e Elisa):</strong> Ana ganha 3000.00, está abaixo da média.',
+            3: '<strong>D (Somente Bruno):</strong> Carla (3500) e Elisa (5000) também ganham acima de 3450.00.',
+          },
+        },
+        {
+          id: 'q18',
+          topic: 'Subconsultas',
+          title: 'Compare as duas consultas. Qual afirmação está correta?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>-- (1)
+SELECT nome FROM clientes
+WHERE id IN (SELECT cliente_id FROM pedidos);
+
+-- (2)
+SELECT clientes.nome FROM clientes
+INNER JOIN pedidos ON clientes.id = pedidos.cliente_id;</code></pre>`,
+          options: [
+            'As duas retornam 3 linhas.',
+            '(1) também retorna Daniel, por causa do pedido com cliente_id 5.',
+            '(1) retorna Ana, Bruno e Bruno; (2) retorna Ana e Bruno.',
+            '(1) retorna Ana e Bruno; (2) retorna Ana, Bruno e Bruno.',
+            '(2) só funciona com DISTINCT.',
+          ],
+          correct: 3,
+          correctExplain:
+            'Na (1), o <code>IN</code> só filtra a tabela <code>clientes</code>, então cada cliente aparece 1 vez (Ana e Bruno). Na (2), o <code>INNER JOIN</code> cola com os 2 pedidos do Bruno e repete o Bruno 2 vezes.',
+          wrongReasons: {
+            0: '<strong>A:</strong> A (1) devolve 2 linhas e a (2) devolve 3 linhas.',
+            1: '<strong>B:</strong> Daniel tem <code>id = 4</code>, não está na lista <code>(1, 2, 5)</code>.',
+            2: '<strong>C:</strong> Os dois lados estão invertidos.',
+            4: '<strong>E:</strong> <code>INNER JOIN</code> funciona sem <code>DISTINCT</code>; ele só mostra repetido se tiver vários pedidos.',
+          },
+        },
+        {
+          id: 'q19',
+          topic: 'Subconsultas',
+          title: 'Quais nomes a consulta retorna?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>SELECT nome
+FROM clientes
+WHERE id NOT IN (
+  SELECT cliente_id FROM pedidos
+);</code></pre>`,
+          options: [
+            'Ana e Bruno',
+            'Carla e Daniel',
+            'Carla, Daniel e o cliente 5',
+            'Nenhum',
+            'Todos os quatro',
+          ],
+          correct: 1,
+          correctExplain:
+            'A lista de dentro é <code>(1, 2, 5)</code>. Dos clientes cadastrados (1, 2, 3, 4), quem fica de fora são <strong>Carla (3) e Daniel (4)</strong>.',
+          wrongReasons: {
+            0: '<strong>A (Ana e Bruno):</strong> Eles ESTÃO na lista de pedidos — seria <code>IN</code>, e aqui é <code>NOT IN</code>.',
+            2: '<strong>C (Carla, Daniel e cliente 5):</strong> Não existe cliente 5 na tabela <code>clientes</code>.',
+            3: '<strong>D (Nenhum):</strong> Só zeraria se tivesse algum <code>NULL</code> dentro da lista de <code>cliente_id</code>.',
+            4: '<strong>E (Todos):</strong> Ana (1) e Bruno (2) são eliminados pelo <code>NOT IN</code>.',
+          },
+        },
+        {
+          id: 'q20',
+          topic: 'Subconsultas',
+          title: 'Por que esta consulta gera erro?',
+          extraHtml: `${TBL_CLIENTES_PEDIDOS}<pre class="code-block"><code>SELECT nome
+FROM clientes
+WHERE id = (SELECT cliente_id FROM pedidos);</code></pre>`,
+          options: [
+            'Porque o operador = espera um único valor, e a subconsulta retorna várias linhas.',
+            'Porque não se pode usar subconsulta no WHERE.',
+            'Porque a subconsulta precisa ter alias.',
+            'Porque cliente_id tem valor 5, que não existe em clientes.',
+            'Porque falta ORDER BY na subconsulta.',
+          ],
+          correct: 0,
+          correctExplain:
+            'O sinal <code>=</code> só compara com 1 valor. Como <code>SELECT cliente_id FROM pedidos</code> devolve 4 linhas, o banco dá erro na hora. O jeito certo é trocar <code>=</code> por <code>IN</code>.',
+          wrongReasons: {
+            1: '<strong>B:</strong> O <code>WHERE</code> é justamente o lugar mais usado para subconsultas.',
+            2: '<strong>C:</strong> Subconsulta no <code>WHERE</code> não precisa de apelido (só no <code>FROM</code> precisa).',
+            3: '<strong>D:</strong> ID que não existe nunca gera erro; só não daria match.',
+            4: '<strong>E:</strong> <code>ORDER BY</code> não muda o fato de virem várias linhas.',
+          },
+        },
+      ];
+
+      // ====== INICIALIZAÇÃO ======
+      StudyGuide.init({
+        lang: 'sql',
+        quizQuestions,
+        quizSubtitle: 'Foco pesado em SELECT',
+      });
+      renderJoin('inner', null);
+    </script>
+  </body>
+</html>

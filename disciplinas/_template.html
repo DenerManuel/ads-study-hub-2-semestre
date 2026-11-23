@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nome da Disciplina — Guia de Estudos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/study-guide.css" />
+  </head>
+  <!-- Defina data-lang="sql" ou data-lang="c" (ou remova se não usar syntax highlight) -->
+  <body data-lang="">
+    <div class="topbar">
+      <div class="header">
+        <div class="header-top-row">
+          <a class="hub-back" href="../index.html">← Voltar ao Hub</a>
+          <div class="header-tag">ADS · Semestre · Nome da Disciplina</div>
+        </div>
+        <h1>Título Principal do Guia</h1>
+        <p>Subtítulo curto explicando o foco da matéria e o que o aluno encontra aqui.</p>
+      </div>
+
+      <div class="nav-container">
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" onclick="showTab('teoria', this)">📚 Teoria</button>
+          <button class="tab-btn" onclick="showTab('exemplos', this)">💡 Exemplos</button>
+          <button class="tab-btn" onclick="showTab('resumo', this)">📋 Resumo</button>
+          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (1)</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- =================== ABA 1: TEORIA =================== -->
+      <div id="teoria" class="tab-panel active">
+        <div class="subtabs" id="teoria-subtabs">
+          <button class="subtab-btn active" onclick="showSubtab('teoria', 't-tema1', this)">1. Tema 1</button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-tema2', this)">2. Tema 2</button>
+        </div>
+
+        <div id="t-tema1" class="subpanel active">
+          <div class="card">
+            <h2>1. Tema 1</h2>
+            <p>Explicação clara e direta do primeiro tópico.</p>
+
+            <div class="box box-conceito">
+              <div class="box-icon">📘</div>
+              <div class="box-content">
+                <div class="box-label">Conceito-Chave</div>
+                <p>Definição curta e objetiva para memorizar.</p>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha de Prova</div>
+                <p>Erro clássico que costuma derrubar na prova.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="t-tema2" class="subpanel">
+          <div class="card">
+            <h2>2. Tema 2</h2>
+            <p>Conteúdo do segundo tópico.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 2: EXEMPLOS =================== -->
+      <div id="exemplos" class="tab-panel">
+        <div class="card">
+          <h2>Exemplos Práticos</h2>
+          <p>Coloque aqui exemplos comentados ou simuladores específicos desta disciplina.</p>
+          <pre class="code-block"><code>// Exemplo de bloco de código</code></pre>
+        </div>
+      </div>
+
+      <!-- =================== ABA 3: RESUMO =================== -->
+      <div id="resumo" class="tab-panel">
+        <div class="card">
+          <h2>Cola Rápida para Revisão</h2>
+          <div class="table-scroll">
+            <table class="resumo-table">
+              <thead>
+                <tr>
+                  <th>Conceito</th>
+                  <th>Quando usar</th>
+                  <th>Cuidado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Item A</strong></td>
+                  <td>Descrição breve</td>
+                  <td>Detalhe importante</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 4: QUIZ =================== -->
+      <div id="quiz" class="tab-panel">
+        <div class="score-bar">
+          <div class="score-top">
+            <div class="score-stats">
+              <div class="score-display" id="scoreDisplay">0/1</div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text)">Seu placar no simulado</div>
+                <div class="score-label" id="scoreSubtitle" data-subtitle="Nome da Disciplina">
+                  0 de 1 respondidas · Nome da Disciplina
+                </div>
+              </div>
+            </div>
+            <button class="reset-btn" onclick="resetQuiz()">↺ Reiniciar Tudo</button>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="subtabs" id="quiz-filters">
+          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (1)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Tema 1', this)">Tema 1 (1)</button>
+        </div>
+
+        <div id="quiz-container"></div>
+      </div>
+    </div>
+
+    <script src="../assets/js/study-guide.js"></script>
+    <script>
+      const quizQuestions = [
+        {
+          id: 'q1',
+          topic: 'Tema 1',
+          title: 'Enunciado da questão de exemplo.',
+          extraHtml: '',
+          options: [
+            'Alternativa A (correta).',
+            'Alternativa B (distrator).',
+            'Alternativa C (distrator).',
+            'Alternativa D (distrator).',
+          ],
+          correct: 0,
+          correctExplain: 'Explicação clara do motivo pelo qual a alternativa A está correta.',
+          wrongReasons: {
+            1: '<strong>B está errada:</strong> motivo.',
+            2: '<strong>C está errada:</strong> motivo.',
+            3: '<strong>D está errada:</strong> motivo.',
+          },
+        },
+      ];
+
+      StudyGuide.init({
+        quizQuestions,
+        quizSubtitle: 'Nome da Disciplina',
+      });
+    </script>
+  </body>
+</html>
