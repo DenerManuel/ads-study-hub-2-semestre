@@ -44,6 +44,40 @@
         return '';
       },
     },
+    js: {
+      regex:
+        /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`[^`]*`|"[^"]*"|'[^']*')|\b(const|let|var|function|return|if|else|for|while|class|extends|import|from|export|default|new|this|typeof)\b|\b(Number|String|Boolean|Array|Object|JSON|console|document|window|localStorage|customElements|HTMLElement|useState)\b|\b(true|false|null|undefined)\b|\b(\d+(?:\.\d+)?)\b/g,
+      mapGroups(match) {
+        const [, com, str, kw, typ, nul, num] = match;
+        if (com) return 'tok-com';
+        if (str) return 'tok-str';
+        if (kw) return 'tok-kw';
+        if (typ) return 'tok-type';
+        if (nul) return 'tok-null';
+        if (num) return 'tok-num';
+        return '';
+      },
+    },
+    json: {
+      regex: /("[^"]*")|\b(true|false|null)\b|\b(-?\d+(?:\.\d+)?)\b/g,
+      mapGroups(match) {
+        const [, str, nul, num] = match;
+        if (str) return 'tok-str';
+        if (nul) return 'tok-null';
+        if (num) return 'tok-num';
+        return '';
+      },
+    },
+    html: {
+      regex: /(<!--[\s\S]*?-->)|("[^"]*"|'[^']*')|(<\/?[a-zA-Z0-9-]+|\/?>)/g,
+      mapGroups(match) {
+        const [, com, str, tag] = match;
+        if (com) return 'tok-com';
+        if (str) return 'tok-str';
+        if (tag) return 'tok-kw';
+        return '';
+      },
+    },
   };
 
   function registerLanguage(name, config) {

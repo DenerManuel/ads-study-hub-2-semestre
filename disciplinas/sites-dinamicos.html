@@ -1,0 +1,1813 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sites Dinâmicos — Guia Completo para Prova</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/study-guide.css" />
+    <style>
+      .sim-textarea {
+        width: 100%;
+        min-height: 140px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: #1e1c18;
+        color: #e8e4da;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        resize: vertical;
+      }
+      .sim-input-wide {
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        font-family: 'Atkinson Hyperlegible', sans-serif;
+        font-size: 14px;
+        min-width: 220px;
+        flex: 1;
+        color: var(--text);
+      }
+      .array-box {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px solid var(--blue);
+        border-radius: 8px;
+        background: #fff;
+        overflow: hidden;
+        min-width: 64px;
+      }
+      .array-box .arr-idx {
+        width: 100%;
+        text-align: center;
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text3);
+        padding: 3px 8px;
+      }
+      .array-box .arr-val {
+        padding: 8px 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .dom-preview {
+        background: #fff;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        margin-top: 8px;
+        min-height: 44px;
+        font-size: 14px;
+        color: var(--text);
+        overflow-wrap: anywhere;
+      }
+      .sim-log.ok {
+        background: var(--green-soft);
+        border-left-color: var(--green);
+        color: var(--green-text);
+      }
+      .sim-log.err {
+        background: var(--error-soft);
+        border-left-color: var(--error);
+        color: var(--error-text);
+      }
+    </style>
+  </head>
+  <body data-lang="js">
+    <div class="topbar">
+      <div class="header">
+        <div class="header-top-row">
+          <a class="hub-back" href="../index.html">← Voltar ao Hub</a>
+          <div class="header-tag">Faculdade Donaduzzi · Sites Dinâmicos · ADS Turma B</div>
+        </div>
+        <h1>Sites Dinâmicos Sem Mistério: do JavaScript Básico ao React</h1>
+        <p>
+          Guia direto para a prova (Prof. Guilherme Assunção): só o básico de cada um dos 11 tópicos do guia oficial,
+          em português simples, código traduzido linha por linha, 3 labs interativos e 20 questões comentadas.
+        </p>
+      </div>
+
+      <div class="nav-container">
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" onclick="showTab('teoria', this)">📚 Teoria</button>
+          <button class="tab-btn" onclick="showTab('exemplos', this)">💡 Exemplos &amp; Labs</button>
+          <button class="tab-btn" onclick="showTab('resumo', this)">📋 Resumo</button>
+          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (20)</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- =================== ABA 1: TEORIA =================== -->
+      <div id="teoria" class="tab-panel active">
+        <div class="subtabs" id="teoria-subtabs">
+          <button class="subtab-btn active" onclick="showSubtab('teoria', 't-js-arrays', this)">
+            1. JS &amp; Arrays (01–02) ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-dom-eventos', this)">
+            2. Eventos, DOM &amp; Validação (03–05) ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-storage-json', this)">
+            3. localStorage &amp; JSON (06 &amp; 08) ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-tech', this)">
+            4. Node.js, Web Components &amp; React (07, 09–10)
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-conexao', this)">
+            5. Como Tudo Se Conecta (11)
+          </button>
+        </div>
+
+        <!-- ========== SUB 1: JS & ARRAYS (CAPÍTULOS 01 e 02) ========== -->
+        <div id="t-js-arrays" class="subpanel active">
+          <div class="card">
+            <h2>1. O Papel de Cada Peça na Web + Variáveis (Cap. 01)</h2>
+            <p>
+              Antes de ler código, lembre do trio básico de qualquer site:
+            </p>
+            <div class="grid-3">
+              <div class="mini-card" style="border-top: 3px solid var(--amber)">
+                <h4 style="color: var(--amber)">🧱 HTML (Estrutura)</h4>
+                <p>É o esqueleto da página: títulos, textos, botões e formulários.</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--purple)">
+                <h4 style="color: var(--purple)">🎨 CSS (Aparência)</h4>
+                <p>É a roupa e a pintura: cores, fontes, tamanhos e espaçamentos.</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">⚡ JavaScript (Comportamento)</h4>
+                <p>É o cérebro: faz contas, toma decisões e reage quando o usuário clica ou digita.</p>
+              </div>
+            </div>
+
+            <h3>Variáveis: <code>const</code> vs <code>let</code> e os 3 tipos básicos</h3>
+            <p>
+              Uma variável é uma <strong>caixinha com nome</strong> que guarda um valor na memória.
+            </p>
+            <ul>
+              <li><strong><code>const</code>:</strong> trava o vínculo — depois que você coloca o valor, <strong>não pode trocar</strong> (reatribuir) por outro.</li>
+              <li><strong><code>let</code>:</strong> deixa trocar o valor depois (ex.: contador de acessos que vai subindo).</li>
+              <li><strong>Tipos mais comuns:</strong> <code>string</code> (texto entre aspas), <code>number</code> (número) e <code>boolean</code> (<code>true</code> ou <code>false</code>).</li>
+              <li><strong><code>typeof</code>:</strong> operador que responde qual é o tipo daquele valor.</li>
+            </ul>
+
+            <pre class="code-block"><code>const linguagem = "JavaScript"; // string (texto) — não muda
+let acessos = 2;                // number (número) — pode mudar depois
+acessos = acessos + 1;          // agora acessos vale 3
+
+console.log(typeof linguagem);  // mostra: "string"
+console.log(typeof acessos);    // mostra: "number"</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha nº 1 da Prova: Texto e Número NÃO são a mesma coisa!</div>
+                <p>
+                  Tudo o que o usuário digita num campo HTML (<code>input</code>) ou no <code>prompt()</code> chega para o JavaScript como <strong>texto (<code>string</code>)</strong>!<br />
+                  Se você usar o sinal <code>+</code> com texto, o JS <strong>gruda (concatena)</strong> em vez de somar: <code>"6" + 2</code> vira <code>"62"</code>!<br />
+                  <strong>Solução:</strong> converta com <code>Number(...)</code> antes de fazer conta!
+                </p>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>const quantidade = "6";              // veio de um campo → é TEXTO ("6")
+const convertida = Number(quantidade); // agora virou NÚMERO (6)
+console.log(convertida * 2);           // mostra: 12</code></pre>
+
+            <h3>Contas, <code>===</code>, <code>if</code> e <code>for</code></h3>
+            <ul>
+              <li><strong>Contas:</strong> <code>+</code> (soma), <code>-</code> (subtrai), <code>*</code> (multiplica), <code>/</code> (divide) e <code>%</code> (<strong>resto da divisão</strong> — ótimo para saber se é par!).</li>
+              <li><strong><code>===</code> (igualdade estrita):</strong> compara <strong>valor E tipo</strong> sem adivinhar. Ex.: <code>5 === "5"</code> é <code>false</code> (número não é texto).</li>
+              <li><strong><code>if</code>:</strong> só executa o bloco se a condição for verdadeira.</li>
+              <li><strong><code>for</code>:</strong> repete um bloco várias vezes seguindo um contador.</li>
+            </ul>
+
+            <pre class="code-block"><code>// Repete numero de 1 até 5, somando 1 a cada volta
+for (let numero = 1; numero &lt;= 5; numero++) {
+  if (numero % 2 === 0) {           // se o resto da divisão por 2 for exatamente 0...
+    console.log("Par:", numero);    // ...imprime os pares: 2 e 4
+  }
+}</code></pre>
+          </div>
+
+          <div class="card">
+            <h2>2. Manipulação de Arrays (Cap. 02)</h2>
+            <p>
+              Um <strong>array</strong> é uma <strong>lista</strong> que guarda vários itens dentro de uma mesma variável, entre colchetes <code>[ ]</code>.
+              Pense em uma prateleira numerada onde a primeira vaga sempre é a <strong>0</strong>!
+            </p>
+            <pre class="code-block"><code>const produtos = ["livro", "caderno", "lapis"];
+// índices:         0         1          2
+
+console.log(produtos[1]);     // mostra "caderno" (índice 1 é o 2º item!)
+console.log(produtos.length); // mostra 3 (quantidade total de itens)</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha Clássica de Array: <code>length</code> × Último Índice</div>
+                <p>
+                  Se um array tem <strong>3 itens</strong> (<code>length === 3</code>), os índices são <code>0, 1, 2</code>.<br />
+                  Logo, <code>length</code> <strong>não é</strong> o índice do último item! O último índice é sempre <strong><code>length - 1</code></strong>.
+                </p>
+              </div>
+            </div>
+
+            <h3>Os 3 métodos que você precisa diferenciar na prova</h3>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Método</th>
+                    <th>O que ele faz?</th>
+                    <th>Altera o array original?</th>
+                    <th>O que devolve?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>push(item)</code></td>
+                    <td>Coloca um item novo no <strong>final</strong> da lista.</td>
+                    <td><span class="badge badge-amber">Sim!</span> Muda o array original.</td>
+                    <td>O <strong>novo tamanho</strong> (<code>length</code>) da lista.</td>
+                  </tr>
+                  <tr>
+                    <td><code>filter(fn)</code></td>
+                    <td>Testa cada item e pega só os que passam na condição.</td>
+                    <td><span class="badge badge-green">Não!</span> Preserva o original.</td>
+                    <td>Um <strong>novo array</strong> (pode ter menos itens).</td>
+                  </tr>
+                  <tr>
+                    <td><code>map(fn)</code></td>
+                    <td>Transforma/converte cada item (ex.: aplicar taxa).</td>
+                    <td><span class="badge badge-green">Não!</span> Preserva o original.</td>
+                    <td>Um <strong>novo array</strong> (sempre do mesmo tamanho).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>const precos = [15, 40, 22, 60];
+
+// filter: escolhe só os maiores que 25 (devolve NOVO array: [40, 60])
+const altos = precos.filter(function(p) {
+  return p &gt; 25;
+});
+
+// map: aumenta 5% em cada preço (devolve NOVO array: [15.75, 42, 23.1, 63])
+const comTaxa = precos.map(function(p) {
+  return p * 1.05;
+});
+
+// push: adiciona 18 no FINAL do próprio array precos
+precos.push(18);</code></pre>
+
+            <div class="box box-conceito">
+              <div class="box-icon">📘</div>
+              <div class="box-content">
+                <div class="box-label">O que é um Callback?</div>
+                <p>
+                  No código acima, aquela função passada dentro de <code>filter(...)</code> e <code>map(...)</code> se chama <strong>callback</strong> (uma função entregue como argumento para o método rodar em cada item).
+                  No <code>filter</code>, o callback responde <em>sim ou não</em> (<code>true</code>/<code>false</code>); no <code>map</code>, ele devolve o <em>novo valor</em> transformado.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 2: EVENTOS, DOM & VALIDAÇÃO (CAPÍTULOS 03, 04 e 05) ========== -->
+        <div id="t-dom-eventos" class="subpanel">
+          <div class="card">
+            <h2>1. Formulários e Eventos com <code>addEventListener</code> (Cap. 03)</h2>
+            <p>
+              Um site fica dinâmico quando reage ao que a pessoa faz (clicar, digitar, apertar tecla, enviar formulário).
+              Cada ação dessas é um <strong>evento</strong>.
+            </p>
+            <p>
+              No HTML, um formulário básico usa 4 tags amigas:
+              <code>&lt;form&gt;</code> (agrupa os campos), <code>&lt;label&gt;</code> (etiqueta do campo),
+              <code>&lt;input&gt;</code> (caixinha onde se digita) e <code>&lt;button&gt;</code> (botão que envia ou aciona algo).
+            </p>
+
+            <h3>Como o JS "escuta" um elemento?</h3>
+            <p>
+              Primeiro você acha o elemento na página com <code>document.querySelector(...)</code> e depois instala um "ouvido" com <code>addEventListener("evento", funcao)</code>.
+            </p>
+            <pre class="code-block"><code>// Acha o elemento cujo id="busca" (o # significa ID; o . significa classe)
+const campo = document.querySelector("#busca");
+
+// Toda vez que o texto mudar ("input"), executa a função:
+campo.addEventListener("input", function() {
+  console.log("Texto atual:", campo.value);
+});</code></pre>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Evento</th>
+                    <th>Quando dispara?</th>
+                    <th>Para que serve?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>click</code></td>
+                    <td>Quando clica em um elemento (botão, cartão, etc.).</td>
+                    <td>Executar uma ação na tela.</td>
+                  </tr>
+                  <tr>
+                    <td><code>input</code></td>
+                    <td>A cada alteração no valor de um campo.</td>
+                    <td>Acompanhar a digitação em tempo real.</td>
+                  </tr>
+                  <tr>
+                    <td><code>submit</code></td>
+                    <td>Quando tentam enviar o formulário (<code>&lt;form&gt;</code>).</td>
+                    <td>Validar e processar os dados digitados.</td>
+                  </tr>
+                  <tr>
+                    <td><code>keydown</code></td>
+                    <td>Quando uma tecla do teclado é pressionada.</td>
+                    <td>Atalhos e interações pelo teclado.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Segurando o envio padrão: <code>e.preventDefault()</code></h3>
+            <p>
+              Por padrão, quando um <code>&lt;form&gt;</code> é enviado (<code>submit</code>), o navegador tenta recarregar/enviar a página.
+              Para o JavaScript assumir o controle sem recarregar tudo, chamamos <code>e.preventDefault()</code>!
+            </p>
+            <pre class="code-block"><code>const formulario = document.querySelector("#contato");
+
+formulario.addEventListener("submit", function(e) {
+  e.preventDefault(); // trava o recarregamento padrão do navegador
+  console.log("Tratando os dados do formulario");
+});</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha da Prova sobre <code>preventDefault()</code></div>
+                <p>
+                  <code>e.preventDefault()</code> <strong>NÃO</strong> valida campos, <strong>NÃO</strong> limpa o formulário e <strong>NÃO</strong> envia dados sozinho!
+                  Ele faz uma única coisa: <strong>impede a ação padrão do navegador</strong> (se o evento for cancelável). Todo o resto precisa ser escrito no seu código.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. Manipulação do DOM: <code>textContent</code> × <code>innerHTML</code> (Cap. 04)</h2>
+            <p>
+              O <strong>DOM (Document Object Model)</strong> é o mapa vivo que transforma as tags HTML em objetos que o JavaScript consegue ler e alterar na hora.
+            </p>
+            <div class="box box-analogia">
+              <div class="box-icon">🧩</div>
+              <div class="box-content">
+                <div class="box-label">Não confunda os 3 nomes!</div>
+                <p>
+                  <strong>HTML</strong> = texto/código do arquivo.<br />
+                  <strong>DOM</strong> = representação viva da página na memória que o JS manipula.<br />
+                  <strong><code>textContent</code> / <code>innerHTML</code></strong> = propriedades usadas para trocar o conteúdo de um elemento selecionado.
+                </p>
+              </div>
+            </div>
+
+            <p>
+              Lembre-se: <code>document.querySelector()</code> sempre devolve <strong>apenas o primeiro</strong> elemento que combina com o seletor (<code>#id</code> ou <code>.classe</code>).
+              E atribuir um novo valor a <code>textContent</code> ou <code>innerHTML</code> <strong>substitui tudo</strong> o que tinha dentro daquele elemento antes!
+            </p>
+
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">✅ <code>textContent</code> (Texto Puro)</h4>
+                <p>
+                  Escreve o texto <strong>literalmente</strong>, sem interpretar tags HTML.<br />
+                  Se você mandar <code>"&lt;em&gt;Oi&lt;/em&gt;"</code>, aparece escrito <code>&lt;em&gt;Oi&lt;/em&gt;</code> na tela.<br />
+                  <strong>Mais seguro</strong> para dados digitados pelo usuário!
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--amber)">
+                <h4 style="color: var(--amber)">🏷️ <code>innerHTML</code> (HTML Interpretado)</h4>
+                <p>
+                  Interpreta as tags HTML da string e cria elementos de verdade.<br />
+                  Se você mandar <code>"&lt;em&gt;Novidades&lt;/em&gt;"</code>, aparece <em>Novidades</em> em itálico.<br />
+                  <strong>Cuidado:</strong> perigoso usar com texto digitado por usuário ou fonte não confiável!
+                </p>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>const mensagem = document.querySelector("#mensagem");
+mensagem.textContent = "O registro foi recebido."; // só texto literal (seguro)
+
+const titulo = document.querySelector("#titulo");
+titulo.innerHTML = "&lt;em&gt;Novidades&lt;/em&gt;";       // interpreta a tag &lt;em&gt;</code></pre>
+          </div>
+
+          <div class="card">
+            <h2>3. Template Strings e Validação de Campos (Cap. 05)</h2>
+            <p>
+              <strong>Template Strings</strong> são textos escritos com <strong>crases</strong> (<code>`...`</code>) em vez de aspas.
+              Com elas, você encaixa variáveis direto dentro do texto usando <code>${...}</code> (interpolação) e pode até quebrar linhas sem precisar ficar somando <code>+</code>!
+            </p>
+            <pre class="code-block"><code>const atividade = "laboratorio";
+const encontros = 3;
+// Repare nas CRASES (` `) e no ${variavel} dentro delas:
+const aviso = `Atividade: ${atividade} | Dias: ${encontros}`;
+console.log(aviso); // "Atividade: laboratorio | Dias: 3"</code></pre>
+
+            <h3>Kit básico de limpeza e checagem de Strings</h3>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Recurso</th>
+                    <th>Tipo</th>
+                    <th>Para que serve?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>trim()</code></td>
+                    <td>Método (usa <code>()</code>)</td>
+                    <td>Remove espaços sobrando no início e no fim do texto.</td>
+                  </tr>
+                  <tr>
+                    <td><code>length</code></td>
+                    <td><strong>Propriedade (SEM <code>()</code>!)</strong></td>
+                    <td>Informa quantos caracteres a string tem.</td>
+                  </tr>
+                  <tr>
+                    <td><code>includes("x")</code></td>
+                    <td>Método</td>
+                    <td>Diz se o texto contém aquele pedaço (<code>true</code>/<code>false</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><code>replace("a", "b")</code></td>
+                    <td>Método</td>
+                    <td>Troca uma ocorrência de texto por outra.</td>
+                  </tr>
+                  <tr>
+                    <td><code>startsWith()</code> / <code>endsWith()</code></td>
+                    <td>Método</td>
+                    <td>Verifica se começa ou termina com determinado trecho.</td>
+                  </tr>
+                  <tr>
+                    <td><code>toUpperCase()</code> / <code>toLowerCase()</code></td>
+                    <td>Método</td>
+                    <td>Converte tudo para MAIÚSCULAS ou minúsculas.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>const entrada = "  Projeto Web  ";
+const normalizada = entrada.trim();           // "Projeto Web" (tirou espaços das pontas)
+const padrao = normalizada.toLowerCase();     // "projeto web" (tudo minúsculo)
+console.log(padrao.length);                   // 11 (repare: length SEM parênteses!)</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">2 Cuidados de Prova em Strings e Validação</div>
+                <p>
+                  1. <code>length</code> é <strong>propriedade</strong> (sem <code>()</code>), diferente de <code>trim()</code> e <code>toLowerCase()</code> que são <strong>métodos</strong> (com <code>()</code>).<br />
+                  2. Só tirar espaços (<code>trim()</code>) ou contar caracteres (<code>length</code>) <strong>ajuda</strong>, mas não garante sozinho que um e-mail ou documento complexo seja válido — a validação precisa refletir uma regra do sistema.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 3: LOCALSTORAGE & JSON (CAPÍTULOS 06 e 08) ========== -->
+        <div id="t-storage-json" class="subpanel">
+          <div class="card">
+            <h2>1. <code>localStorage</code>: Memória Persistente no Navegador (Cap. 06)</h2>
+            <p>
+              Normalmente, quando você fecha ou atualiza a página, as variáveis do JS somem.
+              O <strong><code>localStorage</code></strong> é uma gavetinha do próprio navegador que guarda pares de <strong>chave e valor</strong> e <strong>não apaga</strong> mesmo depois de fechar a aba ou o navegador (no uso normal).
+            </p>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Comando</th>
+                    <th>O que faz?</th>
+                    <th>Detalhe importante</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>localStorage.setItem("chave", "valor")</code></td>
+                    <td>Salva um valor ligado a uma chave.</td>
+                    <td>Se a chave já existir, <strong>substitui</strong> o valor antigo.</td>
+                  </tr>
+                  <tr>
+                    <td><code>localStorage.getItem("chave")</code></td>
+                    <td>Lê o valor guardado naquela chave.</td>
+                    <td>Devolve <code>null</code> se a chave não existir.</td>
+                  </tr>
+                  <tr>
+                    <td><code>localStorage.removeItem("chave")</code></td>
+                    <td>Apaga só o item daquela chave.</td>
+                    <td>Os outros itens continuam salvos.</td>
+                  </tr>
+                  <tr>
+                    <td><code>localStorage.clear()</code></td>
+                    <td>Apaga <strong>tudo</strong> daquela origem/site.</td>
+                    <td>Limpa o <code>localStorage</code> inteiro do site.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>// Salvando e lendo uma preferência simples (texto)
+localStorage.setItem("layout", "compacto");
+const preferencia = localStorage.getItem("layout"); // tem que usar a MESMA chave!
+console.log(preferencia);                           // mostra: "compacto"</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">As 2 Grandes Pegadinhas do <code>localStorage</code></div>
+                <p>
+                  1. <strong>Só guarda texto (<code>string</code>)!</strong> Se você tentar salvar um objeto ou array direto, vira bagunça (<code>"[object Object]"</code>). Para guardar objetos/arrays, precisa converter para texto com <code>JSON.stringify()</code> antes!<br />
+                  2. <strong>NÃO é banco de dados seguro!</strong> Não substitui um banco de dados no servidor e <strong>nunca</strong> deve guardar senhas ou dados sensíveis — serve só para preferências locais e configurações simples.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. JSON: Formato de Texto para Trocar Dados (Cap. 08)</h2>
+            <p>
+              <strong>JSON</strong> significa <em>JavaScript Object Notation</em>. Apesar do nome lembrar JavaScript, ele é um <strong>formato de texto leve</strong> que quase toda linguagem entende (Python, Java, PHP, JavaScript...).
+              É o "envelope padrão" usado em <strong>APIs</strong>, <strong><code>localStorage</code></strong>, arquivos de configuração e <strong>Node.js</strong>.
+            </p>
+
+            <pre class="code-block" data-lang="json"><code>{
+  "evento": "Semana de Tecnologia",
+  "participantes": 42,
+  "aberto": true,
+  "salas": ["A1", "B2"]
+}</code></pre>
+
+            <h3>As 4 Regras de Ouro do JSON Válido (Cai Muito na Prova!)</h3>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">✅ O que TEM que ter</h4>
+                <ul>
+                  <li><strong>Aspas duplas (<code>"..."</code>)</strong> obrigatórias em TODAS as chaves e textos.</li>
+                  <li>Só aceita 6 tipos: <code>string</code>, <code>number</code>, <code>boolean</code>, <code>null</code>, <code>array</code> e <code>object</code>.</li>
+                </ul>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--error)">
+                <h4 style="color: var(--error)">❌ O que é PROIBIDO</h4>
+                <ul>
+                  <li><strong>Vírgula extra</strong> depois do último item de objeto ou array.</li>
+                  <li><strong>Comentários</strong> (<code>//</code> ou <code>/* */</code>) e <strong>funções</strong> JS.</li>
+                  <li>Aspas simples (<code>'texto'</code>) ou chave sem aspas.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3>Os 2 comandos que convertem ida e volta</h3>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Método</th>
+                    <th>Direção da conversão</th>
+                    <th>Pense assim</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>JSON.stringify(valor)</code></td>
+                    <td>Objeto/Array JS → <strong>String JSON</strong></td>
+                    <td><strong>Empacota</strong> em texto para salvar ou enviar pela rede.</td>
+                  </tr>
+                  <tr>
+                    <td><code>JSON.parse(texto)</code></td>
+                    <td><strong>String JSON</strong> → Objeto/Array JS</td>
+                    <td><strong>Desempacota</strong> o texto para usar como objeto no código.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>const configuracao = { fonte: "media", alertas: false };
+
+// 1. Transforma objeto JS em texto JSON para poder guardar no localStorage
+const texto = JSON.stringify(configuracao);
+localStorage.setItem("config", texto);
+
+// 2. Depois, lê o texto e transforma de volta em objeto JS
+const salvo = localStorage.getItem("config");
+const recuperado = JSON.parse(salvo); // cuidado: se o texto JSON for inválido, dá erro!</code></pre>
+
+            <div class="box box-conceito">
+              <div class="box-icon">📘</div>
+              <div class="box-content">
+                <div class="box-label">JSON ≠ Objeto JS na Memória</div>
+                <p>
+                  Um JSON é apenas uma <strong>string (texto)</strong> formatada. Você não consegue fazer <code>texto.fonte</code> antes de passar pelo <code>JSON.parse(texto)</code>!
+                  E quando o texto vem de fora (API, usuário) com sintaxe quebrada, o <code>JSON.parse()</code> falha e lança erro.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 4: NODE.JS, WEB COMPONENTS & REACT (CAPÍTULOS 07, 09 e 10) ========== -->
+        <div id="t-tech" class="subpanel">
+          <div class="card">
+            <h2>1. Node.js: JavaScript Fora do Navegador (Cap. 07)</h2>
+            <p>
+              Antigamente o JavaScript só rodava dentro do navegador. O <strong>Node.js</strong> é um <strong>ambiente de execução (runtime)</strong> que pega o motor <strong>V8</strong> (o mesmo do Chrome) e deixa o JS rodar direto no computador/servidor!
+            </p>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Não confunda Ambiente × Linguagem × Biblioteca!</div>
+                <p>
+                  • <strong>JavaScript</strong> é a <em>linguagem de programação</em>.<br />
+                  • <strong>Node.js</strong> é um <em>ambiente de execução</em> para rodar JS fora do navegador (NÃO é outra linguagem nem biblioteca de telas!).<br />
+                  • <strong>React</strong> é uma <em>biblioteca JS</em> para construir interfaces visuais.
+                </p>
+              </div>
+            </div>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Parte da Aplicação</th>
+                    <th>O que faz?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Front-end</strong></td>
+                    <td>Interface e interações que o usuário vê e usa no navegador.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Servidor / Back-end</strong></td>
+                    <td>Recebe pedidos, aplica regras de negócio e processa dados (ex.: com Node.js).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Banco de dados</strong></td>
+                    <td>Guarda e consulta os registros da aplicação de forma estruturada.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>// arquivo: saudacao.js
+const sistema = "Agenda online";
+console.log(`Aplicacao: ${sistema}`);
+
+// Para rodar direto no terminal (sem abrir HTML nenhum):
+// node saudacao.js</code></pre>
+
+            <ul>
+              <li><strong>NPM:</strong> gerenciador de pacotes que facilita instalar código reutilizável no projeto.</li>
+              <li><strong>Execução não bloqueante:</strong> enquanto aguarda uma tarefa de entrada/saída (como ler arquivo ou rede), o Node.js continua atendendo outras requisições sem travar.</li>
+              <li><strong>Comunicação cliente-servidor (HTTP):</strong> o Node.js implementa APIs que respondem aos métodos HTTP: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code> e <code>DELETE</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>2. Web Components: Peças Reutilizáveis Nativas do Navegador (Cap. 09)</h2>
+            <p>
+              Em vez de copiar e colar o mesmo HTML e CSS em 10 páginas, os <strong>Web Components</strong> permitem criar suas próprias peças reutilizáveis usando recursos <strong>nativos do próprio navegador</strong> (sem precisar instalar React!).
+            </p>
+
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4>1. Custom Elements</h4>
+                <p>Cria e registra novas tags HTML personalizadas (ex.: <code>&lt;mensagem-info&gt;</code>).</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--purple)">
+                <h4>2. Shadow DOM</h4>
+                <p>Cria uma "bolha" interna (<code>attachShadow()</code>) que isola a estrutura e os estilos CSS do componente.</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4>3. Template (<code>&lt;template&gt;</code>)</h4>
+                <p>Define um molde de HTML que pode ser clonado e reaproveitado várias vezes.</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--amber)">
+                <h4>4. Slots (<code>&lt;slot&gt;</code>)</h4>
+                <p>Espaços reservados onde quem usa o componente encaixa títulos ou textos personalizados.</p>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>// A classe herda de HTMLElement (base de todo elemento HTML)
+class MensagemInfo extends HTMLElement {
+  // connectedCallback() roda automaticamente quando a tag entra na página
+  connectedCallback() {
+    this.textContent = "Componente carregado";
+  }
+}
+
+// Registra a nova tag. REGRA: tudo minúsculo e COM HÍFEN!
+customElements.define("mensagem-info", MensagemInfo);</code></pre>
+
+            <div class="box box-dica">
+              <div class="box-icon">💡</div>
+              <div class="box-content">
+                <div class="box-label">Regra do Hífen nos Custom Elements</div>
+                <p>
+                  O nome da tag personalizada precisa ter <strong>letras minúsculas e um hífen</strong> (ex.: <code>mensagem-info</code>, <code>meu-cartao</code>) para nunca dar conflito com tags padrão do HTML (<code>div</code>, <code>p</code>, <code>button</code>).
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>3. React: Interfaces por Componentes, <code>props</code> e <code>state</code> (Cap. 10)</h2>
+            <p>
+              O <strong>React</strong> é uma <strong>biblioteca JavaScript</strong> para montar telas dividindo tudo em pequenas peças reutilizáveis (componentes) que formam uma árvore (cabeçalho, lista, cartões, botões).
+            </p>
+            <p>
+              Ele usa <strong>JSX</strong>: uma sintaxe que parece HTML escrito dentro do código JavaScript (as ferramentas do projeto convertem esse JSX em JS comum para o navegador entender).
+            </p>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Conceito</th>
+                    <th>O que significa em português simples?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>props</code></td>
+                    <td>Dados que vêm <strong>de fora</strong> (quem usa o componente passa para ele, como um argumento).</td>
+                  </tr>
+                  <tr>
+                    <td><code>state</code></td>
+                    <td>Dados <strong>de dentro</strong> do componente que mudam quando o usuário interage.</td>
+                  </tr>
+                  <tr>
+                    <td><code>useState()</code></td>
+                    <td>Hook que cria um estado e devolve dois itens: <code>[valorAtual, funcaoParaAtualizar]</code>.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>// 1. Componente recebendo PROPS (vem de fora)
+function Etiqueta(props) {
+  return &lt;span&gt;Categoria: {props.tipo}&lt;/span&gt;;
+}
+
+function App() {
+  return &lt;Etiqueta tipo="Livros" /&gt;; // passa "Livros" na prop tipo
+}</code></pre>
+
+            <pre class="code-block"><code>// 2. Componente com STATE (muda ao clicar sem recarregar a página)
+import { useState } from "react";
+
+function Alternador() {
+  // visivel começa false; setVisivel é a função usada para trocar esse valor
+  const [visivel, setVisivel] = useState(false);
+
+  return (
+    &lt;button onClick={() =&gt; setVisivel(!visivel)}&gt;
+      {visivel ? "Ocultar" : "Mostrar"}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+            <div class="box box-conceito">
+              <div class="box-icon">📘</div>
+              <div class="box-content">
+                <div class="box-label">Modo Declarativo + Virtual DOM</div>
+                <p>
+                  No React você trabalha de forma <strong>declarativa</strong>: você descreve <em>como a tela deve parecer</em> para cada estado, e o React cuida de atualizar só o necessário sem recarregar a página inteira (usando o <strong>Virtual DOM</strong> para comparar o que mudou).<br />
+                  <strong>Em comum com Web Components:</strong> a ideia de <strong>reutilização de componentes</strong> (Web Components é nativo do navegador; React é biblioteca externa).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 5: COMO TUDO SE CONECTA (CAPÍTULO 11) ========== -->
+        <div id="t-conexao" class="subpanel">
+          <div class="card">
+            <h2>Como os 11 Conteúdos Trabalham Juntos em Um Site Real (Cap. 11)</h2>
+            <p>
+              Na prova, o mais importante é saber <strong>para que serve cada tecnologia</strong> e como elas se ligam em uma aplicação real (como uma plataforma de reservas acadêmicas).
+              Nenhuma tecnologia substitui todas as outras — cada uma resolve uma etapa:
+            </p>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 760 220" width="720" aria-label="Fluxo completo de um site dinâmico">
+                <rect x="10" y="25" width="160" height="62" rx="10" fill="#ebf3fb" stroke="#1a6bb5" stroke-width="2" />
+                <text x="90" y="50" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="13">1. Formulário + Eventos</text>
+                <text x="90" y="70" text-anchor="middle" fill="#4a4740" font-size="11">HTML, DOM, addEventListener</text>
+
+                <line x1="170" y1="56" x2="205" y2="56" stroke="#1a6bb5" stroke-width="2.5" />
+                <polygon points="205,51 215,56 205,61" fill="#1a6bb5" />
+
+                <rect x="215" y="25" width="160" height="62" rx="10" fill="#ebf7f2" stroke="#0d7a5f" stroke-width="2" />
+                <text x="295" y="50" text-anchor="middle" fill="#063d2f" font-weight="bold" font-size="13">2. Limpeza + Arrays</text>
+                <text x="295" y="70" text-anchor="middle" fill="#4a4740" font-size="11">trim(), if, filter(), map()</text>
+
+                <line x1="375" y1="56" x2="410" y2="56" stroke="#0d7a5f" stroke-width="2.5" />
+                <polygon points="410,51 420,56 410,61" fill="#0d7a5f" />
+
+                <rect x="420" y="25" width="155" height="62" rx="10" fill="#fef7e8" stroke="#e8a020" stroke-width="2" />
+                <text x="497" y="50" text-anchor="middle" fill="#6b4200" font-weight="bold" font-size="13">3. Tela + Preferências</text>
+                <text x="497" y="70" text-anchor="middle" fill="#4a4740" font-size="11">textContent, `...`, localStorage</text>
+
+                <line x1="575" y1="56" x2="605" y2="56" stroke="#e8a020" stroke-width="2.5" />
+                <polygon points="605,51 615,56 605,61" fill="#e8a020" />
+
+                <rect x="615" y="25" width="135" height="62" rx="10" fill="#f3f0fb" stroke="#7c5fd4" stroke-width="2" />
+                <text x="682" y="50" text-anchor="middle" fill="#462f8c" font-weight="bold" font-size="13">4. API + Servidor</text>
+                <text x="682" y="70" text-anchor="middle" fill="#4a4740" font-size="11">HTTP, JSON, Node.js</text>
+
+                <rect x="155" y="128" width="450" height="62" rx="10" fill="#f0efe8" stroke="#65625a" stroke-width="2" />
+                <text x="380" y="153" text-anchor="middle" fill="#1c1a17" font-weight="bold" font-size="13">Peças Visuais Reutilizáveis em toda a interface</text>
+                <text x="380" y="173" text-anchor="middle" fill="#4a4740" font-size="12">Web Components (nativo do navegador) ou React (biblioteca com JSX, props e state)</text>
+              </svg>
+              <div class="diagram-caption">Jornada de uma ação do usuário até a resposta da interface e do servidor.</div>
+            </div>
+
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>O que acontece na aplicação</th>
+                    <th>Qual recurso entra em ação?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Pessoa preenche um formulário ou clica</td>
+                    <td>HTML + DOM + <code>input</code> + <code>addEventListener()</code> (+ <code>preventDefault()</code>)</td>
+                  </tr>
+                  <tr>
+                    <td>Texto digitado é limpo e conferido</td>
+                    <td><code>trim()</code>, métodos de string (<code>toLowerCase()</code>, <code>length</code>) e <code>if</code></td>
+                  </tr>
+                  <tr>
+                    <td>Lista de atividades é filtrada ou transformada</td>
+                    <td>Arrays com <code>filter()</code>, <code>map()</code> e <code>push()</code></td>
+                  </tr>
+                  <tr>
+                    <td>Mensagem dinâmica aparece na tela</td>
+                    <td><code>textContent</code> (seguro) ou <code>innerHTML</code> + Template Strings (<code>`...${}...`</code>)</td>
+                  </tr>
+                  <tr>
+                    <td>Preferência de aparência fica salva para a próxima visita</td>
+                    <td><code>localStorage</code> com pares chave-valor (e JSON se for objeto/array)</td>
+                  </tr>
+                  <tr>
+                    <td>Interface conversa com sistemas externos</td>
+                    <td>Comunicação HTTP (GET/POST/...) + dados em texto <strong>JSON</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Servidor executa regras de negócio em JS</td>
+                    <td><strong>Node.js</strong> (runtime com motor V8) no back-end</td>
+                  </tr>
+                  <tr>
+                    <td>Tela é montada em blocos reaproveitáveis</td>
+                    <td><strong>Web Components</strong> (nativo) ou <strong>React</strong> (biblioteca)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 2: EXEMPLOS & LABS =================== -->
+      <div id="exemplos" class="tab-panel">
+        <!-- LAB 1: ARRAYS & TIPOS -->
+        <div class="card">
+          <h2>📦 Lab 1: Arrays (<code>push</code>, <code>filter</code>, <code>map</code>) &amp; Texto × Número</h2>
+          <p>
+            Veja na prática a diferença entre mexer no próprio array (<code>push</code>) e criar um array novo (<code>filter</code> e <code>map</code>).
+            Repare também nos índices começando em <code>0</code> e no último índice sendo sempre <code>length - 1</code>!
+          </p>
+
+          <div class="sim-controls">
+            <input type="number" id="arrInput" class="sim-input" value="18" placeholder="Preço" onkeydown="if(event.key==='Enter')arrPush()" />
+            <button class="sim-btn primary" onclick="arrPush()">+ push(valor)</button>
+            <button class="sim-btn" onclick="arrFilter()">🔍 filter(p &gt; 25)</button>
+            <button class="sim-btn" onclick="arrMap()">📈 map(p * 1.05)</button>
+            <button class="sim-btn danger" onclick="arrReset()">↺ Resetar [15, 40, 22, 60]</button>
+          </div>
+
+          <div id="arrStage" class="ll-stage"></div>
+          <div id="arrDerivedStage" class="ll-stage" style="margin-top: 8px; min-height: 70px; display: none"></div>
+          <div id="arrLog" class="sim-log"></div>
+
+          <h3 style="margin-top: 18px">Teste Rápido: <code>"6" + 2</code> vs <code>Number("6") + 2</code></h3>
+          <div class="sim-controls">
+            <button class="sim-btn active" id="btnConcat" onclick="testTypeMode('concat')">Sem Number(): "6" + 2</button>
+            <button class="sim-btn" id="btnSum" onclick="testTypeMode('sum')">Com Number(): Number("6") + 2</button>
+          </div>
+          <div id="typeLog" class="sim-log"></div>
+        </div>
+
+        <!-- LAB 2: FORMULÁRIO + DOM + LOCALSTORAGE -->
+        <div class="card">
+          <h2>📝 Lab 2: Formulário + DOM (<code>textContent</code> × <code>innerHTML</code>) + <code>localStorage</code></h2>
+          <p>
+            Teste o caminho completo de um campo de texto: digite algo com espaços nas pontas ou com uma tag HTML (como <code>&lt;em&gt;Aviso&lt;/em&gt;</code>) e veja o que cada ferramenta faz!
+          </p>
+
+          <form id="labForm" onsubmit="handleLabSubmit(event)">
+            <div class="sim-controls">
+              <input
+                type="text"
+                id="labField"
+                class="sim-input-wide"
+                value="  <em>Projeto Web</em>  "
+                oninput="updateLabTyping()"
+              />
+              <button type="submit" class="sim-btn primary">Enviar (submit)</button>
+              <button type="button" class="sim-btn" id="btnPreventToggle" onclick="togglePreventDefault()">
+                preventDefault(): LIGADO
+              </button>
+            </div>
+          </form>
+
+          <div id="labTypingPill" class="pill-row"></div>
+
+          <div class="grid-2" style="margin-top: 12px">
+            <div class="mini-card" style="border-top: 3px solid var(--green)">
+              <h4 style="color: var(--green)">Saída com <code>textContent</code> (Seguro)</h4>
+              <div id="outTextContent" class="dom-preview"></div>
+            </div>
+            <div class="mini-card" style="border-top: 3px solid var(--amber)">
+              <h4 style="color: var(--amber)">Saída com <code>innerHTML</code> (Interpreta HTML)</h4>
+              <div id="outInnerHTML" class="dom-preview"></div>
+            </div>
+          </div>
+
+          <div id="labFormLog" class="sim-log"></div>
+
+          <h3 style="margin-top: 18px">Gaveta do <code>localStorage</code> (Chave e Valor em String)</h3>
+          <div class="sim-controls">
+            <button class="sim-btn primary" onclick="lsSet()">setItem("tema_texto", texto limpo)</button>
+            <button class="sim-btn" onclick="lsGet()">getItem("tema_texto")</button>
+            <button class="sim-btn danger" onclick="lsRemove()">removeItem("tema_texto")</button>
+          </div>
+          <div id="lsLog" class="sim-log"></div>
+        </div>
+
+        <!-- LAB 3: JSON -->
+        <div class="card">
+          <h2>📨 Lab 3: Inspetor de JSON (<code>JSON.parse</code> × <code>JSON.stringify</code>)</h2>
+          <p>
+            Escolha um cenário abaixo (ou edite o texto na caixa preta) e clique em <strong>Testar JSON.parse()</strong> para enxergar na hora os erros clássicos que caem na prova!
+          </p>
+
+          <div class="sim-controls">
+            <button class="sim-btn active" onclick="loadJsonPreset('valid')">✅ JSON Válido (PDF)</button>
+            <button class="sim-btn" onclick="loadJsonPreset('singleQuotes')">❌ Aspas Simples</button>
+            <button class="sim-btn" onclick="loadJsonPreset('trailingComma')">❌ Vírgula Extra</button>
+            <button class="sim-btn" onclick="loadJsonPreset('comment')">❌ Comentário //</button>
+          </div>
+
+          <textarea id="jsonEditor" class="sim-textarea" spellcheck="false"></textarea>
+
+          <div class="sim-controls">
+            <button class="sim-btn primary" onclick="runJsonParse()">Testar JSON.parse(texto)</button>
+            <button class="sim-btn" onclick="runJsonStringify()">Gerar com JSON.stringify(objetoJS)</button>
+          </div>
+          <div id="jsonLog" class="sim-log"></div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 3: RESUMO =================== -->
+      <div id="resumo" class="tab-panel">
+        <div class="card">
+          <h2>⏱️ Roteiro Express de Sobrevivência (Revisão Rápida)</h2>
+          <p>Foque primeiro nos pontos em que mais gente perde questão por detalhe bobo:</p>
+          <div class="grid-2" style="margin-top: 12px">
+            <div class="mini-card" style="border-top: 3px solid var(--error)">
+              <h4 style="color: var(--error)">🔥 Prioridade Máxima (Cai Direto)</h4>
+              <ul>
+                <li><strong>JS Básico:</strong> <code>const</code> vs <code>let</code>; campos/<code>prompt()</code> chegam como <code>string</code> → usar <code>Number()</code>; <code>===</code> compara valor e tipo.</li>
+                <li><strong>Arrays:</strong> índice começa em <code>0</code>; último índice = <code>length - 1</code>; <code>push()</code> altera o array e retorna novo tamanho; <code>filter()</code> e <code>map()</code> criam <strong>novo array</strong>.</li>
+                <li><strong>DOM &amp; Eventos:</strong> <code>querySelector()</code> pega só o 1º; <code>preventDefault()</code> só cancela a ação padrão (não valida nem envia); <code>textContent</code> (texto puro/seguro) vs <code>innerHTML</code> (interpreta tags).</li>
+                <li><strong>localStorage &amp; JSON:</strong> <code>localStorage</code> só guarda <code>string</code> (retorna <code>null</code> se não achar); JSON exige aspas duplas, sem vírgula final, sem comentários/funções; <code>stringify</code> (vira texto) vs <code>parse</code> (vira objeto).</li>
+              </ul>
+            </div>
+            <div class="mini-card" style="border-top: 3px solid var(--blue)">
+              <h4 style="color: var(--blue)">⚡ Prioridade Rápida (Seminários &amp; Conceitos)</h4>
+              <ul>
+                <li><strong>Strings:</strong> Template Strings usam crases e <code>${...}</code>; <code>length</code> é <strong>propriedade</strong> (sem <code>()</code>), <code>trim()</code> e <code>toLowerCase()</code> são <strong>métodos</strong> (com <code>()</code>).</li>
+                <li><strong>Node.js:</strong> é um <em>runtime</em> (motor V8) para rodar JS fora do navegador (back-end/APIs), com NPM e execução não bloqueante.</li>
+                <li><strong>Web Components:</strong> recurso nativo do navegador com 4 peças (Custom Elements com <strong>hífen</strong> no nome, Shadow DOM, Template e Slots).</li>
+                <li><strong>React:</strong> biblioteca de UI com JSX, forma declarativa, Virtual DOM, <code>props</code> (vem de fora) e <code>state</code>/<code>useState()</code> (muda dentro).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🗺️ Cola Rápida de Véspera de Prova (Capítulos 01 a 11)</h2>
+
+          <h3 class="section-title">1. Comparativo Rápido: Arrays, Strings e DOM</h3>
+          <div class="table-scroll">
+            <table class="resumo-table">
+              <thead>
+                <tr>
+                  <th>Recurso</th>
+                  <th>O que faz</th>
+                  <th>Pegadinha para lembrar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>push()</code></td>
+                  <td>Adiciona no fim do próprio array</td>
+                  <td>Muda o array original e retorna o novo <code>length</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>filter()</code></td>
+                  <td>Filtra itens por condição (callback)</td>
+                  <td>Devolve um <strong>novo array</strong> sem mexer no original.</td>
+                </tr>
+                <tr>
+                  <td><code>map()</code></td>
+                  <td>Transforma cada item (callback)</td>
+                  <td>Devolve um <strong>novo array</strong> com o mesmo tamanho.</td>
+                </tr>
+                <tr>
+                  <td><code>trim()</code> &amp; <code>length</code></td>
+                  <td>Limpa pontas / conta caracteres</td>
+                  <td><code>trim()</code> tem <code>()</code>; <code>length</code> NÃO tem <code>()</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>textContent</code> vs <code>innerHTML</code></td>
+                  <td>Altera o conteúdo de um elemento</td>
+                  <td><code>textContent</code> não interpreta HTML (mais seguro); ambos apagam o conteúdo anterior.</td>
+                </tr>
+                <tr>
+                  <td><code>e.preventDefault()</code></td>
+                  <td>Impede envio/recarregamento padrão</td>
+                  <td>Não valida e não limpa campos sozinho.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">2. Comparativo das Tecnologias (Seminários)</h3>
+          <div class="table-scroll">
+            <table class="resumo-table">
+              <thead>
+                <tr>
+                  <th>Tecnologia</th>
+                  <th>O que é?</th>
+                  <th>Palavras-chave da Prova</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>JSON</strong></td>
+                  <td>Formato textual leve para trocar dados</td>
+                  <td>Aspas duplas, sem vírgula final, sem comentário/função; <code>stringify</code> / <code>parse</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Node.js</strong></td>
+                  <td>Ambiente de execução (runtime) JS</td>
+                  <td>Motor V8 fora do navegador, terminal (<code>node</code>), NPM, não bloqueante, HTTP (GET/POST/PUT/PATCH/DELETE).</td>
+                </tr>
+                <tr>
+                  <td><strong>Web Components</strong></td>
+                  <td>Padrão nativo do navegador</td>
+                  <td>Custom Elements (nome com hífen, <code>connectedCallback</code>), Shadow DOM (<code>attachShadow</code>), Template, Slots.</td>
+                </tr>
+                <tr>
+                  <td><strong>React</strong></td>
+                  <td>Biblioteca JS de interface</td>
+                  <td>JSX, árvore de componentes, <code>props</code> (externo), <code>state</code> / <code>useState()</code> (interno), declarativo, Virtual DOM.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">3. Checklist Anti-Pegadinha da Prova</h3>
+          <div class="grid-2">
+            <div class="mini-card">
+              <h4>⚡ JavaScript, DOM &amp; Storage</h4>
+              <ul>
+                <li><code>"6" + 2</code> dá <code>"62"</code> (texto concatena!); use <code>Number("6")</code> para somar.</li>
+                <li><code>===</code> compara valor e tipo; <code>%</code> pega o resto da divisão.</li>
+                <li>Último índice de array não vazio é <code>length - 1</code>.</li>
+                <li><code>document.querySelector()</code> retorna só o <strong>1º</strong> elemento que bater.</li>
+                <li><code>localStorage.getItem()</code> devolve <code>null</code> se a chave não existir; não serve para senhas nem substitui banco no servidor.</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <h4>🧩 JSON, Node, Web Components &amp; React</h4>
+              <ul>
+                <li>JSON é <strong>texto</strong>, não objeto em memória; erro no texto quebra o <code>JSON.parse()</code>.</li>
+                <li>Node.js <strong>não</strong> é uma nova linguagem — a linguagem continua sendo JavaScript.</li>
+                <li>Custom Element precisa de <strong>letras minúsculas + hífen</strong> (<code>tag-aqui</code>).</li>
+                <li>No React: <code>props</code> vem de quem chama; <code>state</code> muda dentro via <code>useState()</code>.</li>
+                <li>Web Components e React compartilham a ideia de <strong>reutilização de componentes</strong>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 4: QUIZ =================== -->
+      <div id="quiz" class="tab-panel">
+        <div class="score-bar">
+          <div class="score-top">
+            <div class="score-stats">
+              <div class="score-display" id="scoreDisplay">0/20</div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text)">Seu placar no simulado</div>
+                <div class="score-label" id="scoreSubtitle" data-subtitle="Sites Dinâmicos · Baseado no Guia Oficial">
+                  0 de 20 respondidas · Sites Dinâmicos · Baseado no Guia Oficial
+                </div>
+              </div>
+            </div>
+            <button class="reset-btn" onclick="resetQuiz()">↺ Reiniciar Tudo</button>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="subtabs" id="quiz-filters">
+          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (20)</button>
+          <button class="subtab-btn" onclick="filterQuiz('JS & Arrays', this)">JS &amp; Arrays (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Eventos, DOM & Validação', this)">Eventos, DOM &amp; Validação (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('localStorage & JSON', this)">localStorage &amp; JSON (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Node, Web Components & React', this)">Node, WC &amp; React (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Conexão & Pegadinhas', this)">Conexão &amp; Pegadinhas (4)</button>
+        </div>
+
+        <div id="quiz-container"></div>
+      </div>
+    </div>
+
+    <script src="../assets/js/study-guide.js"></script>
+    <script>
+      // ====== LAB 1: ARRAYS & TIPOS ======
+      let arrData = [15, 40, 22, 60];
+
+      function renderArrayStage(containerId, items, highlightColor) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.innerHTML = items
+          .map(
+            (val, idx) => `
+          <div class="array-box" style="border-color:${highlightColor || 'var(--blue)'}">
+            <div class="arr-idx">[${idx}]</div>
+            <div class="arr-val">${val}</div>
+          </div>`
+          )
+          .join('');
+      }
+
+      function arrRenderMain(msg, logClass) {
+        renderArrayStage('arrStage', arrData, 'var(--blue)');
+        const log = document.getElementById('arrLog');
+        log.className = 'sim-log' + (logClass ? ' ' + logClass : '');
+        log.innerHTML =
+          msg +
+          `<br><small>Array atual: <code>[${arrData.join(', ')}]</code> · <code>length = ${arrData.length}</code> · Último índice = <code>${arrData.length - 1}</code></small>`;
+      }
+
+      function arrPush() {
+        const input = document.getElementById('arrInput');
+        const val = Number(input.value);
+        if (input.value.trim() === '' || Number.isNaN(val)) {
+          arrRenderMain('Digite um número válido para fazer <code>push()</code>.', 'err');
+          return;
+        }
+        const novoTamanho = arrData.push(val);
+        document.getElementById('arrDerivedStage').style.display = 'none';
+        arrRenderMain(
+          `<strong>push(${val}):</strong> adicionou <code>${val}</code> no final do <strong>próprio array</strong> e retornou o novo comprimento: <code>${novoTamanho}</code>.`,
+          'ok'
+        );
+      }
+
+      function arrFilter() {
+        const altos = arrData.filter((p) => p > 25);
+        const derived = document.getElementById('arrDerivedStage');
+        derived.style.display = 'flex';
+        renderArrayStage('arrDerivedStage', altos, 'var(--green)');
+        arrRenderMain(
+          `<strong>filter(p &gt; 25):</strong> criou um <strong>NOVO array</strong> só com quem passou no teste: <code>[${altos.join(', ')}]</code>. Repare que o array original de cima não mudou!`,
+          'ok'
+        );
+      }
+
+      function arrMap() {
+        const comTaxa = arrData.map((p) => Number((p * 1.05).toFixed(2)));
+        const derived = document.getElementById('arrDerivedStage');
+        derived.style.display = 'flex';
+        renderArrayStage('arrDerivedStage', comTaxa, 'var(--purple)');
+        arrRenderMain(
+          `<strong>map(p * 1.05):</strong> criou um <strong>NOVO array</strong> com o mesmo tamanho transformando cada item: <code>[${comTaxa.join(', ')}]</code>. O array original continua intacto!`,
+          'ok'
+        );
+      }
+
+      function arrReset() {
+        arrData = [15, 40, 22, 60];
+        document.getElementById('arrDerivedStage').style.display = 'none';
+        arrRenderMain('Array resetado para os valores do guia: <code>[15, 40, 22, 60]</code>.');
+      }
+
+      function testTypeMode(mode) {
+        document.getElementById('btnConcat').classList.toggle('active', mode === 'concat');
+        document.getElementById('btnSum').classList.toggle('active', mode === 'sum');
+        const el = document.getElementById('typeLog');
+        if (mode === 'concat') {
+          el.className = 'sim-log err';
+          el.innerHTML =
+            '<strong>Resultado: <code>"62"</code> (<code>typeof === "string"</code>)</strong> — Como <code>"6"</code> é texto, o sinal <code>+</code> <strong>grudou (concatenou)</strong> em vez de somar!';
+        } else {
+          el.className = 'sim-log ok';
+          el.innerHTML =
+            '<strong>Resultado: <code>8</code> (<code>typeof === "number"</code>)</strong> — <code>Number("6")</code> converteu para número antes da conta, então o <code>+</code> <strong>somou</strong>!';
+        }
+      }
+
+      // ====== LAB 2: FORMULÁRIO + DOM + LOCALSTORAGE ======
+      let usePreventDefault = true;
+      const fakeStorage = {};
+
+      function getFieldValue() {
+        return document.getElementById('labField').value;
+      }
+
+      function updateLabTyping() {
+        const bruto = getFieldValue();
+        const limpo = bruto.trim();
+        const minusculo = limpo.toLowerCase();
+
+        document.getElementById('labTypingPill').innerHTML = `
+          <span class="pill">Bruto length: ${bruto.length}</span>
+          <span class="pill">Após trim(): "${escapeHtml(limpo)}" (length: ${limpo.length})</span>
+          <span class="pill">toLowerCase(): "${escapeHtml(minusculo)}"</span>
+        `;
+
+        // Atualiza os dois jeitos do DOM lado a lado
+        document.getElementById('outTextContent').textContent = limpo;
+        document.getElementById('outInnerHTML').innerHTML = limpo;
+      }
+
+      function togglePreventDefault() {
+        usePreventDefault = !usePreventDefault;
+        const btn = document.getElementById('btnPreventToggle');
+        btn.textContent = `preventDefault(): ${usePreventDefault ? 'LIGADO' : 'DESLIGADO'}`;
+        btn.classList.toggle('active', usePreventDefault);
+      }
+
+      function handleLabSubmit(e) {
+        e.preventDefault(); // Sempre seguramos a página real para não perder o lab, mas explicamos a diferença!
+        const log = document.getElementById('labFormLog');
+        const limpo = getFieldValue().trim();
+        if (!usePreventDefault) {
+          log.className = 'sim-log err';
+          log.innerHTML =
+            '<strong>Simulação sem <code>preventDefault()</code>:</strong> Em um site normal, o navegador teria <strong>recarregado a página agora</strong> e apagado tudo antes do seu JavaScript validar o campo!';
+          return;
+        }
+        if (limpo.length === 0) {
+          log.className = 'sim-log err';
+          log.innerHTML =
+            '<strong><code>preventDefault()</code> segurou o envio!</strong> Depois, nossa regra com <code>trim()</code> e <code>length === 0</code> percebeu que o campo está vazio.';
+          return;
+        }
+        log.className = 'sim-log ok';
+        log.innerHTML = `<strong><code>preventDefault()</code> impediu o recarregamento padrão!</strong> Nosso código leu o campo limpo (<code>${escapeHtml(limpo)}</code>) e atualizou <code>textContent</code> e <code>innerHTML</code> sem recarregar a página.`;
+      }
+
+      function lsSet() {
+        const val = getFieldValue().trim();
+        fakeStorage['tema_texto'] = String(val);
+        try {
+          window.localStorage.setItem('studyhub_demo_tema_texto', String(val));
+        } catch (err) {}
+        const log = document.getElementById('lsLog');
+        log.className = 'sim-log ok';
+        log.innerHTML = `<strong>Gravado com <code>setItem("tema_texto", ...)</code>:</strong> salvo como string <code>"${escapeHtml(val)}"</code>.`;
+      }
+
+      function lsGet() {
+        let val = fakeStorage['tema_texto'];
+        if (val === undefined) {
+          try {
+            const stored = window.localStorage.getItem('studyhub_demo_tema_texto');
+            if (stored !== null) val = stored;
+          } catch (err) {}
+        }
+        const log = document.getElementById('lsLog');
+        if (val === undefined || val === null) {
+          log.className = 'sim-log';
+          log.innerHTML =
+            '<strong><code>getItem("tema_texto")</code> retornou <code>null</code></strong> porque a chave não existe (ainda não foi salva ou foi removida).';
+        } else {
+          log.className = 'sim-log ok';
+          log.innerHTML = `<strong><code>getItem("tema_texto")</code> retornou:</strong> <code>"${escapeHtml(val)}"</code> (<code>typeof === "string"</code>).`;
+        }
+      }
+
+      function lsRemove() {
+        delete fakeStorage['tema_texto'];
+        try {
+          window.localStorage.removeItem('studyhub_demo_tema_texto');
+        } catch (err) {}
+        const log = document.getElementById('lsLog');
+        log.className = 'sim-log';
+        log.innerHTML = '<strong><code>removeItem("tema_texto")</code> executado:</strong> a chave foi excluída. Tente clicar em <code>getItem()</code> agora para ver o <code>null</code>!';
+      }
+
+      // ====== LAB 3: JSON ======
+      const jsonPresets = {
+        valid: `{
+  "evento": "Semana de Tecnologia",
+  "participantes": 42,
+  "aberto": true,
+  "salas": ["A1", "B2"]
+}`,
+        singleQuotes: `{
+  'evento': 'Semana de Tecnologia',
+  'participantes': 42
+}`,
+        trailingComma: `{
+  "evento": "Semana de Tecnologia",
+  "salas": ["A1", "B2",]
+}`,
+        comment: `{
+  // comentário não pode em JSON!
+  "evento": "Semana de Tecnologia",
+  "participantes": 42
+}`,
+      };
+
+      function loadJsonPreset(key) {
+        const buttons = document.querySelectorAll('#exemplos .card:last-child .sim-controls:first-of-type .sim-btn');
+        const keys = ['valid', 'singleQuotes', 'trailingComma', 'comment'];
+        buttons.forEach((b, i) => b.classList.toggle('active', keys[i] === key));
+        document.getElementById('jsonEditor').value = jsonPresets[key];
+        runJsonParse();
+      }
+
+      function runJsonParse() {
+        const raw = document.getElementById('jsonEditor').value;
+        const log = document.getElementById('jsonLog');
+        try {
+          const obj = JSON.parse(raw);
+          log.className = 'sim-log ok';
+          log.innerHTML = `<strong>✅ JSON válido!</strong> O <code>JSON.parse()</code> leu o texto e criou um valor JS do tipo <code>${Array.isArray(obj) ? 'array' : typeof obj}</code> com ${Object.keys(obj).length} chave(s).`;
+        } catch (e) {
+          log.className = 'sim-log err';
+          let dica = 'Confira as 4 regras: aspas duplas em chaves/textos, sem vírgula sobrando no final, sem comentários e sem funções.';
+          if (raw.includes("'")) dica = 'Regra quebrada: JSON exige <strong>aspas duplas (<code>"</code>)</strong>, não aceita aspas simples (<code>\'</code>).';
+          else if (raw.includes('//') || raw.includes('/*')) dica = 'Regra quebrada: <strong>comentários</strong> não fazem parte da sintaxe JSON.';
+          else if (/,\s*[\]}]/m.test(raw)) dica = 'Regra quebrada: existe uma <strong>vírgula extra</strong> depois do último item.';
+          log.innerHTML = `<strong>❌ Erro no <code>JSON.parse()</code>:</strong> ${dica}<br><small>Detalhe técnico: <code>${escapeHtml(e.message)}</code></small>`;
+        }
+      }
+
+      function runJsonStringify() {
+        const obj = { turno: 'noturno', alunos: 28, ativo: true };
+        const texto = JSON.stringify(obj, null, 2);
+        document.getElementById('jsonEditor').value = texto;
+        const log = document.getElementById('jsonLog');
+        log.className = 'sim-log ok';
+        log.innerHTML =
+          '<strong><code>JSON.stringify(obj)</code> executado!</strong> Pegou o objeto JS <code>{ turno: "noturno", alunos: 28, ativo: true }</code> e gerou a string JSON acima com aspas duplas.';
+      }
+
+      // ====== QUIZ (20 QUESTÕES COMENTADAS, BASEADAS NO GUIA OFICIAL) ======
+      const quizQuestions = [
+        // --- BLOCO 1: JS & ARRAYS (4) ---
+        {
+          id: 'q1',
+          topic: 'JS & Arrays',
+          title: 'Um formulário captura a quantidade digitada pelo usuário na variável <code>const qtd = "6";</code>. O que acontece ao executar <code>console.log(qtd + 2)</code> e como resolver para somar?',
+          extraHtml: '',
+          options: [
+            'Mostra 8 automaticamente, pois o JavaScript sempre converte texto em número no sinal +.',
+            'Mostra "62" (concatena texto); para somar é preciso converter antes com Number(qtd).',
+            'Gera erro de sintaxe porque const não permite fazer contas.',
+            'Mostra 62 como tipo number porque === não foi usado.',
+          ],
+          correct: 1,
+          correctExplain: 'Dados de campos chegam como texto (string). Entre strings, o sinal + concatena ("6" + 2 vira "62"). Usando Number(qtd), "6" vira número 6 e soma normalmente.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> o + entre texto e número concatena ("62"), não soma.',
+            2: '<strong>C está errada:</strong> const só impede trocar a variável qtd por outro valor depois; ler qtd para uma conta funciona normalmente.',
+            3: '<strong>D está errada:</strong> o resultado é a string "62", não o número 62, e isso não tem relação com ===.',
+          },
+        },
+        {
+          id: 'q2',
+          topic: 'JS & Arrays',
+          title: 'Sobre <code>const</code>, <code>let</code> e o operador <code>===</code> em JavaScript, qual afirmação está correta?',
+          extraHtml: '',
+          options: [
+            'const permite reatribuir o valor quantas vezes quiser; let trava o valor.',
+            '=== compara valor e tipo sem conversão implícita (ex.: 5 === "5" é false).',
+            '=== serve apenas para descobrir o tipo de uma variável, como typeof.',
+            'let e const são usados exclusivamente fora do navegador, no Node.js.',
+          ],
+          correct: 1,
+          correctExplain: 'O operador === faz comparação estrita: exige que valor e tipo sejam iguais, evitando surpresas entre texto e número.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> é o contrário! const impede reatribuição e let permite reatribuir.',
+            2: '<strong>C está errada:</strong> quem informa o tipo ("string", "number", "boolean") é o operador typeof.',
+            3: '<strong>D está errada:</strong> let e const são a base do JavaScript tanto no navegador quanto no Node.js.',
+          },
+        },
+        {
+          id: 'q3',
+          topic: 'JS & Arrays',
+          title: 'Considere o array <code>const produtos = ["livro", "caderno", "lapis"];</code>. Qual é o resultado de <code>produtos[1]</code> e qual é o índice do último elemento?',
+          extraHtml: '',
+          options: [
+            'produtos[1] é "livro" e o último índice é igual a produtos.length (3).',
+            'produtos[1] é "caderno" e o último índice é produtos.length - 1 (2).',
+            'produtos[1] é "caderno" e o último índice é produtos.length (3).',
+            'produtos[1] é "lapis" porque arrays começam no índice -1.',
+          ],
+          correct: 1,
+          correctExplain: 'Índices de array começam no 0 ("livro" = 0, "caderno" = 1, "lapis" = 2). Como length é 3, o último índice é sempre length - 1 (2).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> "livro" está no índice 0, e o índice 3 não existe nesse array.',
+            2: '<strong>C está errada:</strong> pegadinha clássica! length (3) conta quantos itens existem, não é o último índice (2).',
+            3: '<strong>D está errada:</strong> arrays em JavaScript começam sempre no índice 0.',
+          },
+        },
+        {
+          id: 'q4',
+          topic: 'JS & Arrays',
+          title: 'Qual é a diferença correta entre os métodos de array <code>push()</code>, <code>filter()</code> e <code>map()</code>?',
+          extraHtml: '',
+          options: [
+            'push() altera o próprio array adicionando ao final; filter() cria novo array com itens que passam num teste; map() cria novo array transformando cada item.',
+            'filter() altera o array original apagando itens; push() e map() nunca alteram nada.',
+            'map() serve só para selecionar itens maiores que um valor, enquanto filter() multiplica todos os valores.',
+            'push() retorna o último item do array e cria um novo array copiado.',
+          ],
+          correct: 0,
+          correctExplain: 'Essa é a divisão exata: push() modifica o array original no fim (e retorna o novo length); filter() gera novo array filtrando por condição; map() gera novo array transformando cada elemento.',
+          wrongReasons: {
+            1: '<strong>B está errada:</strong> filter() NÃO altera o array original — ele cria um novo array; quem altera o original é push().',
+            2: '<strong>C está errada:</strong> trocou os papéis! Selecionar por condição é filter(); transformar/multiplicar cada item é map().',
+            3: '<strong>D está errada:</strong> push() altera o array existente e retorna o novo comprimento (length) da coleção.',
+          },
+        },
+
+        // --- BLOCO 2: EVENTOS, DOM & VALIDAÇÃO (4) ---
+        {
+          id: 'q5',
+          topic: 'Eventos, DOM & Validação',
+          title: 'No envio de um formulário com <code>formulario.addEventListener("submit", function(e) { e.preventDefault(); ... })</code>, o que <code>e.preventDefault()</code> realmente faz?',
+          extraHtml: '',
+          options: [
+            'Valida automaticamente todos os campos obrigatórios e limpa o formulário.',
+            'Envia os dados do formulário direto para o banco de dados sem precisar de servidor.',
+            'Impede apenas a ação padrão do navegador (como recarregar/enviar a página), se for cancelável.',
+            'Converte todos os inputs do formulário de string para number.',
+          ],
+          correct: 2,
+          correctExplain: 'preventDefault() bloqueia só o comportamento padrão do evento (no submit, o envio convencional que recarregaria a página). Validação, limpeza e envio ficam por conta do código da aplicação.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> ele não valida nem limpa nenhum campo sozinho.',
+            1: '<strong>B está errada:</strong> ele não envia dados para lugar nenhum.',
+            3: '<strong>D está errada:</strong> conversão de texto para número é feita com Number(), não com preventDefault().',
+          },
+        },
+        {
+          id: 'q6',
+          topic: 'Eventos, DOM & Validação',
+          title: 'Qual evento dispara continuamente enquanto o usuário altera o texto dentro de um <code>&lt;input&gt;</code>?',
+          extraHtml: '',
+          options: ['submit', 'input', 'click', 'connectedCallback'],
+          correct: 1,
+          correctExplain: 'O evento "input" dispara sempre que o valor de um campo muda, permitindo acompanhar a digitação em tempo real.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> submit só dispara na tentativa de envio do formulário.',
+            2: '<strong>C está errada:</strong> click dispara apenas quando há clique no elemento.',
+            3: '<strong>D está errada:</strong> connectedCallback() é um método de ciclo de vida de Web Components, não um evento de digitação.',
+          },
+        },
+        {
+          id: 'q7',
+          topic: 'Eventos, DOM & Validação',
+          title: 'Um site vai exibir na tela um nome digitado pelo usuário. Por que <code>textContent</code> é preferível ao <code>innerHTML</code> nesse caso?',
+          extraHtml: '',
+          options: [
+            'Porque textContent interpreta tags HTML como <em> mais rápido que innerHTML.',
+            'Porque textContent insere texto literal sem interpretar tags HTML, sendo mais seguro contra marcação indesejada.',
+            'Porque innerHTML não apaga o conteúdo anterior do elemento, acumulando lixo na tela.',
+            'Porque textContent funciona apenas com Template Strings.',
+          ],
+          correct: 1,
+          correctExplain: 'textContent trata tudo como texto puro (literal), evitando que dados vindos do usuário ou fontes não confiáveis virem marcação HTML executada na página.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> quem interpreta tags HTML é innerHTML, não textContent.',
+            2: '<strong>C está errada:</strong> tanto textContent quanto innerHTML substituem o conteúdo anterior do elemento.',
+            3: '<strong>D está errada:</strong> textContent aceita qualquer string (aspas normais ou crases).',
+          },
+        },
+        {
+          id: 'q8',
+          topic: 'Eventos, DOM & Validação',
+          title: 'Dado <code>const texto = "  ADS  ";</code>, qual opção usa corretamente Template String e sintaxe de string em JavaScript?',
+          extraHtml: '',
+          options: [
+            'const msg = "Curso: ${texto.trim()}"; e texto.length()',
+            'const msg = `Curso: ${texto.trim()}`; e texto.length',
+            'const msg = \'Curso: ${texto.trim()}\'; e texto.trim',
+            'const msg = `Curso: #{texto.trim()}`; e texto.length()',
+          ],
+          correct: 1,
+          correctExplain: 'Template Strings exigem crases (` `) e interpolação com ${...}. Além disso, trim() é método (tem parênteses) e length é propriedade (SEM parênteses).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> usou aspas duplas em vez de crases e colocou parênteses em length().',
+            2: '<strong>C está errada:</strong> usou aspas simples (não interpola) e esqueceu os parênteses em trim().',
+            3: '<strong>D está errada:</strong> a sintaxe da interpolação é ${...} (com cifrão), não #{...}, e length não usa parênteses.',
+          },
+        },
+
+        // --- BLOCO 3: LOCALSTORAGE & JSON (4) ---
+        {
+          id: 'q9',
+          topic: 'localStorage & JSON',
+          title: 'O que acontece ao chamar <code>localStorage.getItem("tema")</code> se a chave <code>"tema"</code> nunca foi salva antes?',
+          extraHtml: '',
+          options: [
+            'Devolve uma string vazia "" automaticamente.',
+            'Devolve null.',
+            'Cria a chave com valor undefined e grava no navegador.',
+            'Lança um erro fatal igual ao JSON.parse().',
+          ],
+          correct: 1,
+          correctExplain: 'Quando a chave procurada não existe no localStorage, getItem() devolve null.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> não devolve string vazia "", e sim null.',
+            2: '<strong>C está errada:</strong> getItem() apenas lê, nunca cria chaves.',
+            3: '<strong>D está errada:</strong> getItem() não lança erro quando a chave não existe; ele apenas retorna null.',
+          },
+        },
+        {
+          id: 'q10',
+          topic: 'localStorage & JSON',
+          title: 'Por que NÃO devemos usar o <code>localStorage</code> para guardar senhas e qual é o único tipo de valor que ele armazena?',
+          extraHtml: '',
+          options: [
+            'Porque ele só guarda objetos JS e apaga tudo ao fechar a aba.',
+            'Porque ele não é seguro para dados sensíveis (nem substitui banco no servidor) e armazena apenas strings.',
+            'Porque ele só funciona dentro do Node.js e aceita apenas números inteiros.',
+            'Porque cada setItem() apaga todos os outros sites do navegador.',
+          ],
+          correct: 1,
+          correctExplain: 'O localStorage é voltado para persistência local simples (preferências, pequenas configurações). Ele armazena apenas strings e não é adequado para senhas ou dados sensíveis.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> ele persiste após fechar a página e guarda strings, não objetos direto.',
+            2: '<strong>C está errada:</strong> localStorage é recurso do navegador (front-end), não do Node.js.',
+            3: '<strong>D está errada:</strong> setItem(chave, valor) só substitui aquela mesma chave; quem apaga tudo da origem é clear().',
+          },
+        },
+        {
+          id: 'q11',
+          topic: 'localStorage & JSON',
+          title: 'Qual dos blocos abaixo representa um documento <strong>JSON válido</strong> de acordo com as regras da sintaxe?',
+          extraHtml: '',
+          options: [
+            '{ \'evento\': \'Tech\', \'aberto\': true }',
+            '{ "evento": "Tech", "salas": ["A1", "B2",] }',
+            '{ "evento": "Tech", "participantes": 42, "aberto": true }',
+            '{ // dados\n  "evento": "Tech"\n}',
+          ],
+          correct: 2,
+          correctExplain: 'A opção C respeita todas as regras: aspas duplas em todas as chaves e textos, tipos aceitos (string, number, boolean), sem vírgula extra no final e sem comentários.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> usou aspas simples, o que é inválido em JSON.',
+            1: '<strong>B está errada:</strong> tem vírgula extra após "B2" dentro do array.',
+            3: '<strong>D está errada:</strong> JSON não aceita comentários (//).',
+          },
+        },
+        {
+          id: 'q12',
+          topic: 'localStorage & JSON',
+          title: 'Você tem um objeto <code>const cfg = { fonte: "media" };</code> e quer salvá-lo no <code>localStorage</code> e depois lê-lo de volta como objeto. Qual é a ordem correta?',
+          extraHtml: '',
+          options: [
+            'Salvar com JSON.parse(cfg) e depois recuperar com JSON.stringify().',
+            'Salvar com JSON.stringify(cfg) e depois recuperar com JSON.parse().',
+            'Salvar cfg direto no setItem() porque o localStorage já converte objetos sozinho.',
+            'Usar preventDefault() antes do setItem() para evitar perda dos dados.',
+          ],
+          correct: 1,
+          correctExplain: 'JSON.stringify() transforma o objeto JS em texto JSON para caber no localStorage. Na volta, JSON.parse() transforma o texto JSON novamente em objeto JS.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> inverteu os dois métodos! parse lê string; stringify gera string.',
+            2: '<strong>C está errada:</strong> localStorage só armazena strings; salvar objeto direto não conserva a estrutura.',
+            3: '<strong>D está errada:</strong> preventDefault() é para eventos do DOM, não tem relação com localStorage.',
+          },
+        },
+
+        // --- BLOCO 4: NODE, WEB COMPONENTS & REACT (4) ---
+        {
+          id: 'q13',
+          topic: 'Node, Web Components & React',
+          title: 'Qual definição descreve corretamente o <strong>Node.js</strong>?',
+          extraHtml: '',
+          options: [
+            'Uma nova linguagem de programação que substitui o JavaScript no back-end.',
+            'Uma biblioteca visual para desenhar botões e formulários no navegador.',
+            'Um ambiente de execução (runtime) que usa o motor V8 para rodar JavaScript fora do navegador.',
+            'Um formato de texto leve usado para trocar dados entre Python e PHP.',
+          ],
+          correct: 2,
+          correctExplain: 'Node.js não é outra linguagem nem biblioteca visual: ele é um ambiente de execução (runtime) com o motor V8 para executar JavaScript no computador/servidor.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> a linguagem continua sendo JavaScript.',
+            1: '<strong>B está errada:</strong> quem foca em construir interfaces visuais por componentes é o React (ou Web Components).',
+            3: '<strong>D está errada:</strong> essa é a definição de JSON, não de Node.js.',
+          },
+        },
+        {
+          id: 'q14',
+          topic: 'Node, Web Components & React',
+          title: 'Nos Web Components, para que servem o <strong>Shadow DOM</strong> e qual é a regra prática para nomear um <strong>Custom Element</strong>?',
+          extraHtml: '',
+          options: [
+            'Shadow DOM envia dados HTTP; o nome da tag deve ser sempre em MAIÚSCULAS.',
+            'Shadow DOM isola/encapsula estrutura e estilos internos; o nome da tag usa letras minúsculas e hífen (ex.: mensagem-info).',
+            'Shadow DOM é uma biblioteca do React; o nome da tag não pode ter hífen.',
+            'Shadow DOM guarda preferências após fechar o navegador; o nome deve começar com $.',
+          ],
+          correct: 1,
+          correctExplain: 'attachShadow() cria um Shadow DOM para encapsular estrutura e CSS internos. E Custom Elements usam letras minúsculas com hífen para evitar conflito com tags HTML nativas.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> Shadow DOM não tem relação com HTTP, e tags personalizadas usam minúsculas + hífen.',
+            2: '<strong>C está errada:</strong> Web Components são nativos do navegador (não são do React) e exigem hífen.',
+            3: '<strong>D está errada:</strong> quem guarda preferências após fechar o navegador é o localStorage.',
+          },
+        },
+        {
+          id: 'q15',
+          topic: 'Node, Web Components & React',
+          title: 'Em um componente React, qual é a diferença entre <code>props</code> e <code>state</code> (com <code>useState()</code>)?',
+          extraHtml: '',
+          options: [
+            'props são dados internos que mudam toda hora; state são dados fixos que vêm de fora.',
+            'props são informações passadas ao componente por quem o utiliza; state são dados internos que podem mudar com a interação.',
+            'Ambos são métodos de array exclusivos do JSX.',
+            'props funcionam só no Node.js e state funciona só no localStorage.',
+          ],
+          correct: 1,
+          correctExplain: 'Quem usa o componente passa props de fora (ex.: <code>&lt;Etiqueta tipo="Livros" /&gt;</code>). Já o state é interno ao componente e muda ao longo da interação via useState().',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> inverteu completamente os papéis de props e state.',
+            2: '<strong>C está errada:</strong> não são métodos de array.',
+            3: '<strong>D está errada:</strong> ambos são conceitos centrais de componentes React na interface.',
+          },
+        },
+        {
+          id: 'q16',
+          topic: 'Node, Web Components & React',
+          title: 'Qual característica é <strong>comum</strong> tanto aos Web Components quanto ao React?',
+          extraHtml: '',
+          options: [
+            'Ambos exigem obrigatoriamente a instalação do pacote React via NPM.',
+            'Ambos existem para executar JavaScript no terminal sem página HTML.',
+            'Ambos trabalham com a ideia de reutilização de componentes na interface.',
+            'Ambos são formatos de armazenamento persistente no navegador.',
+          ],
+          correct: 2,
+          correctExplain: 'Embora Web Components sejam nativos do navegador e React seja uma biblioteca JS, ambos compartilham o objetivo de organizar a interface em componentes reutilizáveis.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> Web Components são nativos do navegador e não exigem instalar React.',
+            1: '<strong>B está errada:</strong> executar JS fora do navegador no terminal é papel do Node.js.',
+            3: '<strong>D está errada:</strong> armazenamento persistente no navegador é papel do localStorage.',
+          },
+        },
+
+        // --- BLOCO 5: CONEXÃO & PEGADINHAS (4) ---
+        {
+          id: 'q17',
+          topic: 'Conexão & Pegadinhas',
+          title: 'Em uma aplicação completa, se uma tela precisa exibir um texto dinâmico vindo de uma variável com nome e contagem, qual combinação resolve isso com segurança?',
+          extraHtml: '',
+          options: [
+            'Template String (`...${...}`) + element.textContent',
+            'JSON.parse() + e.preventDefault() sem selecionar elemento nenhum',
+            'localStorage.clear() + push() direto no HTML',
+            'Node.js no terminal + innerHTML obrigatório para dados do usuário',
+          ],
+          correct: 0,
+          correctExplain: 'Template Strings montam a mensagem legível com ${...}, e textContent insere essa mensagem no elemento selecionado pelo DOM sem interpretar HTML perigoso.',
+          wrongReasons: {
+            1: '<strong>B está errada:</strong> sem selecionar elemento do DOM nem atribuir conteúdo, nada muda na tela.',
+            2: '<strong>C está errada:</strong> clear() apaga o storage e push() é método de array.',
+            3: '<strong>D está errada:</strong> innerHTML com dados do usuário traz risco de marcação indesejada; textContent é mais seguro.',
+          },
+        },
+        {
+          id: 'q18',
+          topic: 'Conexão & Pegadinhas',
+          title: 'O que acontece quando um código chama <code>document.querySelector(".card")</code> em uma página que possui 5 elementos com a classe <code>card</code>?',
+          extraHtml: '',
+          options: [
+            'Retorna um array com todos os 5 elementos.',
+            'Retorna apenas o primeiro elemento encontrado com a classe card.',
+            'Retorna null porque querySelector só aceita ID (#), nunca classe (.).',
+            'Apaga o conteúdo dos 5 elementos automaticamente.',
+          ],
+          correct: 1,
+          correctExplain: 'Como visto no capítulo 04, document.querySelector() encontra apenas o PRIMEIRO elemento que corresponde ao seletor (e aceita tanto # para ID quanto . para classe).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> querySelector() devolve apenas o primeiro elemento correspondente, não uma lista.',
+            2: '<strong>C está errada:</strong> querySelector() aceita # para ID e . para classe.',
+            3: '<strong>D está errada:</strong> ele apenas seleciona o elemento; nada é apagado sem alterar textContent ou innerHTML.',
+          },
+        },
+        {
+          id: 'q19',
+          topic: 'Conexão & Pegadinhas',
+          title: 'Analise o trecho: <code>const numeros = [10, 20, 30]; const dobro = numeros.map(function(n) { return n * 2; });</code>. Qual o valor de <code>numeros</code> e de <code>dobro</code> depois disso?',
+          extraHtml: '',
+          options: [
+            'numeros vira [20, 40, 60] e dobro fica undefined.',
+            'numeros continua [10, 20, 30] e dobro é um novo array [20, 40, 60].',
+            'numeros vira [10, 20, 30, 60] porque map adiciona no fim.',
+            'dobro vira [60] porque map funciona igual a filter.',
+          ],
+          correct: 1,
+          correctExplain: 'map() nunca altera o array original (numeros continua [10, 20, 30]); ele devolve um novo array com o mesmo tamanho contendo cada item transformado ([20, 40, 60]).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> map() não modifica numeros e sempre retorna um novo array.',
+            2: '<strong>C está errada:</strong> quem adiciona no fim do array é push().',
+            3: '<strong>D está errada:</strong> filter() seleciona itens por condição; map() transforma todos os itens mantendo a quantidade.',
+          },
+        },
+        {
+          id: 'q20',
+          topic: 'Conexão & Pegadinhas',
+          title: 'Em um sistema web completo (como uma plataforma de reservas), qual é o papel específico do <strong>Node.js</strong>, do <strong>JSON</strong> e do <strong>React</strong>?',
+          extraHtml: '',
+          options: [
+            'Node.js substitui o HTML; JSON estiliza os botões; React guarda senhas no navegador.',
+            'Node.js executa regras no servidor/back-end; JSON representa os dados trocados; React constrói a interface em componentes.',
+            'Os três fazem exatamente a mesma coisa e podem ser trocados entre si sem diferença.',
+            'React roda no servidor com V8; Node.js valida campos com trim(); JSON cria tags HTML com hífen.',
+          ],
+          correct: 1,
+          correctExplain: 'Cada tecnologia resolve uma necessidade específica: Node.js cuida do back-end/servidor em JS, JSON transporta dados em formato texto e React organiza a interface do usuário em componentes.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> misturou todos os papéis — CSS estiliza e localStorage é no navegador (e não serve para senhas).',
+            2: '<strong>C está errada:</strong> como destaca o capítulo 11, as tecnologias não se substituem automaticamente; cada uma tem seu papel.',
+            3: '<strong>D está errada:</strong> quem roda no servidor com V8 é o Node.js, e quem cria tags com hífen são os Web Components.',
+          },
+        },
+      ];
+
+      // Inicializa Labs + Motor compartilhado
+      arrReset();
+      testTypeMode('concat');
+      updateLabTyping();
+      lsGet();
+      loadJsonPreset('valid');
+
+      StudyGuide.init({
+        lang: 'js',
+        quizQuestions,
+        quizSubtitle: 'Sites Dinâmicos · Baseado no Guia Oficial',
+      });
+    </script>
+  </body>
+</html>
