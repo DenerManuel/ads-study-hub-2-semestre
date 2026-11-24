@@ -19,8 +19,8 @@
         </div>
         <h1>Estrutura de Dados Sem Mistério: Grafos, Listas, Árvores ABB e AVL</h1>
         <p>
-          Teoria explicada como para quem nunca viu ponteiros na vida, leitura linha a linha dos códigos em C dos
-          slides, 3 simuladores visuais e quiz comentado com 25 questões.
+          Guia direto para quem tem menos de 1 semana para a prova: explicação do zero (mesmo se você não entendeu nada na aula),
+          código em C traduzido para o português, pegadinhas clássicas, 3 simuladores visuais e 20 questões de fixação comentadas.
         </p>
       </div>
 
@@ -29,7 +29,7 @@
           <button class="tab-btn active" onclick="showTab('teoria', this)">📚 Teoria</button>
           <button class="tab-btn" onclick="showTab('exemplos', this)">💡 Exemplos &amp; Labs</button>
           <button class="tab-btn" onclick="showTab('resumo', this)">📋 Resumo</button>
-          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (25)</button>
+          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (20)</button>
         </nav>
       </div>
     </div>
@@ -58,31 +58,31 @@
         <!-- ========== SUB 1: GRAFOS (AULA 6) ========== -->
         <div id="t-grafos" class="subpanel active">
           <div class="card">
-            <h2>1. O que é um Grafo? A Ideia Mais Simples do Mundo</h2>
+            <h2>1. O que é um Grafo? (Pense em Cidades e Redes Sociais)</h2>
             <p>
-              Imagine um mapa do metrô, sua rede de amigos no Instagram ou cidades ligadas por estradas. Sempre existem
-              <strong>coisas</strong> (pontos) e <strong>ligações</strong> entre elas. Na computação, damos o nome de
-              <strong>Grafo</strong> a essa teia de conexões!
+              Esqueça a matemática pesada por 1 minuto. Um <strong>Grafo</strong> é só um desenho formado por
+              <strong>bolinhas</strong> (as coisas) ligadas por <strong>linhas ou setas</strong> (as conexões).
+              Mapa do metrô, amigos no WhatsApp, seguidores no Instagram e rotas de GPS são grafos!
             </p>
-            <p style="margin-top: 8px">
-              Matematicamente, escrevemos <code>G = (V, A)</code>:
-            </p>
-            <ul>
-              <li><strong>V (Vértices ou Nós):</strong> são as "bolinhas" — as entidades (pessoa, cidade, computador, site).</li>
-              <li><strong>A (Arestas):</strong> são os "tracinhos" ou "setas" que ligam pares de vértices.</li>
-            </ul>
+            <div class="flow-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))">
+              <div class="flow-step" style="background: var(--blue-soft); border-color: var(--blue); color: #0c3a68">
+                <span class="flow-num" style="background: var(--blue); color: #fff">V</span>
+                <span><strong>Vértices (Nós):</strong> as bolinhas (pessoas, cidades, servidores).</span>
+              </div>
+              <div class="flow-step" style="background: var(--green-soft); border-color: var(--green); color: var(--green-text)">
+                <span class="flow-num" style="background: var(--green); color: #fff">A</span>
+                <span><strong>Arestas:</strong> os tracinhos ou setas que ligam dois vértices.</span>
+              </div>
+            </div>
 
             <div class="diagram-wrap">
               <svg viewBox="0 0 640 210" width="580" aria-label="Exemplo de Grafo com laço">
-                <!-- Arestas -->
                 <line x1="90" y1="103" x2="220" y2="63" stroke="#1a6bb5" stroke-width="2.5" />
                 <line x1="90" y1="103" x2="180" y2="163" stroke="#1a6bb5" stroke-width="2.5" />
                 <line x1="220" y1="63" x2="180" y2="163" stroke="#1a6bb5" stroke-width="2.5" />
                 <line x1="220" y1="63" x2="310" y2="158" stroke="#1a6bb5" stroke-width="2.5" />
                 <line x1="180" y1="163" x2="310" y2="158" stroke="#1a6bb5" stroke-width="2.5" />
-                <!-- Laço no vértice 2 -->
                 <path d="M 212 46 C 195 8, 255 8, 232 48" fill="none" stroke="#e8a020" stroke-width="3" />
-                <!-- Nós -->
                 <circle cx="90" cy="103" r="20" fill="#1a6bb5" />
                 <text x="90" y="109" text-anchor="middle" fill="#fff" font-weight="bold" font-size="16">1</text>
 
@@ -95,7 +95,6 @@
                 <circle cx="310" cy="158" r="20" fill="#1a6bb5" />
                 <text x="310" y="164" text-anchor="middle" fill="#fff" font-weight="bold" font-size="16">4</text>
 
-                <!-- Anotações -->
                 <text x="268" y="38" fill="#6b4200" font-size="13" font-weight="bold">Laço no 2 (vale +2 no grau!)</text>
                 <text x="355" y="93" fill="#1c1a17" font-size="13">V = {1, 2, 3, 4}</text>
                 <text x="355" y="118" fill="#0d7a5f" font-size="13" font-weight="bold">grau(2) = 5 (3 linhas + 2 do laço)</text>
@@ -107,52 +106,50 @@
             <div class="box box-pegadinha">
               <div class="box-icon">⚠️</div>
               <div class="box-content">
-                <div class="box-label">Pegadinha clássica de prova: O Laço!</div>
+                <div class="box-label">Pegadinha nº 1 da Prova: O Laço conta +2!</div>
                 <p>
-                  Um <strong>laço</strong> é uma aresta que sai de um vértice e volta para ele mesmo (ex: uma página com
-                  link para ela própria). <strong>Em grafos NÃO direcionados, cada laço conta 2 no grau do vértice</strong>!
-                  Pense assim: o barbante tem duas pontas encostadas na mesma bolinha, então ele "toca" o vértice 2 vezes.
-                  No desenho acima, o vértice 2 tem 3 arestas normais + 1 laço = <code>3 + 2 = 5</code>!
+                  Um <strong>laço</strong> é uma linha que sai de uma bolinha e volta para ela mesma.
+                  Pense em uma corda com as <strong>duas pontas amarradas no mesmo poste</strong>: quantas pontas encostam no poste?
+                  <strong>Duas!</strong> Por isso, em grafos sem seta (não direcionados), cada laço soma <strong>+2</strong> no grau daquele vértice.
+                  No desenho acima, o nó <code>2</code> tem 3 linhas normais + 1 laço = <code>3 + 2 = 5</code>!
                 </p>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>2. Tipos de Grafos e Grau (Entrada × Saída)</h2>
+            <h2>2. Os 3 Tipos que Caem na Prova + Como Contar Setas</h2>
             <div class="grid-3">
               <div class="mini-card" style="border-top: 3px solid var(--blue)">
                 <h4 style="color: var(--blue)">🤝 Não Direcionado</h4>
                 <p>
-                  As ligações são "mão dupla", sem seta. Se <code>1</code> está ligado a <code>2</code>, então
-                  <code>2</code> também está ligado a <code>1</code>.<br />
-                  <em>Exemplo: amizade no Facebook.</em>
+                  <strong>Mão dupla (sem seta).</strong> Se 1 liga com 2, então 2 também liga com 1.<br />
+                  <em>Pense: amizade no Facebook.</em>
                 </p>
               </div>
               <div class="mini-card" style="border-top: 3px solid var(--purple)">
                 <h4 style="color: var(--purple)">➡️ Direcionado (Dígrafo)</h4>
                 <p>
-                  As ligações têm <strong>seta (direção)</strong>. Ir de A para B não garante volta de B para A.<br />
-                  <em>Exemplo: seguidores no Instagram (A segue B ≠ B segue A).</em>
+                  <strong>Mão única (com seta).</strong> A seta <code>A → B</code> só vale na ida, não garante volta.<br />
+                  <em>Pense: seguir no Instagram.</em>
                 </p>
               </div>
               <div class="mini-card" style="border-top: 3px solid var(--amber)">
-                <h4 style="color: var(--amber)">⚖️ Grafo Ponderado</h4>
+                <h4 style="color: var(--amber)">⚖️ Ponderado (Com Peso)</h4>
                 <p>
-                  Cada aresta carrega um <strong>número (peso)</strong>: distância em km, tempo, custo ou capacidade.<br />
-                  <em>Exemplo: mapa de rotas (GPS escolhe o caminho com menor soma de pesos).</em>
+                  Cada linha tem um <strong>número</strong> (km, tempo, custo).<br />
+                  <em>Pense: GPS escolhendo o caminho com menor soma de km, não com menos curvas!</em>
                 </p>
               </div>
             </div>
 
-            <h3>Como calcular Grau em Grafos × Dígrafos?</h3>
+            <h3>Macete para Dígrafo (Com Setas): Entrada × Saída</h3>
             <p>
-              Em um grafo comum (sem seta), só existe um número: o <strong>grau</strong> (quantas pontas de aresta encostam ali).
-              Já em um <strong>Dígrafo</strong> (com setas), separamos em dois:
+              Não confunda na hora da prova! Olhe sempre para a bolinha e conte:
             </p>
             <ul>
-              <li><strong>Grau de Entrada (in-degree):</strong> quantas setas <em>chegam</em> (apontam para dentro) no vértice.</li>
-              <li><strong>Grau de Saída (out-degree):</strong> quantas setas <em>saem</em> do vértice.</li>
+              <li><strong>Grau de Entrada:</strong> quantas <strong>pontas de seta chegam</strong> nela (apontam para dentro).</li>
+              <li><strong>Grau de Saída:</strong> quantos <strong>rabos de seta saem</strong> dela (apontam para fora).</li>
             </ul>
 
             <div class="diagram-wrap">
@@ -182,69 +179,50 @@
                 <text x="350" y="108" font-size="13" fill="#4a4740">C: ent = 1, sai = 1</text>
                 <text x="350" y="128" font-size="13" fill="#0d7a5f" font-weight="bold">D: ent = 2, sai = 0</text>
               </svg>
-              <div class="diagram-caption">Exemplo dos slides (Aula 6, slide 9): conferindo Entrada e Saída no dígrafo.</div>
+              <div class="diagram-caption">D só recebe setas (entrada = 2, saída = 0). A só envia (entrada = 0, saída = 1).</div>
             </div>
-          </div>
 
-          <div class="card">
-            <h2>3. Caminhos, Ciclos e Conectividade</h2>
-            <div class="grid-2">
+            <div class="grid-2" style="margin-top: 12px">
               <div class="mini-card">
-                <h4>🛤️ Caminho</h4>
-                <p>Sequência de vértices ligados por arestas, tipo um roteiro de viagem. Ex: <code>A → B → C</code>.</p>
-              </div>
-              <div class="mini-card">
-                <h4>🔁 Ciclo</h4>
-                <p>Um caminho que <strong>começa e termina no mesmo vértice</strong> (dá uma volta fechada). Ex: <code>A → B → C → A</code>.</p>
-              </div>
-              <div class="mini-card">
-                <h4>🔌 Conectividade</h4>
-                <p>Pergunta simples: "Existe algum caminho entre X e Y?" Se sim, eles estão conectados.</p>
+                <h4>🛤️ Caminho vs 🔁 Ciclo</h4>
+                <p>
+                  <strong>Caminho:</strong> sequência de passos de um ponto a outro (<code>A → B → D</code>).<br />
+                  <strong>Ciclo:</strong> caminho fechado que <strong>volta para onde começou</strong> (<code>A → B → C → A</code>).
+                </p>
               </div>
               <div class="mini-card">
                 <h4>🌐 Grafo Conexo</h4>
-                <p>Um grafo inteiro é <strong>conexo</strong> quando não há nenhuma "ilha isolada": você consegue ir de qualquer vértice até qualquer outro.</p>
+                <p>
+                  Sem "ilhas isoladas": saindo de qualquer bolinha, você consegue chegar em qualquer outra bolinha seguindo as linhas.
+                </p>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>4. Como o Computador Guarda um Grafo? (Matriz × Lista)</h2>
+            <h2>3. Como o Computador Guarda um Grafo? (Matriz × Lista)</h2>
             <p>
-              O computador não entende "bolinhas e tracinhos" desenhados na tela. Para programar algoritmos em grafos,
-              usamos duas representações clássicas:
+              Na prova, a professora pode te dar uma <strong>tabela de 0 e 1 (Matriz)</strong> ou uma <strong>Lista</strong> e pedir para você interpretar. Veja como ler em 5 segundos:
             </p>
 
             <div class="grid-2">
               <div class="mini-card" style="border-top: 3px solid var(--blue)">
-                <h4 style="color: var(--blue)">📊 Matriz de Adjacência (N × N)</h4>
+                <h4 style="color: var(--blue)">📊 Matriz de Adjacência (Tabela N × N)</h4>
                 <p>
-                  Uma tabela quadrada com <code>N</code> linhas e <code>N</code> colunas (<code>N</code> = número de vértices).<br />
-                  • Tem aresta de <code>i</code> para <code>j</code>? Coloca <strong>1</strong>.<br />
-                  • Não tem? Coloca <strong>0</strong>.<br />
-                  • Em grafo <strong>não direcionado</strong>, a matriz é um <strong>espelho (simétrica)</strong>!<br />
-                  • Laço aparece com <strong>1 na diagonal principal</strong> (ex: linha 4, coluna 4).
+                  • Leia assim: <strong>"Linha i vai para Coluna j?"</strong><br />
+                  • Se vale <code>1</code> = tem ligação. Se vale <code>0</code> = não tem.<br />
+                  • <strong>Regra do Espelho:</strong> se o grafo <em>não tem seta</em>, a matriz é simétrica (<code>M[1][2] == M[2][1]</code>).<br />
+                  • <strong>Onde fica o laço?</strong> Na diagonal principal (<code>M[4][4] = 1</code>)!<br />
+                  • <strong>Desvantagem:</strong> se há poucas arestas (grafo esparso), gasta memória à toa guardando um monte de zeros.
                 </p>
               </div>
               <div class="mini-card" style="border-top: 3px solid var(--green)">
-                <h4 style="color: var(--green)">📋 Lista de Adjacência</h4>
+                <h4 style="color: var(--green)">📋 Lista de Adjacência (Agenda de Contatos)</h4>
                 <p>
-                  Cada vértice tem uma pequena lista só com os vizinhos aos quais está ligado.<br />
-                  • Economiza muita memória quando há poucas arestas (grafos esparsos), pois não guarda vários <code>0</code>s à toa!<br />
-                  • No dígrafo, a seta <code>1 → 2</code> aparece só na lista do <code>1</code>. No não direcionado, aparece na do <code>1</code> e na do <code>2</code>.
-                </p>
-              </div>
-            </div>
-
-            <div class="box box-analogia">
-              <div class="box-icon">💡</div>
-              <div class="box-content">
-                <div class="box-label">Analogia infalível: Planilha vs Agenda</div>
-                <p>
-                  A <strong>Matriz de Adjacência</strong> é uma planilha gigante com todos os moradores da cidade nas linhas
-                  e colunas marcando "conhece = 1, não conhece = 0". É ótimo para checar instantaneamente se João conhece Maria,
-                  mas gasta muito espaço. A <strong>Lista de Adjacência</strong> é a agenda telefônica de cada pessoa: só anota
-                  quem ela realmente conhece!
+                  • Cada vértice tem uma listinha só com seus vizinhos reais.<br />
+                  • <strong>Exemplo:</strong> <code>1 → 2 → 4</code> significa "do 1 dá para ir para o 2 e para o 4".<br />
+                  • <strong>Vantagem gigante:</strong> economiza muita memória em grafos com poucas conexões (não guarda zeros!).<br />
+                  • No dígrafo: a seta <code>1 → 2</code> só entra na lista do <code>1</code>. Na mão dupla, entra na do <code>1</code> e na do <code>2</code>.
                 </p>
               </div>
             </div>
@@ -254,77 +232,100 @@
         <!-- ========== SUB 2: LISTA SIMPLES (AULA 7) ========== -->
         <div id="t-lsl" class="subpanel">
           <div class="card">
-            <h2>1. Por que não usar apenas Vetores?</h2>
+            <h2>1. O que é Lista Simples? (Esqueça os termos difíceis!)</h2>
             <p>
-              Um <strong>vetor (array)</strong> é como uma fileira de cadeiras numeradas e coladas no cinema: você acessa
-              a cadeira 50 instantaneamente (<code>O(1)</code>), mas se quiser enfiar alguém no meio ou a sala lotar, tem que
-              empurrar todo mundo ou mudar a turma toda de sala!
+              Um <strong>vetor (array)</strong> é como uma fileira de cadeiras coladas no cinema: você acha a cadeira 50 na hora,
+              mas se alguém quiser entrar no meio da fila, todo mundo precisa levantar e andar uma cadeira para o lado!
             </p>
             <p style="margin-top: 8px">
-              A <strong>Lista Simplesmente Encadeada (LSL)</strong> é como uma <strong>caça ao tesouro</strong>: cada pista
-              (<strong>nó</strong>) fica em qualquer lugar da memória, guarda um valor (<code>dado</code>) e o endereço
-              (<code>prox</code>) de onde está a próxima pista!
+              Já a <strong>Lista Simplesmente Encadeada (LSL)</strong> funciona como um <strong>trem de vagões</strong> (ou uma caça ao tesouro):
+              cada vagão (chamado de <strong>Nó</strong>) fica em qualquer lugar da memória e carrega apenas duas coisas:
+              <strong>o dado</strong> (ex: número <code>10</code>) e o <strong>endereço do próximo vagão</strong> (<code>prox</code>).
             </p>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 610 110" width="570" aria-label="Estrutura visual de Lista Simplesmente Encadeada">
+                <rect x="12" y="34" width="66" height="36" rx="8" fill="#1a6bb5" />
+                <text x="45" y="57" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">head</text>
+                <line x1="78" y1="52" x2="112" y2="52" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#arr)" />
+
+                <rect x="118" y="26" width="110" height="52" rx="8" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+                <line x1="173" y1="26" x2="173" y2="78" stroke="#1a6bb5" stroke-width="1.5" />
+                <text x="145" y="42" text-anchor="middle" fill="#4a4740" font-size="10">dado</text>
+                <text x="145" y="64" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="16">10</text>
+                <text x="200" y="42" text-anchor="middle" fill="#4a4740" font-size="10">prox</text>
+                <text x="200" y="64" text-anchor="middle" fill="#1a6bb5" font-weight="bold" font-size="12">→ 20</text>
+
+                <line x1="228" y1="52" x2="262" y2="52" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#arr)" />
+
+                <rect x="268" y="26" width="110" height="52" rx="8" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+                <line x1="323" y1="26" x2="323" y2="78" stroke="#1a6bb5" stroke-width="1.5" />
+                <text x="295" y="42" text-anchor="middle" fill="#4a4740" font-size="10">dado</text>
+                <text x="295" y="64" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="16">20</text>
+                <text x="350" y="42" text-anchor="middle" fill="#4a4740" font-size="10">prox</text>
+                <text x="350" y="64" text-anchor="middle" fill="#1a6bb5" font-weight="bold" font-size="12">→ 30</text>
+
+                <line x1="378" y1="52" x2="412" y2="52" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#arr)" />
+
+                <rect x="418" y="26" width="110" height="52" rx="8" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+                <line x1="473" y1="26" x2="473" y2="78" stroke="#1a6bb5" stroke-width="1.5" />
+                <text x="445" y="42" text-anchor="middle" fill="#4a4740" font-size="10">dado</text>
+                <text x="445" y="64" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="16">30</text>
+                <text x="500" y="42" text-anchor="middle" fill="#4a4740" font-size="10">prox</text>
+                <text x="500" y="64" text-anchor="middle" fill="#d64535" font-weight="bold" font-size="12">NULL</text>
+
+                <text x="305" y="102" text-anchor="middle" fill="#4a4740" font-size="12">
+                  head aponta para o 1º vagão. O último vagão sempre aponta para NULL ("acabou o trem!").
+                </text>
+              </svg>
+            </div>
 
             <div class="box box-conceito">
               <div class="box-icon">📌</div>
               <div class="box-content">
-                <div class="box-label">Regra de Ouro da LSL</div>
+                <div class="box-label">Tradutor de C para Humanos (Leia antes de ver qualquer código!)</div>
                 <p>
-                  • <code>head</code> <strong>NÃO é um nó</strong>! Ele é só uma variável ponteiro que guarda o endereço do 1º nó (ou <code>NULL</code> se a lista está vazia).<br />
-                  • O último nó da lista sempre aponta para <code>NULL</code> (sinal de "acabou a lista!").<br />
-                  • Não existe índice <code>lista[3]</code>! Para chegar no 4º item, você precisa caminhar a partir do <code>head</code>.
+                  Se você travava ao ver <code>*</code>, <code>**</code> e <code>-&gt;</code>, decore só estas 4 traduções:<br />
+                  1. <code>No* p</code> → "<strong><code>p</code> é um GPS</strong> que guarda o endereço de um vagão (não é o vagão!)."<br />
+                  2. <code>p-&gt;dado</code> → "Vá até o vagão onde <code>p</code> aponta e leia o <strong>número dentro dele</strong>."<br />
+                  3. <code>p = p-&gt;prox</code> → "Dê <strong>1 passo para frente</strong> no trem (<code>p</code> agora aponta para o próximo vagão)."<br />
+                  4. <code>No** headRef</code> → "Permissão para <strong>trocar quem é o 1º vagão lá no <code>main()</code></strong>". Se a função só lê ou imprime (ex: <code>busca</code>), usa só <code>No*</code>. Se pode mudar o começo da lista (inserir/remover no início ou destruir), precisa de <code>No**</code> (e dentro da função, <code>*headRef</code> significa "a placa <code>head</code> original")!
                 </p>
               </div>
             </div>
-          </div>
 
-          <div class="card">
-            <h2>2. Lendo o Código em C Sem Medo (Ponteiros, <code>-&gt;</code> e <code>No**</code>)</h2>
-            <p>
-              Na prova você precisa <strong>entender o que o código C faz</strong>. Guarde apenas 3 símbolos que resolvem 90% das questões:
-            </p>
-            <ul>
-              <li><code>No* p</code>: "<code>p</code> guarda um endereço de memória de um Nó".</li>
-              <li><code>p-&gt;dado</code>: "vá até o nó onde <code>p</code> aponta e pegue o campo <code>dado</code>" (a setinha substitui <code>(*p).dado</code>).</li>
-              <li><code>No** headRef</code>: "ponteiro para o ponteiro <code>head</code>". Usamos <code>No**</code> quando a função precisa <strong>mudar quem é o primeiro nó da lista</strong> lá no <code>main()</code> (ex: inserir ou remover no início). Dentro da função, <code>*headRef</code> significa "o <code>head</code> original"!</li>
-            </ul>
-
-            <h3>Estrutura do Nó e Criação Dinâmica</h3>
             <pre class="code-block"><code>typedef struct No {
-    int dado;          // Informação guardada no nó
-    struct No* prox;   // Endereço do próximo nó (ou NULL)
+    int dado;          // O valor guardado no vagão (ex: 10)
+    struct No* prox;   // O endereço do próximo vagão (ou NULL se for o último)
 } No;
 
 No* criaNo(int valor) {
-    No* novo = malloc(sizeof(No)); // Pede memória do tamanho de 1 Nó
-    if (novo == NULL) {            // Sempre checar se o malloc falhou!
-        perror("malloc falhou");
-        exit(EXIT_FAILURE);
-    }
-    novo->dado = valor;
-    novo->prox = NULL;             // Nasce solteiro (sem próximo)
+    No* novo = malloc(sizeof(No)); // Pede memória na RAM para 1 vagão novo
+    if (novo == NULL) { perror("malloc falhou"); exit(EXIT_FAILURE); }
+    novo->dado = valor;            // Coloca o valor dentro do vagão
+    novo->prox = NULL;             // Nasce desconectado (aponta para nada)
     return novo;
 }</code></pre>
           </div>
 
           <div class="card">
-            <h2>3. Inserções na LSL (Início, Fim, Posição e Ordenada)</h2>
+            <h2>2. As 3 Inserções na LSL (Código C Traduzido)</h2>
 
-            <h3>A) Inserir no Início — <code>O(1)</code></h3>
+            <h3>A) Inserir no Início — <code>O(1)</code> (Instantâneo!)</h3>
             <pre class="code-block"><code>void insereInicio(No** headRef, int valor) {
     No* novo = criaNo(valor);
-    novo->prox = *headRef; // 1º: o novo aponta para o antigo primeiro
-    *headRef = novo;       // 2º: o head passa a apontar para o novo
+    novo->prox = *headRef; // PASSO 1: novo vagão segura o antigo 1º vagão!
+    *headRef = novo;       // PASSO 2: placa "head" passa a apontar para o novo!
 }</code></pre>
             <div class="box box-pegadinha">
               <div class="box-icon">⚠️</div>
               <div class="box-content">
-                <div class="box-label">Pegadinha da ordem das linhas!</div>
+                <div class="box-label">Pegadinha Clássica de Prova: Inverter essas 2 linhas!</div>
                 <p>
-                  E se você inverter e fizer <code>*headRef = novo;</code> antes? Você <strong>perde para sempre a referência</strong>
-                  do restante da lista (vira vazamento de memória e <code>novo->prox</code> aponta para si mesmo!). Lembre do lema:
-                  <strong>"Primeiro segura a frente, depois solta atrás"</strong>.
+                  Se o programador fizer <code>*headRef = novo;</code> <strong>ANTES</strong> de <code>novo-&gt;prox = *headRef;</code>:<br />
+                  1. O endereço do antigo 1º vagão é <strong>apagado para sempre</strong> (todo o resto do trem se perde na memória → vazamento de memória!).<br />
+                  2. Na linha seguinte, <code>novo-&gt;prox</code> recebe <code>*headRef</code>, que agora é o próprio <code>novo</code>! Ou seja, o vagão fica apontando para <strong>ele mesmo</strong> (loop infinito!).<br />
+                  <strong>Regra:</strong> <em>"Primeiro segura o trem na mão do novo; só depois muda a placa head!"</em>
                 </p>
               </div>
             </div>
@@ -332,94 +333,70 @@ No* criaNo(int valor) {
             <h3>B) Inserir no Fim — <code>O(n)</code></h3>
             <pre class="code-block"><code>void insereFim(No** headRef, int valor) {
     No* novo = criaNo(valor);
-    if (*headRef == NULL) {    // Caso 1: lista vazia -> novo vira o 1º!
+    if (*headRef == NULL) {     // Se o trem está vazio, o novo já é o 1º vagão!
         *headRef = novo;
         return;
     }
-    No* aux = *headRef;        // Caso 2: começa no head e anda...
-    while (aux->prox != NULL) { // ...até o ÚLTIMO nó (cujo prox é NULL)
-        aux = aux->prox;
-    }
-    aux->prox = novo;          // Último nó passa a apontar para o novo
+    No* aux = *headRef;         // Cria um inspetor "aux" começando no 1º vagão
+    while (aux->prox != NULL) { // Enquanto existir um vagão depois de aux...
+        aux = aux->prox;        // ...dá 1 passo para frente!
+    }                           // Quando o while acaba, aux está exatamente no ÚLTIMO vagão!
+    aux->prox = novo;           // Engata o novo vagão atrás do último!
 }</code></pre>
-            <p>
-              <em>Por que custa <code>O(n)</code>?</em> Porque em lista simples sem ponteiro de cauda (<code>tail</code>),
-              temos que caminhar nó por nó até achar quem tem <code>prox == NULL</code>.
-            </p>
 
-            <h3>C) Inserir em Posição Específica e Inserção Ordenada</h3>
-            <pre class="code-block"><code>// Inserção Ordenada (lista crescente) — O(n)
-void insereOrdenado(No** headRef, int valor) {
+            <h3>C) Inserção Ordenada (mantém crescente) — <code>O(n)</code></h3>
+            <pre class="code-block"><code>void insereOrdenado(No** headRef, int valor) {
     No* novo = criaNo(valor);
+    // Se lista vazia OU valor é menor que o 1º, entra logo no começo!
     if (*headRef == NULL || valor &lt; (*headRef)->dado) {
-        novo->prox = *headRef; // Entra logo no começo
+        novo->prox = *headRef;
         *headRef = novo;
         return;
     }
     No* aux = *headRef;
+    // Tradução: "enquanto houver próximo E o dado do próximo ainda for menor que valor..."
     while (aux->prox != NULL && aux->prox->dado &lt; valor) {
-        aux = aux->prox; // Para ANTES do primeiro nó maior ou igual a valor
+        aux = aux->prox; // ...ande! Para UM PASSO ANTES de onde deve encaixar.
     }
-    novo->prox = aux->prox; // Primeiro preserva a frente!
-    aux->prox = novo;       // Depois encaixa atrás!
+    novo->prox = aux->prox; // 1º: novo segura quem estava na frente
+    aux->prox = novo;       // 2º: aux aponta para o novo
 }</code></pre>
+            <div class="box box-dica">
+              <div class="box-icon">🧠</div>
+              <div class="box-content">
+                <div class="box-label">Por que o while checa <code>aux-&gt;prox-&gt;dado &lt; valor</code> (e não <code>aux-&gt;dado</code>)?</div>
+                <p>
+                  Porque na LSL <strong>não dá para dar ré</strong>! Se <code>aux</code> já pisasse no nó maior que <code>valor</code>, você não teria como voltar para mudar o ponteiro do nó anterior. Olhando para o <em>próximo</em> (<code>aux-&gt;prox-&gt;dado</code>), <code>aux</code> para exatamente <strong>atrás da vaga</strong> onde o novo nó entra!
+                </p>
+              </div>
+            </div>
           </div>
 
           <div class="card">
-            <h2>4. Busca, Impressão, Remoções e Destruição (<code>free</code>)</h2>
-
-            <div class="grid-2">
-              <div class="mini-card">
-                <h4>🔍 Busca e Impressão — <code>O(n)</code></h4>
-                <pre class="code-block"><code>No* busca(No* head, int valor) {
-    No* aux = head;
-    while (aux != NULL) {
-        if (aux->dado == valor) return aux;
-        aux = aux->prox;
-    }
-    return NULL; // Não encontrou
-}</code></pre>
-                <p>Note que <code>busca</code> e <code>imprime(const No* head)</code> usam só <code>No*</code> (1 asterisco), porque não mudam quem é o <code>head</code>!</p>
-              </div>
-
-              <div class="mini-card">
-                <h4>🧹 Destruição (Evitar Memory Leak!)</h4>
-                <pre class="code-block"><code>void destroi(No** headRef) {
-    No* atual = *headRef;
-    while (atual != NULL) {
-        No* proximo = atual->prox; // Salva antes!
-        free(atual);
-        atual = proximo;
-    }
-    *headRef = NULL; // Lista volta a ficar vazia
-}</code></pre>
-                <p>Se der <code>free(atual)</code> antes de salvar <code>atual->prox</code>, ocorre o erro grave <strong>use-after-free</strong>!</p>
-              </div>
-            </div>
-
-            <h3>As 3 Remoções da LSL (Leia com atenção!)</h3>
+            <h2>3. Remoções e Destruição (Onde Mais Tem Pegadinha de Código!)</h2>
             <pre class="code-block"><code>// 1. Remover do Início — O(1)
 void removeInicio(No** headRef) {
-    if (*headRef == NULL) return;   // Lista vazia
-    No* temp = *headRef;            // Guarda para dar free depois
-    *headRef = (*headRef)->prox;    // Head pula para o 2º nó
-    free(temp);
+    if (*headRef == NULL) return;   // Lista vazia? Não faz nada.
+    No* temp = *headRef;            // Anota o endereço do 1º para poder dar free() depois
+    *headRef = (*headRef)->prox;    // Placa head pula direto para o 2º vagão
+    free(temp);                     // Libera o antigo 1º vagão da memória
 }
 
 // 2. Remover do Fim — O(n)
 void removeFim(No** headRef) {
     if (*headRef == NULL) return;
-    if ((*headRef)->prox == NULL) { // Caso especial: só 1 nó!
+    if ((*headRef)->prox == NULL) { // Caso especial: só tem 1 vagão!
         free(*headRef);
-        *headRef = NULL;
+        *headRef = NULL;            // Lista ficou vazia
         return;
     }
     No* aux = *headRef;
-    while (aux->prox->prox != NULL) { // PARA NO PENÚLTIMO!
-        aux = aux->prox;
+    // Tradução: "enquanto o vagão DA FRENTE ainda não for o último..."
+    while (aux->prox->prox != NULL) {
+        aux = aux->prox;            // PARA NO PENÚLTIMO VAGÃO!
     }
-    free(aux->prox);                // Libera o último
-    aux->prox = NULL;               // Penúltimo vira o novo último
+    free(aux->prox);                // Apaga o último vagão
+    aux->prox = NULL;               // O penúltimo agora fecha o trem com NULL!
 }
 
 // 3. Remover por Valor — O(n)
@@ -428,23 +405,33 @@ void removeValor(No** headRef, int valor) {
     if ((*headRef)->dado == valor) { removeInicio(headRef); return; }
     No* aux = *headRef;
     while (aux->prox != NULL && aux->prox->dado != valor) {
-        aux = aux->prox; // Para no nó ANTERIOR ao alvo
+        aux = aux->prox;            // Para um passo ANTES do vagão que queremos apagar
     }
-    if (aux->prox == NULL) return;  // Valor não encontrado
-    No* temp = aux->prox;           // Nó a remover
-    aux->prox = temp->prox;         // "Pula" o nó removido
+    if (aux->prox == NULL) return;  // Chegou ao fim e não achou o valor
+    No* temp = aux->prox;           // temp é o vagão que vai morrer
+    aux->prox = temp->prox;         // O anterior "pula" temp e aponta para o próximo dele
     free(temp);
 }</code></pre>
 
-            <div class="box box-dica">
-              <div class="box-icon">🧠</div>
-              <div class="box-content">
-                <div class="box-label">Por que <code>removeFim</code> usa <code>aux-&gt;prox-&gt;prox != NULL</code>?</div>
-                <p>
-                  Porque na LSL só olhamos para frente! Se você parar no último nó e der <code>free</code> nele, o nó
-                  anterior fica apontando para um endereço fantasma (lixo). Parando no <strong>penúltimo</strong>, você
-                  apaga o próximo (<code>free(aux-&gt;prox)</code>) e fecha a lista com <code>aux-&gt;prox = NULL;</code>!
-                </p>
+            <h3>Destruir a Lista Sem Cair no Erro "Use-After-Free"</h3>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--error)">
+                <h4 style="color: var(--error)">❌ JEITO ERRADO (Cai na Prova!)</h4>
+                <pre class="code-block"><code>while (atual != NULL) {
+    free(atual);
+    atual = atual->prox; // ERRO!
+}</code></pre>
+                <p>Você demoliu a casa (<code>free</code>) e depois tentou entrar nela para ler onde fica a próxima (<code>atual-&gt;prox</code>). Isso é <strong>use-after-free</strong>!</p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">✅ JEITO CERTO</h4>
+                <pre class="code-block"><code>while (atual != NULL) {
+    No* proximo = atual->prox; // Salva ANTES!
+    free(atual);
+    atual = proximo;
+}
+*headRef = NULL;</code></pre>
+                <p>Anota o endereço do próximo vagão num papel (<code>proximo</code>), só então apaga o atual, e no fim zera <code>*headRef</code>.</p>
               </div>
             </div>
           </div>
@@ -453,71 +440,59 @@ void removeValor(No** headRef, int valor) {
         <!-- ========== SUB 3: LISTA DUPLA (AULA 8) ========== -->
         <div id="t-lde" class="subpanel">
           <div class="card">
-            <h2>1. Lista Duplamente Encadeada (LDE / LDL): Mão Dupla!</h2>
+            <h2>1. Lista Dupla (LDE): Agora o Trem Tem Ré e Painel de Controle!</h2>
             <p>
-              Na Lista Simples, você só anda para frente — é como um trem onde cada vagão só sabe qual é o vagão de trás,
-              nunca o da frente. Na <strong>Lista Duplamente Encadeada</strong>, cada nó tem <strong>dois ponteiros</strong>:
-              <code>ant</code> (anterior) e <code>prox</code> (próximo). Agora dá para ir e voltar!
+              Na Lista Simples, você só andava para frente — por isso remover no fim dava trabalho (<code>O(n)</code>).
+              Na <strong>Lista Duplamente Encadeada (LDE)</strong>, fazemos duas melhorias gigantes:
             </p>
-            <p style="margin-top: 8px">
-              Além disso, nos slides da Aula 8 usamos uma <code>struct Lista</code> (um "painel de controle") que guarda
-              os dois extremos (<code>ini</code> e <code>fim</code>) e o contador <code>n</code>!
-            </p>
+            <ul>
+              <li>Cada vagão ganha <strong>dois ponteiros</strong>: <code>ant</code> (olha para trás) e <code>prox</code> (olha para frente).</li>
+              <li>Criamos uma caixinha de controle chamada <code>Lista</code> que guarda direto o primeiro (<code>ini</code>), o último (<code>fim</code>) e o total de nós (<code>n</code>).</li>
+            </ul>
 
             <div class="grid-2">
               <div class="mini-card">
-                <h4>🧱 Estrutura do Nó</h4>
+                <h4>🧱 Vagão Duplo (<code>No</code>)</h4>
                 <pre class="code-block"><code>typedef struct No {
     int dado;
-    struct No* ant;  // ponteiro p/ anterior
-    struct No* prox; // ponteiro p/ próximo
+    struct No* ant;  // aponta para trás
+    struct No* prox; // aponta para frente
 } No;</code></pre>
-                <p>Primeiro nó tem <code>ant = NULL</code>. Último nó tem <code>prox = NULL</code>.</p>
+                <p>1º nó tem <code>ant == NULL</code>. Último nó tem <code>prox == NULL</code>.</p>
               </div>
               <div class="mini-card">
-                <h4>🎛️ Estrutura Descritora da Lista</h4>
+                <h4>🎛️ Painel de Controle (<code>Lista</code>)</h4>
                 <pre class="code-block"><code>typedef struct {
-    No* ini; // primeiro elemento
-    No* fim; // último elemento
+    No* ini; // endereço do 1º nó
+    No* fim; // endereço do último nó
     int n;   // quantidade de nós
 } Lista;</code></pre>
-                <p>Com <code>fim</code> guardado, inserir e remover no final também viram <code>O(1)</code>!</p>
+                <p>Como <code>fim</code> está sempre à mão, inserir ou remover no final vira <code>O(1)</code>!</p>
               </div>
             </div>
 
             <div class="box box-analogia">
               <div class="box-icon">🎵</div>
               <div class="box-content">
-                <div class="box-label">Aplicações Reais que Caem na Prova</div>
+                <div class="box-label">Onde isso existe na vida real? (Questão clássica!)</div>
                 <p>
-                  • <strong>Botões Desfazer / Refazer (Ctrl+Z / Ctrl+Y)</strong> em editores de texto.<br />
-                  • <strong>Histórico do navegador</strong> (botões Voltar e Avançar).<br />
-                  • <strong>Playlists de música</strong> (próxima faixa / faixa anterior).<br />
-                  • <strong>LRU Cache</strong> (cache dos itens menos recentemente usados).
+                  • <strong>Ctrl+Z / Ctrl+Y</strong> (Desfazer e Refazer) · <strong>Voltar / Avançar</strong> no navegador · <strong>Playlist</strong> (faixa anterior / próxima) · <strong>LRU Cache</strong>.
                 </p>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>2. Criação, Inserção no Início e Inserção no Fim</h2>
-            <pre class="code-block"><code>Lista* criaLista() {
-    Lista* L = malloc(sizeof(Lista));
-    if (L == NULL) { perror("Falha ao criar lista"); exit(EXIT_FAILURE); }
-    L->ini = L->fim = NULL;
-    L->n = 0;
-    return L;
-}
-
-void insereInicio(Lista* L, int valor) {
+            <h2>2. Inserções e Remoções na LDE (Foco nos Casos Especiais!)</h2>
+            <pre class="code-block"><code>void insereInicio(Lista* L, int valor) {
     No* novo = malloc(sizeof(No));
     novo->dado = valor;
-    novo->ant = NULL;
-    novo->prox = L->ini;      // Aponta para o antigo primeiro
-    if (L->ini != NULL)       // Se a lista NÃO estava vazia...
-        L->ini->ant = novo;   // ...o antigo primeiro aponta de volta p/ novo!
-    else
-        L->fim = novo;        // Se estava vazia, fim também é o novo!
+    novo->ant = NULL;         // Vai ser o 1º, então não há ninguém antes dele
+    novo->prox = L->ini;      // Aponta para o antigo 1º
+    if (L->ini != NULL)       // Se a lista JÁ tinha alguém...
+        L->ini->ant = novo;   // ...o antigo 1º aponta de volta para o novo!
+    else                      // Se a lista ESTAVA VAZIA...
+        L->fim = novo;        // ...o novo também é o último (ini e fim são ele)!
     L->ini = novo;
     L->n++;
 }
@@ -525,12 +500,12 @@ void insereInicio(Lista* L, int valor) {
 void insereFim(Lista* L, int valor) {
     No* novo = malloc(sizeof(No));
     novo->dado = valor;
-    novo->prox = NULL;
+    novo->prox = NULL;        // Vai ser o último, então não há ninguém depois dele
     novo->ant = L->fim;       // Aponta para trás (antigo último)
-    if (L->fim != NULL)       // Se a lista NÃO estava vazia...
-        L->fim->prox = novo;  // ...antigo último aponta p/ frente (novo)!
-    else
-        L->ini = novo;        // Se estava vazia, ini também é o novo!
+    if (L->fim != NULL)       // Se a lista JÁ tinha alguém...
+        L->fim->prox = novo;  // ...o antigo último aponta para frente (novo)!
+    else                      // Se a lista ESTAVA VAZIA...
+        L->ini = novo;        // ...o novo também é o primeiro (ini e fim são ele)!
     L->fim = novo;
     L->n++;
 }</code></pre>
@@ -538,75 +513,28 @@ void insereFim(Lista* L, int valor) {
             <div class="box box-pegadinha">
               <div class="box-icon">⚠️</div>
               <div class="box-content">
-                <div class="box-label">Atenção aos 4 erros mais comuns em LDE!</div>
-                <ul>
-                  <li><strong>Esquecer de atualizar os dois ponteiros</strong> (<code>ant</code> e <code>prox</code>) — o caminho de ida funciona e o de volta quebra!</li>
-                  <li><strong>Esquecer o caso de lista vazia / nó único</strong>: ao inserir o 1º nó, <code>ini</code> e <code>fim</code> devem apontar para ele; ao remover o último restante, ambos devem virar <code>NULL</code>.</li>
-                  <li><strong>Não inicializar</strong> a lista (<code>ini = fim = NULL, n = 0</code>) ou acessar memória já liberada.</li>
-                  <li><strong>Esquecer de atualizar <code>L-&gt;n</code></strong> (<code>n++</code> ao inserir, <code>n--</code> ao remover).</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>3. Casos Especiais, Complexidade e Comparação Geral</h2>
-            <div class="grid-2">
-              <div class="mini-card">
-                <h4>✂️ Remoção no Início × Fim</h4>
-                <p>
-                  • <strong>Remoção no início:</strong> <code>ini = ini-&gt;prox;</code> (se ainda houver nó, o novo <code>ini-&gt;ant = NULL</code>; se ficou vazia, <code>fim = NULL</code>).<br />
-                  • <strong>Remoção no fim:</strong> <code>fim = fim-&gt;ant;</code> (se ainda houver nó, o novo <code>fim-&gt;prox = NULL</code>; se ficou vazia, <code>ini = NULL</code>).<br />
-                  • <strong>Nó conhecido no meio:</strong> tendo o ponteiro <code>p</code> do nó, basta fazer <code>p-&gt;ant-&gt;prox = p-&gt;prox</code> e <code>p-&gt;prox-&gt;ant = p-&gt;ant</code> em <code>O(1)</code>!
-                </p>
-              </div>
-              <div class="mini-card">
-                <h4>⚖️ Vantagens × Desvantagens</h4>
-                <p>
-                  <strong>Vantagens:</strong> percorre nos dois sentidos; inserções/remoções nos extremos em <code>O(1)</code>; facilita remover nó no meio.<br />
-                  <strong>Desvantagens:</strong> gasta mais memória (2 ponteiros por nó em vez de 1) e exige mais cuidado na atualização dos ponteiros.
-                </p>
+                <div class="box-label">Os 3 Bugs de LDE que Mais Caem na Prova!</div>
+                <ol>
+                  <li><strong>Lista vazia recebendo o 1º nó:</strong> tanto <code>L-&gt;ini</code> quanto <code>L-&gt;fim</code> precisam apontar para <code>novo</code>! Se esquecer o <code>else</code>, o outro ponteiro continua <code>NULL</code>.</li>
+                  <li><strong>Lista com 1 único nó sendo removida:</strong> quando removemos o último sobrevivente (<code>L-&gt;ini == L-&gt;fim</code>), a lista fica vazia → <strong>AMBOS</strong> <code>L-&gt;ini</code> e <code>L-&gt;fim</code> devem virar <code>NULL</code>! Se só atualizar um deles, o outro fica apontando para memória já liberada com <code>free()</code>!</li>
+                  <li><strong>Esquecer de religar a volta (<code>ant</code>):</strong> ida funciona, volta quebra. E nunca esqueça <code>L-&gt;n++</code> / <code>L-&gt;n--</code>.</li>
+                </ol>
               </div>
             </div>
 
-            <div class="table-scroll">
-              <table class="resumo-table">
-                <thead>
-                  <tr>
-                    <th>Estrutura</th>
-                    <th>Direção</th>
-                    <th>Memória</th>
-                    <th>Inserção (extremo)</th>
-                    <th>Busca</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Vetor</strong></td>
-                    <td>Unidirecional</td>
-                    <td>Contígua</td>
-                    <td><code>O(n)</code> (desloca itens)</td>
-                    <td><code>O(1)</code> (por índice)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Lista Simples (LSL)</strong></td>
-                    <td>Unidirecional (<code>prox</code>)</td>
-                    <td>Dinâmica</td>
-                    <td><code>O(1)</code> no início / <code>O(n)</code> no fim*</td>
-                    <td><code>O(n)</code></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Lista Dupla (LDE)</strong></td>
-                    <td>Bidirecional (<code>ant</code>, <code>prox</code>)</td>
-                    <td>Dinâmica</td>
-                    <td><code>O(1)</code> início e fim (com <code>ini/fim</code>)</td>
-                    <td><code>O(n)</code></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p style="font-size: 13px; color: var(--text3)">
-              *Na LSL sem ponteiro para cauda, inserir/remover no fim custa <code>O(n)</code>. Na LDE com <code>ini</code> e <code>fim</code>, ambos custam <code>O(1)</code>!
+            <h3>Remoção no Meio Tendo o Ponteiro <code>p</code> — <code>O(1)</code>!</h3>
+            <p>
+              Imagine que você já tem o ponteiro <code>p</code> apontando exatamente para o vagão que quer tirar do meio da LDE.
+              Como <code>p</code> conhece o vizinho de trás (<code>p-&gt;ant</code>) e o da frente (<code>p-&gt;prox</code>), você só faz os dois vizinhos se darem as mãos:
+            </p>
+            <pre class="code-block"><code>// Para remover p (estando no meio, entre dois nós):
+p->ant->prox = p->prox; // O vizinho de trás pula p e aponta para o da frente
+p->prox->ant = p->ant;  // O vizinho da frente pula p e aponta para o de trás
+free(p);
+L->n--;</code></pre>
+            <p>
+              <strong>Resumo honesto para prova:</strong> LDE é mais rápida nos extremos (<code>O(1)</code> no início e no fim) e remove nó conhecido do meio em <code>O(1)</code>,
+              mas a <strong>busca por valor</strong> continua <code>O(n)</code> e ela <strong>gasta mais memória</strong> (2 ponteiros por nó em vez de 1).
             </p>
           </div>
         </div>
@@ -614,71 +542,55 @@ void insereFim(Lista* L, int valor) {
         <!-- ========== SUB 4: ÁRVORES & ABB (AULA 9) ========== -->
         <div id="t-abb" class="subpanel">
           <div class="card">
-            <h2>1. O que é uma Árvore? (De Cabeça para Baixo!)</h2>
+            <h2>1. Árvore em 1 Minuto (De Cabeça para Baixo!)</h2>
             <p>
-              Listas, Pilhas e Filas são estruturas <strong>lineares</strong> (um item atrás do outro, tipo fila do pão).
-              Já uma <strong>Árvore</strong> é uma estrutura <strong>não linear</strong> usada para mostrar <strong>hierarquia</strong>:
-              pastas dentro de pastas no Windows, organograma de uma empresa (CEO → Gerentes → Funcionários) ou árvore genealógica.
-            </p>
-            <p style="margin-top: 8px">
-              Na computação, as árvores crescem <strong>de cima para baixo</strong>: a <strong>Raiz</strong> fica no topo e as
-              <strong>Folhas</strong> ficam lá embaixo!
+              Listas são uma fila reta. <strong>Árvores</strong> servem para representar <strong>hierarquia</strong> (pastas do computador, chefes e funcionários).
+              Na computação, desenhamos a árvore de ponta-cabeça: a <strong>Raiz</strong> fica lá em cima e as <strong>Folhas</strong> ficam embaixo!
             </p>
 
             <div class="grid-2">
               <div class="mini-card">
-                <h4>📖 Vocabulário Essencial</h4>
+                <h4>📖 Dicionário Rápido</h4>
                 <ul>
-                  <li><strong>Raiz:</strong> o nó do topo (único nó que não tem pai). Fica no <strong>Nível 0</strong>.</li>
-                  <li><strong>Pai / Filho:</strong> ligação direta de cima (pai) para baixo (filho).</li>
-                  <li><strong>Folha (terminal):</strong> nó que <strong>não tem filhos</strong> (grau 0).</li>
-                  <li><strong>Subárvore:</strong> qualquer filho junto com tudo o que está abaixo dele.</li>
-                  <li><strong>Grau de um nó:</strong> quantos filhos ele tem. <strong>Grau da árvore:</strong> o maior grau entre os nós.</li>
+                  <li><strong>Raiz:</strong> nó do topo (único sem pai). Fica no <strong>Nível 0</strong>.</li>
+                  <li><strong>Folha:</strong> nó lá embaixo que <strong>não tem nenhum filho</strong> (grau 0).</li>
+                  <li><strong>Grau do nó:</strong> quantos filhos ele tem (em árvore binária, no máximo 2: <code>esq</code> e <code>dir</code>).</li>
+                  <li><strong>Acíclica e Conexa:</strong> não pode formar círculo fechado e todo nó (exceto a raiz) tem exatamente 1 pai.</li>
                 </ul>
               </div>
               <div class="mini-card">
-                <h4>📏 Propriedades Obrigatórias</h4>
+                <h4>⚠️ Pegadinha de Definição (Slide 17)</h4>
                 <ul>
-                  <li><strong>Conexo:</strong> existe um único caminho entre quaisquer dois nós.</li>
-                  <li><strong>Acíclico:</strong> NÃO tem ciclos (não dá para andar e voltar a um nó já visitado).</li>
-                  <li><strong>Hierárquico:</strong> todo nó (exceto a raiz) tem <strong>exatamente 1 pai</strong>.</li>
-                  <li><strong>Nível:</strong> distância em arestas até a raiz (Raiz = nível 0; filhos da raiz = nível 1...).</li>
+                  <li><strong>Estritamente Binária:</strong> todo nó tem <strong>0 ou 2 filhos</strong> (é proibido ter apenas 1 filho!).</li>
+                  <li><strong>Binária Completa:</strong> todas as folhas estão exatamente no <strong>mesmo nível</strong> (último andar todo preenchido).</li>
+                  <li><strong>Quase Completa:</strong> diferença de altura entre subárvores é no máximo <code>1</code>.</li>
                 </ul>
-              </div>
-            </div>
-
-            <h3>Tipos de Árvore Binária (No máximo 2 filhos: Esq e Dir)</h3>
-            <div class="grid-3">
-              <div class="mini-card" style="border-top: 3px solid var(--blue)">
-                <h4>Estritamente Binária</h4>
-                <p>Cada nó tem <strong>0 ou 2 filhos</strong> (nunca apenas 1 filho!).</p>
-              </div>
-              <div class="mini-card" style="border-top: 3px solid var(--green)">
-                <h4>Binária Completa</h4>
-                <p>Todos os nós folha estão exatamente no <strong>mesmo nível</strong> (cheia até o último andar).</p>
-              </div>
-              <div class="mini-card" style="border-top: 3px solid var(--purple)">
-                <h4>Quase Completa</h4>
-                <p>A diferença de altura entre as subárvores é no máximo <strong>1</strong> (<code>≤ 1</code>).</p>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>2. Os 3 Percursos Clássicos (Cai Demais na Prova!)</h2>
+            <h2>2. Os 3 Percursos Clássicos (Certo na Prova!)</h2>
             <p>
-              Para ler todos os nós de uma árvore binária, usamos 3 ordens diferentes. O segredo para nunca mais errar
-              é olhar para a posição da palavra <strong>R (Raiz)</strong> na sigla:
+              Como imprimir todos os nós da árvore? Basta olhar onde está a letra <strong>R (Raiz)</strong> na sigla:
             </p>
-            <ul>
-              <li><strong>Pré-ordem (R-E-D):</strong> visita a <strong>Raiz primeiro</strong>, depois Esquerda, depois Direita. <em>(Bom para imprimir o formato/clonar a árvore).</em></li>
-              <li><strong>In-ordem / Em-ordem (E-R-D):</strong> visita a Esquerda, depois a <strong>Raiz no meio</strong>, depois Direita. <em>(Em uma ABB, imprime todos os números em <strong>ordem crescente</strong>!).</em></li>
-              <li><strong>Pós-ordem (E-D-R):</strong> visita Esquerda, depois Direita, e a <strong>Raiz por último</strong>. <em>(Ideal para <code>free</code>/liberar memória: apaga os filhos antes de apagar o pai!).</em></li>
-            </ul>
+            <div class="grid-3">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">Pré-ordem: <u>R</u> - E - D</h4>
+                <p>Imprime a <strong>Raiz primeiro</strong>, depois vai tudo à esquerda, depois à direita.<br /><em>Uso: mostrar estrutura / clonar árvore.</em></p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">In-ordem: E - <u>R</u> - D</h4>
+                <p>Vai tudo à esquerda, imprime a <strong>Raiz no meio</strong>, depois à direita.<br /><em><strong>Mágica na ABB:</strong> sai sempre em <strong>ordem crescente</strong>!</em></p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--purple)">
+                <h4 style="color: var(--purple)">Pós-ordem: E - D - <u>R</u></h4>
+                <p>Esquerda, Direita, e a <strong>Raiz por último</strong>.<br /><em><strong>Uso de prova:</strong> ideal para dar <code>free()</code> (apaga os filhos antes de apagar o pai!).</em></p>
+              </div>
+            </div>
 
             <div class="diagram-wrap">
               <svg viewBox="0 0 600 225" width="555" aria-label="Exemplo de árvore para percursos RED, ERD e EDR">
-                <!-- Arestas -->
                 <line x1="200" y1="35" x2="115" y2="85" stroke="#1a6bb5" stroke-width="2" />
                 <line x1="200" y1="35" x2="295" y2="85" stroke="#1a6bb5" stroke-width="2" />
                 <line x1="115" y1="85" x2="65" y2="140" stroke="#1a6bb5" stroke-width="2" />
@@ -688,7 +600,6 @@ void insereFim(Lista* L, int valor) {
                 <line x1="295" y1="85" x2="345" y2="140" stroke="#1a6bb5" stroke-width="2" />
                 <line x1="345" y1="140" x2="305" y2="195" stroke="#1a6bb5" stroke-width="2" />
 
-                <!-- Nós -->
                 <g font-weight="bold" font-size="14" text-anchor="middle">
                   <circle cx="200" cy="35" r="16" fill="#1a6bb5" /><text x="200" y="40" fill="#fff">F</text>
                   <circle cx="115" cy="85" r="16" fill="#1a6bb5" /><text x="115" y="90" fill="#fff">B</text>
@@ -710,77 +621,63 @@ void insereFim(Lista* L, int valor) {
                 <text x="385" y="168" font-size="13" font-weight="bold" fill="#7c5fd4">Pós-ordem (EDR):</text>
                 <text x="385" y="187" font-size="13" fill="#1c1a17">A, C, E, D, B, H, I, G, F</text>
               </svg>
-              <div class="diagram-caption">Árvore exata dos slides (Aula 9, slides 19–21). Verde = folhas.</div>
-            </div>
-
-            <div class="box box-dica">
-              <div class="box-icon">✨</div>
-              <div class="box-content">
-                <div class="box-label">Macete visual para fazer qualquer percurso no papel!</div>
-                <p>
-                  Imagine contornar a árvore por fora, começando no topo da raiz e descendo pela esquerda:<br />
-                  • <strong>Pré-ordem:</strong> anote a letra na <strong>1ª vez</strong> que passar pelo lado <strong>esquerdo</strong> da bolinha.<br />
-                  • <strong>In-ordem:</strong> anote a letra quando passar <strong>por baixo</strong> da bolinha.<br />
-                  • <strong>Pós-ordem:</strong> anote a letra quando subir pelo lado <strong>direito</strong> da bolinha (saindo dela).
-                </p>
-              </div>
+              <div class="diagram-caption">Macete do contorno: passe por fora da árvore da esquerda para a direita. Pré = borda esquerda; In = por baixo; Pós = borda direita.</div>
             </div>
           </div>
 
           <div class="card">
-            <h2>3. Árvore Binária de Busca (ABB / BST)</h2>
-            <p>
-              Uma árvore binária comum não tem regra de onde guardar os números. A <strong>ABB</strong> coloca ordem na casa
-              usando uma única regra sagrada (<strong>Invariante de Ordem</strong>):
-            </p>
+            <h2>3. ABB (Árvore Binária de Busca) + Remoção com Predecessor</h2>
             <div class="box box-conceito">
               <div class="box-icon">🧭</div>
               <div class="box-content">
-                <div class="box-label">Regra da ABB para todo nó X</div>
+                <div class="box-label">A Regra Única da ABB</div>
                 <p>
-                  • Tudo na subárvore <strong>esquerda</strong> é <strong>menor</strong> que <code>X</code> (<code>&lt; X</code>).<br />
-                  • Tudo na subárvore <strong>direita</strong> é <strong>maior</strong> que <code>X</code> (<code>&gt; X</code>).<br />
-                  • Política desta disciplina para duplicados: <strong>não inserir</strong> (ignora e avisa).
+                  Para qualquer nó <code>X</code>: tudo à <strong>esquerda é MENOR</strong> que <code>X</code>, e tudo à <strong>direita é MAIOR</strong> que <code>X</code>.
+                  (Nesta disciplina, valores repetidos são ignorados).
                 </p>
               </div>
             </div>
 
-            <p>
-              <strong>Por que isso é mágico?</strong> Porque buscar um valor custa <code>O(h)</code> (onde <code>h</code> é a altura).
-              Se a árvore estiver bem distribuída ("saudável"), <code>h ≈ log₂(n)</code> — para 1 milhão de dados, você acha em ~20 comparações!
-              <strong>Porém</strong>, se você inserir dados já ordenados (<code>10, 20, 30, 40, 50</code>), tudo vai sempre para a direita:
-              a árvore vira uma fila torta (<strong>árvore degenerada</strong>) e a busca cai para <code>O(n)</code>! <em>(É exatamente esse problema que a AVL resolve na Aula 10!)</em>
-            </p>
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha da ABB Degenerada!</div>
+                <p>
+                  Em uma ABB equilibrada, buscar custa <code>O(log n)</code>. Mas se você inserir números <strong>já em ordem crescente</strong>
+                  (ex: <code>10, 20, 30, 40, 50</code>), todo número novo é maior e cai sempre na direita! A árvore vira uma linha reta torta
+                  (<strong>árvore degenerada</strong>) igual a uma Lista Ligada, e a busca despenca para <code>O(n)</code>!
+                </p>
+              </div>
+            </div>
 
-            <h3>Como funciona a Remoção na ABB (Os 3 Casos + Predecessor)</h3>
+            <h3>Remoção na ABB — Os 3 Casos (Foco no Caso de 2 Filhos!)</h3>
             <p>
-              Tirar uma folha é fácil; tirar um nó no meio que tem dois filhos exige cuidado para não quebrar a regra da ABB.
-              Nos slides da professora (Aula 9, slides 35–39), adotamos o <strong>Predecessor (máximo da subárvore esquerda)</strong>:
+              Imagine a árvore com raiz <code>50</code>, filho esquerdo <code>30</code> (que tem filhos <code>20</code> e <code>40</code>) e filho direito <code>70</code>.
+              Como remover o <code>50</code> sem quebrar a regra da ABB? Veja os 3 casos no código oficial dos slides:
             </p>
             <ol>
-              <li><strong>Nó Folha (0 filhos):</strong> desconecta do pai e dá <code>free</code>.</li>
-              <li><strong>Nó com 1 filho:</strong> "pula o nó" — o pai aponta direto para o único filho dele e dá <code>free</code> no removido.</li>
-              <li><strong>Nó com 2 filhos:</strong> encontra o <strong>Predecessor</strong> (<code>maximo(r-&gt;esq)</code>, ou seja, dá 1 passo para a esquerda e depois vai tudo para a direita até <code>NULL</code>), <strong>copia</strong> a chave dele para o nó <code>r</code>, e depois <strong>remove o nó original do predecessor</strong> na subárvore esquerda!</li>
+              <li><strong>0 filhos (folha, ex: <code>20</code>):</strong> só apaga e devolve <code>NULL</code>.</li>
+              <li><strong>1 filho:</strong> o pai "pula" o nó removido e adota o único filho dele.</li>
+              <li><strong>2 filhos (ex: remover <code>50</code>):</strong> escolhemos o <strong>Predecessor</strong> — o <strong>MAIOR número do lado esquerdo</strong> (dá 1 passo para a esquerda e vai tudo para a direita → no exemplo, é o <code>40</code>!). Copiamos o <code>40</code> para o lugar do <code>50</code> e depois mandamos remover o nó original do <code>40</code> lá embaixo!</li>
             </ol>
 
-            <pre class="code-block"><code>// Lógica da remoção recursiva (Aula 9, slide 39)
-No* removeRec(No* r, int k) {
+            <pre class="code-block"><code>No* removeRec(No* r, int k) {
     if (r == NULL) return NULL;                       // Não achou
-    if (k &lt; r->chave)      r->esq = removeRec(r->esq, k);
-    else if (k &gt; r->chave) r->dir = removeRec(r->dir, k);
-    else {                                            // Achou o nó r!
-        if (r->esq == NULL) {                         // 0 ou 1 filho (à direita)
+    if (k &lt; r->chave)      r->esq = removeRec(r->esq, k); // Procura na esquerda
+    else if (k &gt; r->chave) r->dir = removeRec(r->dir, k); // Procura na direita
+    else {                                            // ACHOU o nó r!
+        if (r->esq == NULL) {                         // Tem 0 filhos ou só filho à direita
             No* aux = r->dir; free(r); return aux;
         }
-        if (r->dir == NULL) {                         // 1 filho (à esquerda)
+        if (r->dir == NULL) {                         // Só tem filho à esquerda
             No* aux = r->esq; free(r); return aux;
         }
-        // 2 filhos: usa PREDECESSOR (maior da subárvore esquerda)
-        No* p = maximo(r->esq);                       // Navega à direita até NULL
-        r->chave = p->chave;                          // Copia a chave do predecessor
-        r->esq = removeRec(r->esq, p->chave);         // Remove o predecessor original de fato!
+        // CASO DOS 2 FILHOS -> Usa PREDECESSOR (maior valor da subárvore esquerda):
+        No* p = maximo(r->esq);                       // 1 passo p/ esq, depois tudo p/ dir
+        r->chave = p->chave;                          // Copia a chave do predecessor para r
+        r->esq = removeRec(r->esq, p->chave);         // Apaga o nó original de p lá embaixo!
     }
-    return r; // Devolve a nova raiz da subárvore!
+    return r;
 }</code></pre>
           </div>
         </div>
@@ -788,23 +685,22 @@ No* removeRec(No* r, int k) {
         <!-- ========== SUB 5: ÁRVORES AVL (AULA 10) ========== -->
         <div id="t-avl" class="subpanel">
           <div class="card">
-            <h2>1. Por que AVL e Como Calcular o Fator de Balanceamento (FB)?</h2>
+            <h2>1. Árvore AVL Sem Sofrimento: A Única Fórmula que Você Precisa</h2>
             <p>
-              Vimos que uma ABB normal pode "entortar" e virar uma tripa (<code>O(n)</code>). A <strong>Árvore AVL</strong>
-              (criada por Adelson-Velsky e Landis) é uma ABB inteligente que <strong>se auto-equilibra usando rotações</strong>
-              toda vez que um lado fica alto demais, garantindo altura máxima <code>O(log n)</code>!
+              Como vimos na Aula 9, uma ABB comum pode entortar e ficar lenta (<code>O(n)</code>). A <strong>Árvore AVL</strong> é uma ABB que
+              <strong>não deixa nenhum lado ficar alto demais</strong>: quando entorta, ela gira os nós (<strong>rotações</strong>) para manter a busca sempre rápida em <code>O(log n)</code>.
             </p>
 
             <div class="box box-conceito">
               <div class="box-icon">📐</div>
               <div class="box-content">
-                <div class="box-label">Convenção Oficial dos Slides (Aula 10, slides 7 e 17)</div>
+                <div class="box-label">Cola Oficial dos Slides para Calcular FB na Prova (Aula 10)</div>
                 <p>
-                  • <strong>Subárvore vazia (<code>NULL</code>):</strong> altura = <code>-1</code><br />
-                  • <strong>Nó folha:</strong> altura = <code>0</code><br />
-                  • <strong>Qualquer outro nó:</strong> <code>altura = 1 + max(altura(esq), altura(dir))</code><br />
-                  • <strong>Fator de Balanceamento (FB):</strong> <code>FB = altura(subárvore esquerda) - altura(subárvore direita)</code><br />
-                  • <strong>Condição AVL:</strong> todo nó deve ter <code>-1 ≤ FB ≤ 1</code> (isto é, <code>|FB| ≤ 1</code>). Se der <code>+2</code> ou <code>-2</code>, está <strong>desbalanceado</strong>!
+                  • <strong>Lugar vazio (<code>NULL</code>):</strong> altura = <code>-1</code><br />
+                  • <strong>Folha (sem filhos):</strong> altura = <code>0</code><br />
+                  • <strong>Qualquer outro nó:</strong> <code>altura = 1 + maior altura entre os filhos</code><br />
+                  • <strong>Fator de Balanceamento (FB):</strong> <code>FB = altura(Esquerda) - altura(Direita)</code><br />
+                  • <strong>Regra do Jogo:</strong> só é aceito <code>FB</code> igual a <code>-1</code>, <code>0</code> ou <code>+1</code>. Se bater <code>+2</code> ou <code>-2</code>, <strong>quebrou e precisa rotacionar!</strong>
                 </p>
               </div>
             </div>
@@ -812,77 +708,43 @@ No* removeRec(No* r, int k) {
             <div class="box box-dica">
               <div class="box-icon">⚖️</div>
               <div class="box-content">
-                <div class="box-label">Jeito instantâneo de ler o sinal do FB</div>
+                <div class="box-label">Macete Instantâneo de Sinal (Não Erre Nunca Mais!)</div>
                 <p>
-                  • <code>FB &gt; 0</code> (positivo, ex: <code>+1, +2</code>): a árvore está pendendo para a <strong>ESQUERDA</strong>.<br />
-                  • <code>FB &lt; 0</code> (negativo, ex: <code>-1, -2</code>): a árvore está pendendo para a <strong>DIREITA</strong>.<br />
-                  • <code>FB = 0</code>: esquerda e direita estão com a mesma altura!
-                </p>
-              </div>
-            </div>
-
-            <div class="box box-pegadinha">
-              <div class="box-icon">📢</div>
-              <div class="box-content">
-                <div class="box-label">Atenção à convenção de livros diferentes</div>
-                <p>
-                  Na Aula 9 (slide 11), a altura total da árvore foi apresentada como "número total de níveis". Já na Aula 10
-                  (slides 7 e 17), para calcular <code>FB</code> em AVL, os slides fixam explicitamente:
-                  <strong>folha = 0 e subárvore vazia = -1</strong> (que resulta exatamente nos valores de FB mostrados nos desenhos!).
-                  Use <code>folha = 0</code> e <code>vazia = -1</code> para todo exercício de AVL!
+                  • <code>FB</code> <strong>Positivo (<code>+1, +2</code>)</strong> = lado <strong>ESQUERDO</strong> mais pesado.<br />
+                  • <code>FB</code> <strong>Negativo (<code>-1, -2</code>)</strong> = lado <strong>DIREITO</strong> mais pesado.<br />
+                  • <code>FB = 0</code> = os dois lados têm a mesma altura.<br />
+                  <em>Exemplo rápido:</em> um nó com 1 folha na esquerda (alt <code>0</code>) e nada na direita (alt <code>-1</code>) tem <code>FB = 0 - (-1) = +1</code>!
                 </p>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>2. Os 4 Casos de Desbalanceamento e Suas Rotações</h2>
+            <h2>2. Como Saber Qual Rotação Fazer Sem Decorar Tabela!</h2>
             <p>
-              Quando um nó sai de <code>[-1, 1]</code> (fica com <code>FB = +2</code> ou <code>-2</code>), olhamos para o
-              <strong>sinal do FB dele e o sinal do FB do filho do lado pesado</strong> para escolher uma das 4 rotações:
+              Quando um nó dá <code>+2</code> ou <code>-2</code>, olhe para o <strong>sinal dele</strong> e para o <strong>sinal do filho do lado pesado</strong>:
             </p>
-
             <div class="grid-2">
               <div class="mini-card" style="border-top: 3px solid var(--blue)">
-                <h4 style="color: var(--blue)">1) Caso LL (Left-Left) → Rotação Simples à DIREITA</h4>
+                <h4 style="color: var(--blue)">📏 Sinais IGUAIS = Linha Reta → Rotação SIMPLES</h4>
                 <p>
-                  <strong>Quando:</strong> <code>FB(pai) = +2</code> e <code>FB(filho esq) ≥ 0</code> (ex: <code>+1</code>).<br />
-                  Tudo tombou para a esquerda em linha reta (ex: <code>30 → 20 → 10</code>).<br />
-                  <strong>O que faz:</strong> gira o <code>30</code> para a direita; o filho esquerdo (<code>20</code>) sobe e vira a nova raiz!
+                  • <strong>LL (<code>+2</code> e filho esq <code>+1</code> ou <code>0</code>):</strong> caiu tudo para a esquerda → gira o pai para a <strong>DIREITA</strong> (lado oposto!).<br />
+                  • <strong>RR (<code>-2</code> e filho dir <code>-1</code> ou <code>0</code>):</strong> caiu tudo para a direita → gira o pai para a <strong>ESQUERDA</strong> (lado oposto!).
                 </p>
               </div>
-
-              <div class="mini-card" style="border-top: 3px solid var(--green)">
-                <h4 style="color: var(--green)">2) Caso RR (Right-Right) → Rotação Simples à ESQUERDA</h4>
-                <p>
-                  <strong>Quando:</strong> <code>FB(pai) = -2</code> e <code>FB(filho dir) ≤ 0</code> (ex: <code>-1</code>).<br />
-                  Tudo tombou para a direita em linha reta (ex: <code>10 → 20 → 30</code>).<br />
-                  <strong>O que faz:</strong> gira o <code>10</code> para a esquerda; o filho direito (<code>20</code>) sobe e vira a nova raiz!
-                </p>
-              </div>
-
               <div class="mini-card" style="border-top: 3px solid var(--purple)">
-                <h4 style="color: var(--purple)">3) Caso LR (Left-Right) → Rotação Dupla à DIREITA</h4>
+                <h4 style="color: var(--purple)">🦵 Sinais OPOSTOS = "Joelho Dobrado" → Rotação DUPLA</h4>
                 <p>
-                  <strong>Quando:</strong> <code>FB(pai) = +2</code>, mas <code>FB(filho esq) = -1</code> (sinais opostos — faz um "joelho" <code>30 → 10 → 20</code>!).<br />
-                  <strong>Passo 1:</strong> Rotação simples à <strong>esquerda (RR) no filho</strong> (<code>10</code> gira p/ esquerda; vira linha reta <code>30 → 20 → 10</code>).<br />
-                  <strong>Passo 2:</strong> Rotação simples à <strong>direita (LL) no pai</strong> (<code>30</code> gira p/ direita; <code>20</code> vira a raiz!).
-                </p>
-              </div>
-
-              <div class="mini-card" style="border-top: 3px solid var(--amber)">
-                <h4 style="color: var(--amber)">4) Caso RL (Right-Left) → Rotação Dupla à ESQUERDA</h4>
-                <p>
-                  <strong>Quando:</strong> <code>FB(pai) = -2</code>, mas <code>FB(filho dir) = +1</code> (sinais opostos — faz um "joelho" <code>10 → 30 → 20</code>!).<br />
-                  <strong>Passo 1:</strong> Rotação simples à <strong>direita (LL) no filho</strong> (<code>30</code> gira p/ direita; vira linha reta <code>10 → 20 → 30</code>).<br />
-                  <strong>Passo 2:</strong> Rotação simples à <strong>esquerda (RR) no pai</strong> (<code>10</code> gira p/ esquerda; <code>20</code> vira a raiz!).
+                  • <strong>LR (<code>+2</code> no pai e <code>-1</code> no filho esq):</strong> faz zigue-zague (ex: <code>30 → 10 → 20</code>).<br />
+                  1º estica o joelho girando o <strong>filho p/ esquerda</strong>; 2º gira o <strong>pai p/ direita</strong>!<br />
+                  • <strong>RL (<code>-2</code> no pai e <code>+1</code> no filho dir):</strong> faz zigue-zague (ex: <code>10 → 30 → 20</code>).<br />
+                  1º estica o joelho girando o <strong>filho p/ direita</strong>; 2º gira o <strong>pai p/ esquerda</strong>!
                 </p>
               </div>
             </div>
 
             <div class="diagram-wrap">
               <svg viewBox="0 0 620 175" width="580" aria-label="Comparação visual dos 4 casos AVL">
-                <!-- LL -->
                 <text x="75" y="18" text-anchor="middle" font-weight="bold" font-size="12" fill="#1a6bb5">LL (Simples Dir)</text>
                 <line x1="95" y1="42" x2="70" y2="75" stroke="#1a6bb5" stroke-width="2" />
                 <line x1="70" y1="75" x2="45" y2="108" stroke="#1a6bb5" stroke-width="2" />
@@ -891,7 +753,6 @@ No* removeRec(No* r, int k) {
                 <circle cx="45" cy="108" r="13" fill="#1a6bb5" /><text x="45" y="112" text-anchor="middle" fill="#fff" font-size="11">10</text>
                 <text x="75" y="142" text-anchor="middle" font-size="11" fill="#4a4740">FB(30)=+2, FB(20)=+1</text>
 
-                <!-- RR -->
                 <text x="225" y="18" text-anchor="middle" font-weight="bold" font-size="12" fill="#0d7a5f">RR (Simples Esq)</text>
                 <line x1="200" y1="42" x2="225" y2="75" stroke="#0d7a5f" stroke-width="2" />
                 <line x1="225" y1="75" x2="250" y2="108" stroke="#0d7a5f" stroke-width="2" />
@@ -900,7 +761,6 @@ No* removeRec(No* r, int k) {
                 <circle cx="250" cy="108" r="13" fill="#0d7a5f" /><text x="250" y="112" text-anchor="middle" fill="#fff" font-size="11">30</text>
                 <text x="225" y="142" text-anchor="middle" font-size="11" fill="#4a4740">FB(10)=-2, FB(20)=-1</text>
 
-                <!-- LR -->
                 <text x="380" y="18" text-anchor="middle" font-weight="bold" font-size="12" fill="#7c5fd4">LR (Dupla Dir)</text>
                 <line x1="395" y1="42" x2="360" y2="75" stroke="#7c5fd4" stroke-width="2" />
                 <line x1="360" y1="75" x2="390" y2="108" stroke="#7c5fd4" stroke-width="2" />
@@ -909,7 +769,6 @@ No* removeRec(No* r, int k) {
                 <circle cx="390" cy="108" r="13" fill="#7c5fd4" /><text x="390" y="112" text-anchor="middle" fill="#fff" font-size="11">20</text>
                 <text x="380" y="142" text-anchor="middle" font-size="11" fill="#4a4740">FB(30)=+2, FB(10)=-1</text>
 
-                <!-- RL -->
                 <text x="530" y="18" text-anchor="middle" font-weight="bold" font-size="12" fill="#b47500">RL (Dupla Esq)</text>
                 <line x1="515" y1="42" x2="550" y2="75" stroke="#e8a020" stroke-width="2" />
                 <line x1="550" y1="75" x2="520" y2="108" stroke="#e8a020" stroke-width="2" />
@@ -919,21 +778,51 @@ No* removeRec(No* r, int k) {
                 <text x="530" y="142" text-anchor="middle" font-size="11" fill="#4a4740">FB(10)=-2, FB(30)=+1</text>
 
                 <text x="310" y="167" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d7a5f">
-                  Em TODOS os 4 casos acima, o resultado final vira: raiz 20 com filhos 10 (esq) e 30 (dir)!
+                  Truque de ouro: nos 4 casos acima (10, 20, 30), o valor DO MEIO (20) sempre sobe e vira a raiz!
                 </text>
               </svg>
             </div>
           </div>
 
           <div class="card">
-            <h2>3. Regras de Ouro da Inserção e Remoção na AVL</h2>
+            <h2>3. Pegadinhas da AVL na Inserção e Remoção</h2>
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha nº 1: Vários nós com |FB| = 2 ao mesmo tempo!</div>
+                <p>
+                  Quando você insere uma folha e volta recalculando os FBs <strong>de baixo para cima</strong>, às vezes o avô e o bisavô
+                  também ficam com <code>-2</code> (ex: slide 17: nós <code>7</code>, <code>6</code> e <code>4</code>).
+                  <strong>Onde rotacionar?</strong> Apenas no <strong>PRIMEIRO nó desbalanceado que encontrar subindo</strong> (o <code>7</code>)!
+                  Quando você conserta esse primeiro lá embaixo, todos os de cima já se arrumam sozinhos!
+                </p>
+              </div>
+            </div>
             <ul>
-              <li><strong>1. Inserir como ABB comum:</strong> desce comparando até o lugar vazio e coloca o novo nó como folha.</li>
-              <li><strong>2. Voltar na recursão de baixo para cima:</strong> vai atualizando a <code>altura</code> de cada ancestral e recalculando seu <code>FB</code>.</li>
-              <li><strong>3. Primeiro nó ancestral desbalanceado:</strong> se vários nós ficarem com <code>|FB| ≥ 2</code> (ex: aula 10, slide 17: nós 7, 6 e 4), você rotaciona <strong>apenas o primeiro encontrado de baixo para cima</strong> (o nó 7)! Na inserção, ao corrigir esse primeiro nó, todos acima dele já voltam a ficar balanceados!</li>
-              <li><strong>4. Custo de rotação na inserção:</strong> número de rotações é constante (<code>O(1)</code>), independente do tamanho da árvore, e a ordem crescente (In-ordem) é sempre preservada!</li>
-              <li><strong>5. Remoção em AVL:</strong> remove igual na ABB (folha, 1 filho, 2 filhos com predecessor) e, na <strong>rota de volta da recursão</strong>, recalcula alturas e aplica rotações em qualquer nó que passar de <code>|FB| ≥ 2</code>.</li>
+              <li><strong>Custo da rotação na inserção:</strong> <code>O(1)</code> (máximo 1 rotação simples ou dupla) e a ordem crescente (In-ordem) nunca muda!</li>
+              <li><strong>Como funciona a Remoção na AVL?</strong> Remove exatamente como na ABB (folha, 1 filho, 2 filhos com predecessor) e, <strong>na volta da recursão (de baixo para cima)</strong>, recalcula alturas e rotaciona qualquer nó que ficar com <code>|FB| ≥ 2</code>.</li>
             </ul>
+
+            <h3>Como isso aparece em Código C na Prova?</h3>
+            <pre class="code-block"><code>int altura(No* r) {
+    return (r == NULL) ? -1 : r->h; // Vazia vale -1!
+}
+
+int fb(No* r) {
+    return (r == NULL) ? 0 : altura(r->esq) - altura(r->dir);
+}
+
+// Rotação Simples à Direita (caso LL): o filho esquerdo x sobe!
+No* rotacaoDireita(No* y) {
+    No* x = y->esq;   // x é quem vai virar a nova raiz
+    No* T2 = x->dir;  // Salva o filho direito de x para não perder!
+    x->dir = y;       // y desce para a direita de x
+    y->esq = T2;      // T2 vira filho esquerdo de y
+    // Atualiza alturas de baixo para cima (1º y que desceu, depois x que subiu)
+    y->h = 1 + max(altura(y->esq), altura(y->dir));
+    x->h = 1 + max(altura(x->esq), altura(x->dir));
+    return x;         // Devolve x como nova raiz da subárvore
+}</code></pre>
           </div>
         </div>
       </div>
@@ -961,6 +850,15 @@ No* removeRec(No* r, int k) {
 
           <div id="llStage" class="ll-stage"></div>
           <div id="llExplain" class="sim-log"></div>
+          <div class="box box-dica" style="margin-top: 12px">
+            <div class="box-icon">🧪</div>
+            <div class="box-content">
+              <div class="box-label">Teste de 30s para a Prova</div>
+              <p>
+                Troque para <strong>Lista Dupla (ini / fim / n)</strong> e clique em <em>Remover Fim</em> 3 vezes até esvaziar a lista: repare que quando o último nó sai, <strong>ambos</strong> <code>ini</code> e <code>fim</code> viram <code>NULL</code> e <code>n = 0</code>!
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- LAB 2: ABB & AVL -->
@@ -993,6 +891,15 @@ No* removeRec(No* r, int k) {
           <div class="diagram-wrap scrollable-svg" id="treeSvgWrap" style="min-height: 240px"></div>
           <div id="treeLog" class="sim-log"></div>
           <div class="pill-row" id="treeTraversals"></div>
+          <div class="box box-dica" style="margin-top: 12px">
+            <div class="box-icon">🧪</div>
+            <div class="box-content">
+              <div class="box-label">Teste de 30s para a Prova</div>
+              <p>
+                Clique em <strong>Modo ABB (Sem Rotação)</strong> e depois no preset <em>RR (10,20,30)</em> para ver a árvore entortar com <code>FB: -2</code> em vermelho. Depois clique em <strong>Modo AVL</strong> e veja a rotação transformar <code>20</code> em raiz e manter o <strong>In-ordem (ERD)</strong> sempre crescente!
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- LAB 3: GRAFOS -->
@@ -1027,11 +934,42 @@ No* removeRec(No* r, int k) {
               <div id="graphDegWrap" style="margin-top: 10px; font-size: 13px; color: var(--text2)"></div>
             </div>
           </div>
+          <div class="box box-dica" style="margin-top: 12px">
+            <div class="box-icon">🧪</div>
+            <div class="box-content">
+              <div class="box-label">Teste de 30s para a Prova</div>
+              <p>
+                Com o <em>Preset Slide 13</em> ativo, clique em <strong>Laço 4↺4</strong> para ligar e desligar e observe 3 coisas: na matriz aparece o <strong>1 na diagonal</strong> (linha 4, coluna 4), e no modo <em>Não Direcionado</em> o grau do vértice <code>4</code> sobe de <strong>2 para 4</strong> (+2 do laço!).
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- =================== ABA 3: RESUMO =================== -->
       <div id="resumo" class="tab-panel">
+        <div class="card">
+          <h2>⏱️ Roteiro Express de Sobrevivência (Menos de 1 Semana para a Prova)</h2>
+          <p>Sem tempo para ver tudo com calma? Siga exatamente esta ordem de prioridade para garantir os pontos que mais valem na prova:</p>
+          <div class="grid-2" style="margin-top: 12px">
+            <div class="mini-card" style="border-top: 3px solid var(--error)">
+              <h4 style="color: var(--error)">🔥 Prioridade Máxima (Obrigatório Dominar)</h4>
+              <ul>
+                <li><strong>Lista Simples (LSL):</strong> entender <code>No**</code> vs <code>No*</code>, a ordem das 2 linhas do <code>insereInicio</code>, o <code>while (aux-&gt;prox-&gt;prox != NULL)</code> do <code>removeFim</code> e o erro <em>use-after-free</em> ao destruir.</li>
+                <li><strong>Árvores &amp; ABB:</strong> saber fazer Pré (RED), In (ERD = crescente!) e Pós (EDR = <code>free</code>) no papel, identificar árvore degenerada e explicar o <strong>Predecessor</strong> (<code>maximo(r-&gt;esq)</code>) na remoção com 2 filhos.</li>
+                <li><strong>Árvores AVL:</strong> decorar <code>vazia = -1</code>, <code>folha = 0</code>, <code>FB = esq - dir</code>, detectar os 4 casos (sinais iguais = simples; sinais opostos = dupla) e lembrar que na inserção só rotaciona o <strong>1º ancestral com |FB| ≥ 2 de baixo para cima</strong>.</li>
+              </ul>
+            </div>
+            <div class="mini-card" style="border-top: 3px solid var(--blue)">
+              <h4 style="color: var(--blue)">⚡ Prioridade Rápida (Pontos Fáceis!)</h4>
+              <ul>
+                <li><strong>Grafos:</strong> laço conta <strong>+2</strong> no grau (grafo não direcionado) e vira <strong>1 na diagonal</strong> da matriz; entrada vs saída no dígrafo; matriz simétrica vs lista de adjacência econômica.</li>
+                <li><strong>Lista Dupla (LDE):</strong> saber por que <code>insereFim</code>/<code>removeFim</code> viram <code>O(1)</code> com <code>ini</code> e <code>fim</code>, religamento de nó no meio em <code>O(1)</code>, e os 2 casos de borda (lista vazia → <code>ini = fim = novo</code>; remover único nó → <code>ini = fim = NULL</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <h2>🗺️ Cola Rápida de Véspera de Prova (Aulas 6 a 10)</h2>
           <p>Leia esta página 15 minutos antes da prova para fixar todas as fórmulas, convenções e armadilhas.</p>
@@ -1101,52 +1039,53 @@ No* removeRec(No* r, int k) {
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>LL</strong> (Esq-Esq)</td>
+                  <td><strong>LL</strong> (Sinais + / +)</td>
                   <td><code>+2</code></td>
                   <td>Filho Esq: <code>+1</code> ou <code>0</code></td>
                   <td><strong>Simples à Direita</strong> no pai</td>
                 </tr>
                 <tr>
-                  <td><strong>RR</strong> (Dir-Dir)</td>
+                  <td><strong>RR</strong> (Sinais - / -)</td>
                   <td><code>-2</code></td>
                   <td>Filho Dir: <code>-1</code> ou <code>0</code></td>
                   <td><strong>Simples à Esquerda</strong> no pai</td>
                 </tr>
                 <tr>
-                  <td><strong>LR</strong> (Esq-Dir)</td>
+                  <td><strong>LR</strong> (Joelho + / -)</td>
                   <td><code>+2</code></td>
                   <td>Filho Esq: <code>-1</code></td>
-                  <td><strong>Dupla à Direita:</strong> Simples Esq (RR) no filho + Simples Dir (LL) no pai</td>
+                  <td><strong>Dupla à Direita:</strong> Simples Esq no filho + Simples Dir no pai</td>
                 </tr>
                 <tr>
-                  <td><strong>RL</strong> (Dir-Esq)</td>
+                  <td><strong>RL</strong> (Joelho - / +)</td>
                   <td><code>-2</code></td>
                   <td>Filho Dir: <code>+1</code></td>
-                  <td><strong>Dupla à Esquerda:</strong> Simples Dir (LL) no filho + Simples Esq (RR) no pai</td>
+                  <td><strong>Dupla à Esquerda:</strong> Simples Dir no filho + Simples Esq no pai</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <h3 class="section-title">3. Checklist Anti-Pegadinha da Profª Letícia</h3>
+          <h3 class="section-title">3. Checklist Anti-Pegadinha da Prova</h3>
           <div class="grid-2">
             <div class="mini-card">
               <h4>🕸️ Grafos &amp; Listas</h4>
               <ul>
                 <li><strong>Laço em grafo não direcionado:</strong> conta <strong>+2</strong> no grau e coloca <strong>1 na diagonal</strong> da matriz.</li>
-                <li><strong>Matriz simétrica:</strong> só acontece em grafo <em>não direcionado</em>; em dígrafo pode ser assimétrica.</li>
-                <li><strong><code>No** headRef</code> na LSL:</strong> só é obrigatório quando a função pode alterar quem é o 1º nó (<code>head</code>).</li>
+                <li><strong>Matriz simétrica:</strong> só vale quando NÃO há setas; em dígrafo, <code>M[A][B] = 1</code> não obriga <code>M[B][A] = 1</code>.</li>
+                <li><strong><code>No** headRef</code> na LSL:</strong> obrigatório quando a função pode trocar o 1º nó (<code>head</code>).</li>
                 <li><strong>Remoção no fim da LSL:</strong> para no <em>penúltimo</em> nó (<code>aux-&gt;prox-&gt;prox != NULL</code>).</li>
-                <li><strong>Destruição:</strong> salva <code>atual-&gt;prox</code> antes do <code>free(atual)</code>.</li>
+                <li><strong>Destruição:</strong> salva <code>atual-&gt;prox</code> antes do <code>free(atual)</code> (evita <em>use-after-free</em>).</li>
+                <li><strong>LDE vazia / nó único:</strong> inserir o 1º altera <code>ini</code> e <code>fim</code>; remover o único zera <code>ini = fim = NULL</code>.</li>
               </ul>
             </div>
             <div class="mini-card">
               <h4>🌳 Árvores ABB &amp; AVL</h4>
               <ul>
-                <li><strong>Percursos:</strong> Pré (<strong>R</strong>ED), In (E<strong>R</strong>D → crescente na ABB!), Pós (ED<strong>R</strong> → ideal p/ <code>free</code>).</li>
-                <li><strong>Remoção com 2 filhos na ABB:</strong> substitui pelo <strong>Predecessor</strong> (<code>maximo(r-&gt;esq)</code>) e depois remove o predecessor original!</li>
-                <li><strong>Fórmula AVL dos slides:</strong> folha = <code>0</code>, vazia = <code>-1</code>, <code>FB = alt(esq) - alt(dir)</code>, válido se <code>-1 ≤ FB ≤ 1</code>.</li>
-                <li><strong>Onde rotacionar na inserção AVL:</strong> apenas no <strong>primeiro ancestral</strong> (de baixo p/ cima) com <code>|FB| ≥ 2</code>!</li>
+                <li><strong>Percursos:</strong> Pré (<strong>R</strong>ED), In (E<strong>R</strong>D → sai ordenado na ABB!), Pós (ED<strong>R</strong> → apaga filhos antes do pai).</li>
+                <li><strong>Remoção com 2 filhos na ABB:</strong> copia o <strong>Predecessor</strong> (<code>maximo(r-&gt;esq)</code>) e depois remove o nó original do predecessor!</li>
+                <li><strong>Fórmula AVL dos slides:</strong> vazia = <code>-1</code>, folha = <code>0</code>, <code>FB = alt(esq) - alt(dir)</code>, válido se <code>-1 ≤ FB ≤ 1</code>.</li>
+                <li><strong>Onde rotacionar na inserção AVL:</strong> apenas no <strong>1º ancestral</strong> (subindo da folha p/ raiz) com <code>|FB| ≥ 2</code>!</li>
               </ul>
             </div>
           </div>
@@ -1158,13 +1097,13 @@ No* removeRec(No* r, int k) {
         <div class="score-bar">
           <div class="score-top">
             <div class="score-stats">
-              <div class="score-display" id="scoreDisplay">0/25</div>
+              <div class="score-display" id="scoreDisplay">0/20</div>
               <div>
                 <div style="font-size: 15px; font-weight: 700; color: var(--text)">
                   Seu placar no simulado
                 </div>
-                <div class="score-label" id="scoreSubtitle" data-subtitle="Aulas 6 a 10">
-                  0 de 25 respondidas · Aulas 6 a 10
+                <div class="score-label" id="scoreSubtitle" data-subtitle="Aulas 6 a 10 · Fixação de Conceitos">
+                  0 de 20 respondidas · Aulas 6 a 10 · Fixação de Conceitos
                 </div>
               </div>
             </div>
@@ -1176,12 +1115,12 @@ No* removeRec(No* r, int k) {
         </div>
 
         <div class="subtabs" id="quiz-filters">
-          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (25)</button>
-          <button class="subtab-btn" onclick="filterQuiz('Grafos', this)">Grafos (5)</button>
-          <button class="subtab-btn" onclick="filterQuiz('Lista Simples', this)">Lista Simples (5)</button>
-          <button class="subtab-btn" onclick="filterQuiz('Lista Dupla', this)">Lista Dupla (5)</button>
-          <button class="subtab-btn" onclick="filterQuiz('Árvores & ABB', this)">Árvores &amp; ABB (5)</button>
-          <button class="subtab-btn" onclick="filterQuiz('Árvores AVL', this)">Árvores AVL (5)</button>
+          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (20)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Grafos', this)">Grafos (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Lista Simples', this)">Lista Simples (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Lista Dupla', this)">Lista Dupla (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Árvores & ABB', this)">Árvores &amp; ABB (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Árvores AVL', this)">Árvores AVL (4)</button>
         </div>
 
         <div id="quiz-container"></div>
@@ -1667,542 +1606,518 @@ No* removeRec(No* r, int k) {
         });
       }
 
-      // ====== QUIZ (25 QUESTÕES) ======
+      // ====== QUIZ (20 QUESTÕES DIRETAS DE FIXAÇÃO) ======
       const quizQuestions = [
-        // --- GRAFOS (5) ---
+        // --- GRAFOS (4) ---
         {
           id: 'q1',
           topic: 'Grafos',
-          title: 'Em um grafo NÃO direcionado, o vértice 2 está ligado aos vértices 1, 3 e 4, e ainda possui um laço ligado nele mesmo. Qual é o grau do vértice 2?',
-          extraHtml: '',
-          options: ['3', '4', '5', '6', '2'],
-          correct: 2,
-          correctExplain: 'Conforme a Aula 6 (slide 5), em grafos não direcionados cada aresta normal soma 1 e <strong>cada laço contribui 2 para o grau</strong>. Logo: 3 + 2 = <strong>5</strong>.',
+          title: 'No grafo direcionado (dígrafo) abaixo, a seta vai de A para B. O que essa seta significa?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 360 80" width="340" aria-label="Dígrafo A para B para C">
+            <defs>
+              <marker id="q1-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="#1a6bb5" />
+              </marker>
+            </defs>
+            <line x1="78" y1="40" x2="160" y2="40" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#q1-arr)" />
+            <line x1="198" y1="40" x2="280" y2="40" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#q1-arr)" />
+            <circle cx="60" cy="40" r="18" fill="#1a6bb5" /><text x="60" y="45" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">A</text>
+            <circle cx="180" cy="40" r="18" fill="#1a6bb5" /><text x="180" y="45" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">B</text>
+            <circle cx="300" cy="40" r="18" fill="#1a6bb5" /><text x="300" y="45" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">C</text>
+          </svg></div>`,
+          options: [
+            'A e B estão ligados em mão dupla (pode ir de A para B e voltar de B para A).',
+            'É caminho de mão única: vai de A para B, mas não garante volta de B para A.',
+            'O vértice B é a raiz e o vértice A é uma folha.',
+            'Não é possível sair do vértice A.',
+          ],
+          correct: 1,
+          correctExplain: 'Em um <strong>dígrafo</strong> (grafo com setas), cada seta representa <strong>mão única</strong> — igual seguir alguém no Instagram. <code>A → B</code> só garante ida de <code>A</code> até <code>B</code>.',
           wrongReasons: {
-            0: '<strong>A (3):</strong> Esqueceu de somar o laço.',
-            1: '<strong>B (4):</strong> Contou o laço como +1 em vez de +2.',
-            3: '<strong>D (6):</strong> Contou arestas a mais.',
-            4: '<strong>E (2):</strong> Contou só o laço.',
+            0: '<strong>A:</strong> Mão dupla acontece no grafo <em>não direcionado</em> (linhas sem seta).',
+            2: '<strong>C:</strong> "Raiz" e "folha" são termos de Árvores, não de grafos gerais.',
+            3: '<strong>D:</strong> Justamente sai uma seta de <code>A</code> para <code>B</code>.',
           },
         },
         {
           id: 'q2',
           topic: 'Grafos',
-          title: 'Sobre a representação de um grafo usando Matriz de Adjacência, qual afirmação é VERDADEIRA?',
-          extraHtml: '',
+          title: 'Olhando para o vértice B no dígrafo abaixo, qual é o seu grau de ENTRADA e o seu grau de SAÍDA?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 360 130" width="340" aria-label="Grau de entrada e saída do vértice B">
+            <defs>
+              <marker id="q2-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="#1a6bb5" />
+              </marker>
+            </defs>
+            <line x1="78" y1="65" x2="160" y2="65" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#q2-arr)" />
+            <path d="M 196 52 Q 240 16 284 52" fill="none" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#q2-arr)" />
+            <path d="M 284 78 Q 240 114 196 78" fill="none" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#q2-arr)" />
+            <circle cx="60" cy="65" r="18" fill="#4a4740" /><text x="60" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">A</text>
+            <circle cx="180" cy="65" r="18" fill="#1a6bb5" /><text x="180" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">B</text>
+            <circle cx="300" cy="65" r="18" fill="#4a4740" /><text x="300" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">C</text>
+          </svg></div>`,
           options: [
-            'Em um grafo não direcionado, a matriz é sempre simétrica em relação à diagonal principal.',
-            'Ela sempre gasta menos memória do que a Lista de Adjacência, mesmo quando há poucas arestas.',
-            'Em um dígrafo, se existe a seta A → B, é obrigatório que M[B][A] também seja 1.',
-            'Um laço no vértice 4 não aparece na matriz de adjacência.',
-            'Cada linha representa apenas o grau de entrada, nunca os vizinhos.',
+            'Entrada = 2 e Saída = 1',
+            'Entrada = 1 e Saída = 2',
+            'Entrada = 3 e Saída = 0',
+            'Entrada = 1 e Saída = 1',
           ],
           correct: 0,
-          correctExplain: 'Se 1 está ligado a 2 em um grafo não direcionado (mão dupla), tanto <code>M[1][2]</code> quanto <code>M[2][1]</code> valem <code>1</code> — formando uma matriz espelhada (simétrica).',
+          correctExplain: '<strong>Entrada</strong> = pontas de seta que chegam em <code>B</code> (uma vem de <code>A</code>, outra vem de <code>C</code> → <strong>2</strong>). <strong>Saída</strong> = setas que saem de <code>B</code> (apenas a seta de cima indo para <code>C</code> → <strong>1</strong>).',
           wrongReasons: {
-            1: '<strong>B:</strong> Em grafos com poucas arestas (esparsos), a matriz desperdiça memória guardando muitos zeros; a Lista de Adjacência é mais econômica.',
-            2: '<strong>C:</strong> Em dígrafos a relação tem sentido único (A segue B ≠ B segue A).',
-            3: '<strong>D:</strong> O laço aparece como <code>1</code> na diagonal principal (<code>M[4][4] = 1</code>).',
-            4: '<strong>E:</strong> A linha mostra justamente para onde saem as arestas daquele vértice.',
+            1: '<strong>B:</strong> Inverteu entrada com saída: chegam 2 setas em <code>B</code> e sai só 1.',
+            2: '<strong>C:</strong> Existe uma seta saindo de <code>B</code> até <code>C</code>, então a saída não é 0.',
+            3: '<strong>D:</strong> Esqueceu de contar uma das setas que chegam em <code>B</code> (<code>A → B</code> e <code>C → B</code>).',
           },
         },
         {
           id: 'q3',
           topic: 'Grafos',
-          title: 'Observe um dígrafo com as setas: A → B, B → C, B → D e C → D. Quais são o grau de entrada e o grau de saída do vértice D?',
-          extraHtml: '',
+          title: 'No grafo NÃO direcionado abaixo, o vértice 2 tem duas linhas normais e um laço (volta para ele mesmo). Qual é o grau do vértice 2?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 360 120" width="340" aria-label="Grafo com laço no vértice 2">
+            <line x1="88" y1="82" x2="162" y2="82" stroke="#1a6bb5" stroke-width="2.5" />
+            <line x1="198" y1="82" x2="272" y2="82" stroke="#1a6bb5" stroke-width="2.5" />
+            <path d="M 169 66 C 148 16, 212 16, 191 66" fill="none" stroke="#e8a020" stroke-width="3" />
+            <circle cx="70" cy="82" r="18" fill="#4a4740" /><text x="70" y="87" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">1</text>
+            <circle cx="180" cy="82" r="18" fill="#1a6bb5" /><text x="180" y="87" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">2</text>
+            <circle cx="290" cy="82" r="18" fill="#4a4740" /><text x="290" y="87" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">3</text>
+            <text x="180" y="20" text-anchor="middle" fill="#6b4200" font-size="12" font-weight="bold">Laço no 2</text>
+          </svg></div>`,
           options: [
-            'Entrada = 0, Saída = 2',
-            'Entrada = 2, Saída = 0',
-            'Entrada = 1, Saída = 1',
-            'Entrada = 2, Saída = 2',
-            'Entrada = 1, Saída = 2',
+            'Grau 2',
+            'Grau 3',
+            'Grau 4',
+            'Grau 1',
           ],
-          correct: 1,
-          correctExplain: 'Chegam em D duas setas (<code>B → D</code> e <code>C → D</code>), então <strong>entrada = 2</strong>. Nenhuma seta sai de D, logo <strong>saída = 0</strong> (Aula 6, slide 9).',
+          correct: 2,
+          correctExplain: 'Pense no laço como uma corda com as <strong>duas pontas amarradas no vértice 2</strong>: ele soma <strong>+2</strong> no grau! Somando as 2 linhas normais (<code>1—2</code> e <code>2—3</code>) + 2 do laço = <strong>Grau 4</strong>.',
           wrongReasons: {
-            0: '<strong>A:</strong> Inverteu entrada com saída (0 e 2 seria o oposto).',
-            2: '<strong>C:</strong> 1 e 1 é o caso do vértice C.',
-            3: '<strong>D:</strong> Não existem setas saindo de D.',
-            4: '<strong>E:</strong> 1 e 2 é o caso do vértice B.',
+            0: '<strong>A:</strong> Contou só as 2 linhas normais e ignorou o laço.',
+            1: '<strong>B:</strong> Pegadinha clássica! Contou o laço como +1 em vez de +2.',
+            3: '<strong>D:</strong> O vértice 2 tem 2 conexões normais além do laço.',
           },
         },
         {
           id: 'q4',
           topic: 'Grafos',
-          title: 'Quando dizemos que um grafo é "conexo"?',
+          title: 'Um mapa tem 500 cidades, mas cada cidade tem estrada direta para apenas 2 ou 3 vizinhas (grafo esparso). Qual forma de guardar esse grafo economiza mais memória?',
           extraHtml: '',
           options: [
-            'Quando todas as arestas possuem um peso numérico associado.',
-            'Quando todos os vértices têm exatamente o mesmo grau.',
-            'Quando existe pelo menos um caminho entre qualquer par de vértices do grafo.',
-            'Quando todas as arestas possuem setas apontando no mesmo sentido.',
-            'Quando o grafo possui um laço em todos os vértices.',
+            'Matriz de Adjacência, porque cria uma tabela 500 × 500.',
+            'Matriz de Adjacência, porque preenche toda a memória com números 0.',
+            'Lista de Adjacência, porque só funciona quando todas as cidades ligam entre si.',
+            'Lista de Adjacência, porque guarda apenas os vizinhos que realmente existem.',
           ],
-          correct: 2,
-          correctExplain: '<strong>Grafo conexo</strong> significa que não existem ilhas isoladas: a partir de qualquer vértice, existe um caminho até qualquer outro vértice.',
+          correct: 3,
+          correctExplain: 'A <strong>Lista de Adjacência</strong> funciona como uma agenda de contatos: cada cidade guarda só as suas 2 ou 3 vizinhas reais, evitando desperdiçar memória com milhares de zeros de uma matriz <code>500 × 500</code>.',
           wrongReasons: {
-            0: '<strong>A:</strong> Isso define um <em>grafo ponderado</em>.',
-            1: '<strong>B:</strong> Graus iguais definem um grafo regular, não conexidade.',
-            3: '<strong>D:</strong> Setas definem um dígrafo.',
-            4: '<strong>E:</strong> Laços não têm relação com ser conexo.',
-          },
-        },
-        {
-          id: 'q5',
-          topic: 'Grafos',
-          title: 'Considere um grafo ponderado com: A–B (10 km), A–C (4 km), C–B (3 km), B–D (5 km) e C–D (12 km). Qual o caminho de menor peso total de A até D?',
-          extraHtml: '',
-          options: [
-            'A → B → D (15 km)',
-            'A → C → D (16 km)',
-            'A → C → B → D (12 km)',
-            'A → B → C → D (25 km)',
-            'Não existe caminho possível entre A e D.',
-          ],
-          correct: 2,
-          correctExplain: 'Somando os pesos: <code>A → C</code> (4) + <code>C → B</code> (3) + <code>B → D</code> (5) = <strong>12 km</strong> — menor que todos os caminhos diretos!',
-          wrongReasons: {
-            0: '<strong>A:</strong> 10 + 5 = 15 km (mais longo que 12 km).',
-            1: '<strong>B:</strong> 4 + 12 = 16 km.',
-            3: '<strong>D:</strong> 10 + 3 + 12 = 25 km.',
-            4: '<strong>E:</strong> Existem vários caminhos entre A e D.',
+            0: '<strong>A:</strong> Uma tabela <code>500 × 500</code> ocuparia 250 mil posições mesmo tendo poucas estradas.',
+            1: '<strong>B:</strong> Guardar um monte de zeros é justamente o desperdício de memória da matriz.',
+            2: '<strong>C:</strong> Pelo contrário! A Lista de Adjacência brilha justamente quando há <em>poucas</em> ligações.',
           },
         },
 
-        // --- LISTA SIMPLES (5) ---
+        // --- LISTA SIMPLES (4) ---
+        {
+          id: 'q5',
+          topic: 'Lista Simples',
+          title: 'Na Lista Simplesmente Encadeada abaixo, por que o campo prox do último vagão (30) guarda NULL?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 470 76" width="450" aria-label="Lista Simples 10 20 30 NULL">
+            <defs>
+              <marker id="q5-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="#1a6bb5" />
+              </marker>
+            </defs>
+            <rect x="8" y="20" width="52" height="32" rx="6" fill="#1a6bb5" />
+            <text x="34" y="40" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">head</text>
+            <line x1="60" y1="36" x2="86" y2="36" stroke="#1a6bb5" stroke-width="2" marker-end="url(#q5-arr)" />
+            <rect x="92" y="14" width="90" height="44" rx="6" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="137" y1="14" x2="137" y2="58" stroke="#1a6bb5" stroke-width="1.5" />
+            <text x="114" y="42" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="14">10</text>
+            <text x="160" y="41" text-anchor="middle" fill="#1a6bb5" font-size="11" font-weight="bold">prox</text>
+            <line x1="182" y1="36" x2="208" y2="36" stroke="#1a6bb5" stroke-width="2" marker-end="url(#q5-arr)" />
+            <rect x="214" y="14" width="90" height="44" rx="6" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="259" y1="14" x2="259" y2="58" stroke="#1a6bb5" stroke-width="1.5" />
+            <text x="236" y="42" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="14">20</text>
+            <text x="282" y="41" text-anchor="middle" fill="#1a6bb5" font-size="11" font-weight="bold">prox</text>
+            <line x1="304" y1="36" x2="330" y2="36" stroke="#1a6bb5" stroke-width="2" marker-end="url(#q5-arr)" />
+            <rect x="336" y="14" width="110" height="44" rx="6" fill="#eef5fc" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="381" y1="14" x2="381" y2="58" stroke="#1a6bb5" stroke-width="1.5" />
+            <text x="358" y="42" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="14">30</text>
+            <text x="414" y="41" text-anchor="middle" fill="#d64535" font-size="12" font-weight="bold">NULL</text>
+          </svg></div>`,
+          options: [
+            'Para avisar que o trem acabou e não existe mais nenhum nó depois do 30.',
+            'Para indicar que o valor 30 foi apagado da memória.',
+            'Para ligar o nó 30 de volta ao primeiro nó (10).',
+            'Para avisar que faltou memória no computador.',
+          ],
+          correct: 0,
+          correctExplain: 'O ponteiro <code>NULL</code> significa "não aponta para lugar nenhum". No último nó da lista, ele funciona como a placa de <strong>fim da lista</strong> para os laços <code>while</code> saberem onde parar!',
+          wrongReasons: {
+            1: '<strong>B:</strong> O valor <code>30</code> está guardado normalmente em <code>dado</code>; só o ponteiro <code>prox</code> é <code>NULL</code>.',
+            2: '<strong>C:</strong> Ligar o último ao primeiro só acontece em lista circular, não na LSL comum.',
+            3: '<strong>D:</strong> Aqui <code>NULL</code> é proposital para marcar o fim da lista.',
+          },
+        },
         {
           id: 'q6',
           topic: 'Lista Simples',
-          title: 'Por que a função insereInicio recebe "No** headRef" em vez de apenas "No* head"?',
-          extraHtml: `<pre class="code-block"><code>void insereInicio(No** headRef, int valor) {
-    No* novo = criaNo(valor);
-    novo->prox = *headRef;
-    *headRef = novo;
-}</code></pre>`,
+          title: 'Na Lista Simples (que só guarda o ponteiro head), por que inserir no INÍCIO é O(1), enquanto inserir no FIM é O(n)?',
+          extraHtml: '',
           options: [
-            'Porque C não aceita retornar void com ponteiro simples.',
-            'Para que a função consiga alterar o próprio ponteiro head que existe lá no main().',
-            'Porque cada nó guarda dois ponteiros na lista simplesmente encadeada.',
-            'Para liberar automaticamente a memória do nó antigo.',
-            'Porque No** é obrigatório até em funções que só imprimem a lista.',
+            'Porque inserir no início não usa malloc().',
+            'Porque inserir no fim apaga a lista inteira e cria outra do zero.',
+            'Porque o início já está direto em head, mas para achar o último nó é preciso caminhar nó por nó desde head.',
+            'Porque a Lista Simples não aceita inserir elementos no final.',
           ],
-          correct: 1,
-          correctExplain: '<code>head</code> já é um ponteiro (<code>No*</code>). Se passássemos só <code>No*</code>, a função receberia uma cópia. Passando <code>&amp;head</code> (<code>No**</code>), conseguimos mudar o <code>head</code> original do <code>main()</code>!',
+          correct: 2,
+          correctExplain: 'Como a LSL só conhece o começo (<code>head</code>), encaixar um novo nó na frente leva sempre o mesmo tempo (<strong>O(1)</strong>). Para pôr no fim, um ponteiro <code>aux</code> precisa andar por todos os <code>n</code> nós até achar quem tem <code>prox == NULL</code> (<strong>O(n)</strong>).',
           wrongReasons: {
-            0: '<strong>A:</strong> C aceita normalmente <code>void</code> com <code>No*</code>.',
-            2: '<strong>C:</strong> Na LSL cada nó tem só 1 ponteiro (<code>prox</code>).',
-            3: '<strong>D:</strong> <code>No**</code> não libera memória.',
-            4: '<strong>E:</strong> Para apenas ler/imprimir (<code>imprime</code>, <code>busca</code>), basta <code>No*</code>.',
+            0: '<strong>A:</strong> Toda inserção de nó novo usa <code>malloc()</code>.',
+            1: '<strong>B:</strong> Não apaga nada — apenas percorre a lista até o último vagão.',
+            3: '<strong>D:</strong> Aceita normalmente com <code>insereFim()</code>, só é mais demorado.',
           },
         },
         {
           id: 'q7',
           topic: 'Lista Simples',
-          title: 'O que acontece se um programador inverter as duas últimas linhas de insereInicio (fazendo *headRef = novo; ANTES de novo->prox = *headRef;)?',
-          extraHtml: `<pre class="code-block"><code>*headRef = novo;
-novo->prox = *headRef; // ERRO!</code></pre>`,
+          title: 'Observe as duas assinaturas de função abaixo. Por que insereInicio precisa de No** (dois asteriscos), enquanto imprime usa só No*?',
+          extraHtml: `<pre class="code-block"><code>void imprime(No* head);
+void insereInicio(No** headRef, int valor);</code></pre>`,
           options: [
-            'A lista continua funcionando normalmente, apenas invertida.',
-            'O novo nó é inserido no final da lista em vez do início.',
-            'Perde-se a referência para o resto da lista (vazamento de memória) e novo->prox aponta para o próprio novo.',
-            'O compilador impede a execução por erro de sintaxe.',
-            'O último nó passa a apontar para NULL duas vezes.',
+            'Porque No** só funciona para listas que têm mais de 10 nós.',
+            'Porque insereInicio pode mudar quem é o 1º nó (head) lá no main(), e imprime apenas lê a lista.',
+            'Porque imprime não consegue acessar o campo dado dos nós.',
+            'Porque No* sempre apaga o primeiro nó da lista.',
           ],
-          correct: 2,
-          correctExplain: 'Ao sobrescrever <code>*headRef</code> primeiro, o endereço do antigo 1º nó desaparece para sempre e <code>novo-&gt;prox</code> acaba apontando para o próprio <code>novo</code> (loop infinito!).',
+          correct: 1,
+          correctExplain: 'Sempre que a função precisa <strong>alterar o endereço guardado em <code>head</code></strong> lá no <code>main()</code> (como inserir ou remover no início), usamos <code>No**</code>. Se ela só lê ou imprime, <code>No*</code> já basta!',
           wrongReasons: {
-            0: '<strong>A:</strong> Todo o restante da lista é perdido.',
-            1: '<strong>B:</strong> Não vai para o fim; cria um auto-ciclo no novo nó.',
-            3: '<strong>D:</strong> Sintaticamente é válido em C, o compilador não barra — é erro de lógica!',
-            4: '<strong>E:</strong> O último nó nem é alcançado.',
+            0: '<strong>A:</strong> Funciona para qualquer tamanho, inclusive lista vazia.',
+            2: '<strong>C:</strong> Com <code>No* head</code> é possível ler <code>head-&gt;dado</code> e andar com <code>head-&gt;prox</code> normalmente.',
+            3: '<strong>D:</strong> <code>No*</code> é apenas um ponteiro simples, não apaga nada sozinho.',
           },
         },
         {
           id: 'q8',
           topic: 'Lista Simples',
-          title: 'Analise a função abaixo. Qual é a tarefa exata do laço while?',
-          extraHtml: `<pre class="code-block"><code>No* aux = *headRef;
-while (aux->prox->prox != NULL) {
-    aux = aux->prox;
-}
-free(aux->prox);
-aux->prox = NULL;</code></pre>`,
-          options: [
-            'Percorrer até o último nó para inserir um novo elemento no fim.',
-            'Parar no penúltimo nó para poder liberar o último nó na remoção do fim.',
-            'Apagar todos os nós da lista do começo ao fim.',
-            'Buscar o nó do meio da lista para remoção por valor.',
-            'Contar quantos nós existem na lista.',
-          ],
-          correct: 1,
-          correctExplain: '<code>aux-&gt;prox-&gt;prox != NULL</code> para exatamente quando o próximo de <code>aux</code> é o último nó — ou seja, <code>aux</code> para no <strong>penúltimo nó</strong>, permitindo dar <code>free</code> no último e fechar com <code>NULL</code>!',
-          wrongReasons: {
-            0: '<strong>A:</strong> Para inserir no fim, paramos no último (<code>aux-&gt;prox != NULL</code>).',
-            2: '<strong>C:</strong> Isso dá <code>free</code> apenas em um nó (o último).',
-            3: '<strong>D:</strong> Não compara <code>dado</code> com nenhum valor.',
-            4: '<strong>E:</strong> Não existe nenhum contador aqui.',
-          },
-        },
-        {
-          id: 'q9',
-          topic: 'Lista Simples',
-          title: 'Qual é o erro grave presente neste código de destruição de lista?',
-          extraHtml: `<pre class="code-block"><code>void destroiMalFeito(No** headRef) {
-    No* atual = *headRef;
-    while (atual != NULL) {
-        free(atual);
-        atual = atual->prox;
-    }
-    *headRef = NULL;
+          title: 'No laço abaixo que apaga toda a lista da memória, por que salvamos atual->prox em proximo ANTES de chamar free(atual)?',
+          extraHtml: `<pre class="code-block"><code>while (atual != NULL) {
+    No* proximo = atual->prox; // Salva antes!
+    free(atual);
+    atual = proximo;
 }</code></pre>`,
           options: [
-            'Deveria usar No* em vez de No**.',
-            'O laço while deveria verificar atual->prox != NULL.',
-            'Use-after-free: lê atual->prox depois de já ter liberado atual com free().',
-            'Não é permitido usar free() dentro de um laço while em C.',
-            'Falta chamar malloc() antes de dar free().',
+            'Porque free(atual) apaga a lista inteira de uma vez.',
+            'Porque a variável proximo cria um novo nó vazio na memória.',
+            'Porque em C o laço while só aceita 3 linhas dentro dele.',
+            'Porque depois de dar free(atual), o nó já foi destruído e não podemos mais ler atual->prox.',
           ],
-          correct: 2,
-          correctExplain: 'Após <code>free(atual)</code>, aquela memória não pertence mais ao programa! Ler <code>atual-&gt;prox</code> depois disso é <strong>use-after-free</strong>. O certo é guardar <code>No* proximo = atual-&gt;prox;</code> ANTES do <code>free</code>.',
+          correct: 3,
+          correctExplain: 'Se você fizer <code>free(atual)</code> primeiro, "demoliu" o vagão — tentar ler <code>atual-&gt;prox</code> depois disso é o erro grave chamado <strong>use-after-free</strong>! Por isso anotamos o próximo endereço antes.',
           wrongReasons: {
-            0: '<strong>A:</strong> Precisa de <code>No**</code> para zerar <code>*headRef = NULL</code> no final.',
-            1: '<strong>B:</strong> Se checasse <code>atual-&gt;prox != NULL</code>, sobraria o último nó sem liberar (e quebraria se vazia).',
-            3: '<strong>D:</strong> É totalmente normal usar <code>free()</code> dentro de <code>while</code>.',
-            4: '<strong>E:</strong> Quem alocou foi quem criou os nós antes.',
+            0: '<strong>A:</strong> <code>free(atual)</code> libera apenas um único nó por volta do laço.',
+            1: '<strong>B:</strong> <code>No* proximo</code> apenas guarda um endereço; não aloca memória nova com <code>malloc</code>.',
+            2: '<strong>C:</strong> Não existe limite de linhas em um <code>while</code>.',
+          },
+        },
+
+        // --- LISTA DUPLA (4) ---
+        {
+          id: 'q9',
+          topic: 'Lista Dupla',
+          title: 'Qual é a grande diferença dentro de cada nó na Lista Duplamente Encadeada (LDE) em comparação com a Lista Simples?',
+          extraHtml: '',
+          options: [
+            'Cada nó tem dois ponteiros: ant (olha para trás) e prox (olha para frente).',
+            'Cada nó guarda dois números inteiros diferentes.',
+            'Os nós ficam colados lado a lado na memória como um vetor.',
+            'Cada nó aponta para dois filhos: esquerda e direita.',
+          ],
+          correct: 0,
+          correctExplain: 'Na LDE o "trem" ganha marcha à ré: além de <code>prox</code> (próximo), cada nó tem o ponteiro <code>ant</code> apontando para o nó anterior!',
+          wrongReasons: {
+            1: '<strong>B:</strong> O nó continua guardando 1 <code>dado</code>; o que dobra é a quantidade de ponteiros.',
+            2: '<strong>C:</strong> Ficar colado na memória é característica de vetor (array), não de lista encadeada.',
+            3: '<strong>D:</strong> Ponteiros <code>esq</code> e <code>dir</code> são usados em Árvores Binárias.',
           },
         },
         {
           id: 'q10',
-          topic: 'Lista Simples',
-          title: 'Qual é a complexidade (Big-O) de Inserir no Início e de Buscar um Valor em uma Lista Simplesmente Encadeada (sem ponteiro para cauda)?',
-          extraHtml: '',
+          topic: 'Lista Dupla',
+          title: 'Na LDE com a struct Lista abaixo, por que inserir ou remover no FIM passa a custar O(1) (instantâneo)?',
+          extraHtml: `<pre class="code-block"><code>typedef struct {
+    No* ini; // aponta para o 1º nó
+    No* fim; // aponta para o último nó
+    int n;
+} Lista;</code></pre>`,
           options: [
-            'Inserir início: O(n) | Buscar valor: O(1)',
-            'Inserir início: O(1) | Buscar valor: O(n)',
-            'Inserir início: O(1) | Buscar valor: O(log n)',
-            'Inserir início: O(n) | Buscar valor: O(n)',
-            'Inserir início: O(1) | Buscar valor: O(1)',
+            'Porque a variável n move os nós sozinha.',
+            'Porque a Lista Dupla não precisa usar ponteiros.',
+            'Porque L->fim já dá acesso direto ao último nó (sem laço while) e cada nó sabe quem é seu ant.',
+            'Porque a Lista Dupla só guarda no máximo 2 elementos.',
           ],
-          correct: 1,
-          correctExplain: 'Inserir no início só mexe em <code>head</code> (<code>O(1)</code>). Já a busca precisa caminhar nó por nó porque não existe acesso direto por índice (<code>O(n)</code>).',
+          correct: 2,
+          correctExplain: 'Como a caixinha de controle guarda <code>L-&gt;fim</code>, vamos direto ao último vagão em 1 passo! E para remover o último, basta usar <code>L-&gt;fim-&gt;ant</code> para descobrir quem era o penúltimo — tudo em <strong>O(1)</strong>!',
           wrongReasons: {
-            0: '<strong>A:</strong> Trocou as duas complexidades!',
-            2: '<strong>C:</strong> <code>O(log n)</code> é busca em árvore balanceada ou busca binária em vetor ordenado, não em lista ligada.',
-            3: '<strong>D:</strong> Inserir no início não precisa percorrer a lista.',
-            4: '<strong>E:</strong> Sem índice direto, busca não é <code>O(1)</code>.',
+            0: '<strong>A:</strong> <code>n</code> é apenas um contador inteiro com o tamanho da lista.',
+            1: '<strong>B:</strong> Ela usa ainda mais ponteiros (<code>ini</code>, <code>fim</code>, <code>ant</code> e <code>prox</code>).',
+            3: '<strong>D:</strong> A Lista Dupla pode crescer dinamicamente para quantos nós couberem na memória.',
           },
         },
-
-        // --- LISTA DUPLA (5) ---
         {
           id: 'q11',
           topic: 'Lista Dupla',
-          title: 'Qual é a principal vantagem da Lista Duplamente Encadeada (com ant, prox, ini e fim) sobre a Lista Simples (só com head e prox)?',
+          title: 'Imagine uma Lista Dupla vazia (L->ini = NULL e L->fim = NULL). Quando inserimos o 1º nó (valor 10), como devem ficar ini e fim?',
           extraHtml: '',
           options: [
-            'Gasta menos memória por nó porque dispensa ponteiros.',
-            'Permite acesso direto por índice lista[i] em tempo O(1).',
-            'Permite percorrer nos dois sentidos e remover/inserir no fim em O(1).',
-            'Elimina completamente o risco de vazamento de memória mesmo sem usar free().',
-            'Impede que os nós fiquem espalhados na memória RAM.',
+            'L->ini aponta para 10, mas L->fim continua NULL.',
+            'Tanto L->ini quanto L->fim passam a apontar para o nó 10.',
+            'L->fim aponta para 10, mas L->ini continua NULL.',
+            'Ambos continuam NULL até inserirmos o segundo nó.',
           ],
-          correct: 2,
-          correctExplain: 'Com <code>ant</code> e <code>prox</code> navegamos para frente e para trás, e com <code>ini</code> e <code>fim</code> na <code>struct Lista</code> inserimos e removemos nos dois extremos em <code>O(1)</code>!',
+          correct: 1,
+          correctExplain: 'Quando só existe <strong>1 nó</strong> na lista, ele é ao mesmo tempo o <strong>primeiro</strong> e o <strong>último</strong>! Por isso <code>L-&gt;ini = novo</code> e <code>L-&gt;fim = novo</code>.',
           wrongReasons: {
-            0: '<strong>A:</strong> Pelo contrário, gasta <em>mais</em> memória (2 ponteiros por nó).',
-            1: '<strong>B:</strong> Acesso direto por índice em <code>O(1)</code> é vantagem exclusiva do Vetor.',
-            3: '<strong>D:</strong> Continua usando alocação dinâmica e precisa de <code>free()</code>.',
-            4: '<strong>E:</strong> Como na LSL, os nós continuam em posições dinâmicas (não contíguas).',
+            0: '<strong>A:</strong> Se <code>L-&gt;fim</code> continuasse <code>NULL</code>, um futuro <code>insereFim()</code> acharia que a lista ainda está vazia!',
+            2: '<strong>C:</strong> Se <code>L-&gt;ini</code> continuasse <code>NULL</code>, perderíamos o começo da lista.',
+            3: '<strong>D:</strong> Com ambos em <code>NULL</code>, a lista pareceria vazia mesmo tendo o nó <code>10</code>.',
           },
         },
         {
           id: 'q12',
           topic: 'Lista Dupla',
-          title: 'Observe o código de insereInicio em uma LDE com descritor Lista* L. Para que serve o bloco if/else?',
-          extraHtml: `<pre class="code-block"><code>novo->ant = NULL;
-novo->prox = L->ini;
-if (L->ini != NULL)
-    L->ini->ant = novo;
-else
-    L->fim = novo;
-L->ini = novo;
-L->n++;</code></pre>`,
-          options: [
-            'Se a lista não estiver vazia, avisa o antigo 1º nó que agora há um nó antes dele; se estiver vazia, faz fim apontar para o novo nó também.',
-            'Se a lista estiver vazia, cancela a inserção para evitar erro.',
-            'Serve para ordenar a lista em ordem crescente automaticamente.',
-            'Libera a memória do último nó antes de inserir o primeiro.',
-            'Duplica o tamanho do vetor interno da lista.',
-          ],
-          correct: 0,
-          correctExplain: 'Se já havia alguém no início, seu campo <code>ant</code> precisa apontar para <code>novo</code>! Se a lista estava vazia, <code>novo</code> é ao mesmo tempo o primeiro (<code>ini</code>) e o último (<code>fim</code>)!',
-          wrongReasons: {
-            1: '<strong>B:</strong> Lista vazia aceita inserção normalmente.',
-            2: '<strong>C:</strong> <code>insereInicio</code> não compara valores nem ordena.',
-            3: '<strong>D:</strong> Não há <code>free</code> algum no código.',
-            4: '<strong>E:</strong> LDE não usa vetor interno.',
-          },
-        },
-        {
-          id: 'q13',
-          topic: 'Lista Dupla',
-          title: 'Em uma LDE com apenas UM único nó (ini == fim), o que deve acontecer com ini e fim após remover esse nó?',
+          title: 'Mesmo com ponteiros ini, fim, ant e prox, qual é o custo para BUSCAR um valor específico (ex: procurar o número 50) na Lista Dupla?',
           extraHtml: '',
           options: [
-            'ini aponta para o nó removido e fim vira NULL.',
-            'Ambos passam a ser NULL (L->ini = NULL e L->fim = NULL).',
-            'fim passa a apontar para ini->prox e ini continua igual.',
-            'Apenas L->n é zerado; os ponteiros não mudam.',
-            'ini aponta para fim->ant e fim não muda.',
+            'O(1), porque L->ini sabe onde o 50 está.',
+            'O(log n), porque a lista divide a busca sempre no meio.',
+            'O(n²), porque é preciso percorrer ida e volta.',
+            'O(n), porque ainda é preciso caminhar nó por nó até encontrar o 50.',
           ],
-          correct: 1,
-          correctExplain: 'Se havia 1 nó e ele foi removido, a lista ficou <strong>vazia</strong>! Portanto, tanto <code>ini</code> quanto <code>fim</code> devem apontar para <code>NULL</code> (Aula 8, slide 20).',
+          correct: 3,
+          correctExplain: 'A LDE deixa as pontas rápidas (<code>O(1)</code> no início e no fim), mas para achar um valor perdido no meio não tem atalho: no pior caso você percorre os <code>n</code> nós — <strong>O(n)</strong>!',
           wrongReasons: {
-            0: '<strong>A:</strong> Apontar para um nó removido (liberado) causa erro de memória inválida.',
-            2: '<strong>C:</strong> Deixaria lixo em <code>ini</code>.',
-            3: '<strong>D:</strong> Ponteiros continuariam apontando para memória liberada.',
-            4: '<strong>E:</strong> <code>fim-&gt;ant</code> já era <code>NULL</code>, mas <code>fim</code> também precisa virar <code>NULL</code>.',
+            0: '<strong>A:</strong> <code>L-&gt;ini</code> só aponta para o primeiro nó, não para um valor específico no meio.',
+            1: '<strong>B:</strong> Busca <code>O(log n)</code> é típica de Árvores equilibradas (como AVL) ou busca binária em vetor ordenado.',
+            2: '<strong>C:</strong> Basta caminhar em uma única direção (do início ao fim), então é <code>O(n)</code>, não <code>O(n²)</code>.',
+          },
+        },
+
+        // --- ÁRVORES & ABB (4) ---
+        {
+          id: 'q13',
+          topic: 'Árvores & ABB',
+          title: 'Na Árvore Binária de Busca (ABB) abaixo, onde o número 15 deve ser inserido para respeitar a regra da ABB?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 260 120" width="240" aria-label="ABB com raiz 20, esquerda 10, direita 30">
+            <line x1="130" y1="28" x2="72" y2="88" stroke="#1a6bb5" stroke-width="2.2" />
+            <line x1="130" y1="28" x2="188" y2="88" stroke="#1a6bb5" stroke-width="2.2" />
+            <circle cx="130" cy="28" r="18" fill="#1a6bb5" /><text x="130" y="33" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">20</text>
+            <circle cx="72" cy="88" r="18" fill="#0d7a5f" /><text x="72" y="93" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">10</text>
+            <circle cx="188" cy="88" r="18" fill="#0d7a5f" /><text x="188" y="93" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">30</text>
+          </svg></div>`,
+          options: [
+            'Como filho DIREITO do 10 (pois 15 < 20 vai para a esquerda, e 15 > 10 vai para a direita).',
+            'Como filho ESQUERDO do 10.',
+            'Como filho ESQUERDO do 30.',
+            'No lugar do 20, substituindo a raiz.',
+          ],
+          correct: 0,
+          correctExplain: 'Regra única da ABB: <strong>menor vai para a esquerda, maior vai para a direita</strong>. Como <code>15 &lt; 20</code>, descemos para o <code>10</code>; como <code>15 &gt; 10</code>, ele entra como filho <strong>direito do 10</strong>!',
+          wrongReasons: {
+            1: '<strong>B:</strong> À esquerda do <code>10</code> só entram números menores que <code>10</code>.',
+            2: '<strong>C:</strong> Tudo abaixo do <code>30</code> precisa ser maior que a raiz <code>20</code>.',
+            3: '<strong>D:</strong> Inserir na ABB sempre coloca o novo nó como uma folha lá embaixo, sem apagar a raiz.',
           },
         },
         {
           id: 'q14',
-          topic: 'Lista Dupla',
-          title: 'Na tabela comparativa da Aula 8, qual é o custo para REMOVER um nó conhecido no meio da LDE quando você já possui o ponteiro para ele?',
-          extraHtml: '',
-          options: ['O(n²)', 'O(n)', 'O(log n)', 'O(1) (após a busca)', 'Impossível remover do meio em LDE'],
-          correct: 3,
-          correctExplain: 'Como o nó já tem <code>p-&gt;ant</code> e <code>p-&gt;prox</code>, religar o vizinho da esquerda com o da direita leva tempo constante: <strong>O(1)</strong>! (Apenas buscar antes é que custa O(n)).',
+          topic: 'Árvores & ABB',
+          title: 'Na ABB abaixo, qual sequência é gerada ao fazer o percurso In-ordem (Esquerda → Raiz → Direita)?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 300 170" width="280" aria-label="ABB com nós 30, 10, 50, 5 e 20">
+            <line x1="150" y1="26" x2="88" y2="80" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="150" y1="26" x2="212" y2="80" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="88" y1="80" x2="50" y2="138" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="88" y1="80" x2="126" y2="138" stroke="#1a6bb5" stroke-width="2" />
+            <circle cx="150" cy="26" r="16" fill="#1a6bb5" /><text x="150" y="31" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">30</text>
+            <circle cx="88" cy="80" r="16" fill="#1a6bb5" /><text x="88" y="85" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">10</text>
+            <circle cx="212" cy="80" r="16" fill="#0d7a5f" /><text x="212" y="85" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">50</text>
+            <circle cx="50" cy="138" r="16" fill="#0d7a5f" /><text x="50" y="143" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">5</text>
+            <circle cx="126" cy="138" r="16" fill="#0d7a5f" /><text x="126" y="143" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">20</text>
+          </svg></div>`,
+          options: [
+            '30, 10, 5, 20, 50',
+            '5, 20, 10, 50, 30',
+            '5, 10, 20, 30, 50',
+            '50, 30, 20, 10, 5',
+          ],
+          correct: 2,
+          correctExplain: 'Mágica clássica de prova: em qualquer ABB, o percurso <strong>In-ordem (E-R-D)</strong> sempre imprime todos os valores em <strong>ordem crescente</strong>: <code>5, 10, 20, 30, 50</code>!',
           wrongReasons: {
-            0: '<strong>A:</strong> Nunca é quadrático.',
-            1: '<strong>B:</strong> Na LSL seria <code>O(n)</code> para achar o anterior, mas na LDE o próprio nó já guarda <code>ant</code>!',
-            2: '<strong>C:</strong> <code>O(log n)</code> não se aplica a listas ligadas.',
-            4: '<strong>E:</strong> Remover no meio é justamente um dos fortes da LDE.',
+            0: '<strong>A:</strong> Esse é o percurso <em>Pré-ordem</em> (Raiz-Esquerda-Direita).',
+            1: '<strong>B:</strong> Esse é o percurso <em>Pós-ordem</em> (Esquerda-Direita-Raiz).',
+            3: '<strong>D:</strong> Ordem decrescente só sairia percorrendo Direita → Raiz → Esquerda.',
           },
         },
         {
           id: 'q15',
-          topic: 'Lista Dupla',
-          title: 'Qual opção descreve corretamente as desvantagens da Lista Duplamente Encadeada em relação à Lista Simples?',
-          extraHtml: '',
+          topic: 'Árvores & ABB',
+          title: 'Queremos remover a raiz 50 (que tem 2 filhos) usando a regra do Predecessor (maior número do lado esquerdo). Qual valor substitui o 50?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 300 170" width="280" aria-label="ABB para remoção do 50 com Predecessor">
+            <line x1="150" y1="26" x2="88" y2="80" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="150" y1="26" x2="212" y2="80" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="88" y1="80" x2="50" y2="138" stroke="#1a6bb5" stroke-width="2" />
+            <line x1="88" y1="80" x2="126" y2="138" stroke="#1a6bb5" stroke-width="2" />
+            <circle cx="150" cy="26" r="16" fill="#d64535" /><text x="150" y="31" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">50</text>
+            <circle cx="88" cy="80" r="16" fill="#1a6bb5" /><text x="88" y="85" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">30</text>
+            <circle cx="212" cy="80" r="16" fill="#0d7a5f" /><text x="212" y="85" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">70</text>
+            <circle cx="50" cy="138" r="16" fill="#0d7a5f" /><text x="50" y="143" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">20</text>
+            <circle cx="126" cy="138" r="16" fill="#0d7a5f" /><text x="126" y="143" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">40</text>
+          </svg></div>`,
           options: [
-            'Não permite inserir no início em O(1).',
-            'Maior consumo de memória (dois ponteiros por nó) e maior cuidado ao atualizar ambos os ponteiros em inserções/remoções.',
-            'Só pode armazenar números inteiros.',
-            'Não permite navegar do início para o fim.',
-            'Exige memória contígua como os vetores.',
+            '20',
+            '40',
+            '70',
+            '30',
           ],
           correct: 1,
-          correctExplain: 'Conforme a Aula 8 (slide 12): as duas desvantagens são exatamente o <strong>consumo extra de memória</strong> (2 ponteiros por nó) e a <strong>maior complexidade/cuidado</strong> ao religar <code>ant</code> e <code>prox</code>.',
+          correctExplain: 'O <strong>Predecessor</strong> é o <strong>maior número da subárvore esquerda</strong> (dá 1 passo para a esquerda até o <code>30</code> e vai tudo para a direita → <strong>40</strong>!). Ele mantém toda a esquerda menor que 40 e toda a direita maior que 40.',
           wrongReasons: {
-            0: '<strong>A:</strong> Inserir no início continua sendo <code>O(1)</code>.',
-            2: '<strong>C:</strong> Pode armazenar qualquer tipo de dado (<code>float</code>, <code>struct</code>, etc.).',
-            3: '<strong>D:</strong> Navega nos dois sentidos.',
-            4: '<strong>E:</strong> A memória é dinâmica, não contígua.',
+            0: '<strong>A:</strong> <code>20</code> é o <em>menor</em> valor da esquerda, não o maior.',
+            2: '<strong>C:</strong> <code>70</code> fica do lado direito (seria o sucessor, não o predecessor).',
+            3: '<strong>D:</strong> <code>30</code> ainda tem o <code>40</code> maior que ele na sua direita; por isso o predecessor é o <code>40</code>.',
           },
         },
-
-        // --- ÁRVORES & ABB (5) ---
         {
           id: 'q16',
           topic: 'Árvores & ABB',
-          title: 'Qual é o resultado dos percursos Pré-ordem (RED), In-ordem (ERD) e Pós-ordem (EDR) para uma ABB com raiz 20, filho esquerdo 10 e filho direito 30?',
-          extraHtml: '',
+          title: 'Se inserirmos os números 10, 20, 30, 40 (já em ordem crescente) em uma ABB comum, o que acontece com o formato e a busca?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 280 155" width="250" aria-label="ABB degenerada 10 20 30 40">
+            <line x1="55" y1="24" x2="110" y2="58" stroke="#d64535" stroke-width="2" />
+            <line x1="110" y1="58" x2="165" y2="92" stroke="#d64535" stroke-width="2" />
+            <line x1="165" y1="92" x2="220" y2="126" stroke="#d64535" stroke-width="2" />
+            <circle cx="55" cy="24" r="15" fill="#1a6bb5" /><text x="55" y="29" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">10</text>
+            <circle cx="110" cy="58" r="15" fill="#1a6bb5" /><text x="110" y="63" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">20</text>
+            <circle cx="165" cy="92" r="15" fill="#1a6bb5" /><text x="165" y="97" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">30</text>
+            <circle cx="220" cy="126" r="15" fill="#d64535" /><text x="220" y="131" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">40</text>
+          </svg></div>`,
           options: [
-            'Pré: 10, 20, 30 | In: 20, 10, 30 | Pós: 30, 20, 10',
-            'Pré: 20, 10, 30 | In: 10, 20, 30 | Pós: 10, 30, 20',
-            'Pré: 20, 30, 10 | In: 10, 20, 30 | Pós: 10, 20, 30',
-            'Pré: 10, 30, 20 | In: 20, 10, 30 | Pós: 20, 10, 30',
-            'Pré: 30, 20, 10 | In: 30, 10, 20 | Pós: 10, 30, 20',
+            'Ela se equilibra sozinha automaticamente para manter busca O(log n).',
+            'Todos os nós vão para o lado esquerdo.',
+            'A ABB não aceita inserir números que já estão ordenados.',
+            'Vira uma "linha reta" só para a direita (árvore degenerada), e a busca cai para O(n).',
           ],
-          correct: 1,
-          correctExplain: '• <strong>Pré (R-E-D):</strong> Raiz(20), Esq(10), Dir(30)<br>• <strong>In (E-R-D):</strong> Esq(10), Raiz(20), Dir(30) — sempre crescente!<br>• <strong>Pós (E-D-R):</strong> Esq(10), Dir(30), Raiz(20)!',
+          correct: 3,
+          correctExplain: 'Como cada número novo é maior que todos os anteriores, todos caem sempre na direita! A ABB comum não faz rotações, então vira uma <strong>árvore degenerada</strong> (igual a uma Lista Simples) com busca <strong>O(n)</strong>.',
           wrongReasons: {
-            0: '<strong>A:</strong> Trocou Pré com In.',
-            2: '<strong>C:</strong> Em Pré visitou Direita antes da Esquerda.',
-            3: '<strong>D:</strong> Colocou Pós no lugar de Pré.',
-            4: '<strong>E:</strong> Ordem invertida.',
+            0: '<strong>A:</strong> Quem faz rotações para equilibrar sozinha é a <strong>AVL</strong>, não a ABB comum.',
+            1: '<strong>B:</strong> Números maiores vão para a direita.',
+            2: '<strong>C:</strong> A ABB insere normalmente; o problema é só que ela fica torta e lenta.',
           },
         },
+
+        // --- ÁRVORES AVL (4) ---
         {
           id: 'q17',
-          topic: 'Árvores & ABB',
-          title: 'Por que o percurso Pós-ordem (Esquerda → Direita → Raiz) é o mais indicado para liberar memória (destruir uma árvore)?',
+          topic: 'Árvores AVL',
+          title: 'Na Árvore AVL, quais valores de Fator de Balanceamento (FB) são válidos (ou seja, a árvore está equilibrada e NÃO precisa rotacionar)?',
           extraHtml: '',
           options: [
-            'Porque imprime os elementos em ordem alfabética/crescente.',
-            'Porque apaga primeiro as subárvores (filhos) e só dá free() no nó pai por último.',
-            'Porque não precisa usar ponteiros esq e dir.',
-            'Porque reduz a altura da árvore pela metade antes de apagar.',
-            'Porque evita checar se o nó é NULL.',
+            'Apenas -1, 0 e +1.',
+            'Apenas 0.',
+            'Qualquer valor entre -2 e +2.',
+            'Apenas números maiores que zero.',
           ],
-          correct: 1,
-          correctExplain: 'Se você desse <code>free(raiz)</code> antes, perderia os ponteiros <code>esq</code> e <code>dir</code> para chegar aos filhos! Com Pós-ordem (EDR), os filhos são liberados antes do pai.',
+          correct: 0,
+          correctExplain: 'Um nó da AVL é equilibrado quando <code>-1 ≤ FB ≤ +1</code> (ou seja, <code>-1</code>, <code>0</code> ou <code>+1</code>). Se bater em <code>+2</code> ou <code>-2</code> (<code>|FB| ≥ 2</code>), precisa rotacionar!',
           wrongReasons: {
-            0: '<strong>A:</strong> Quem imprime em ordem crescente em ABB é o <em>In-ordem</em>.',
-            2: '<strong>C:</strong> Continua usando os ponteiros normalmente.',
-            3: '<strong>D:</strong> Não muda altura antes de apagar.',
-            4: '<strong>E:</strong> Toda função recursiva em árvore precisa checar <code>NULL</code>.',
+            1: '<strong>B:</strong> <code>-1</code> e <code>+1</code> também são permitidos (diferença de no máximo 1 andar).',
+            2: '<strong>C:</strong> Quando chega em <code>-2</code> ou <code>+2</code>, a árvore já está desbalanceada e exige rotação.',
+            3: '<strong>D:</strong> O <code>FB</code> pode ser negativo (<code>-1</code>) quando o lado direito tem 1 andar a mais.',
           },
         },
         {
           id: 'q18',
-          topic: 'Árvores & ABB',
-          title: 'O que acontece se inserirmos a sequência já ordenada 10, 20, 30, 40, 50 em uma ABB comum (sem balanceamento AVL)?',
-          extraHtml: '',
+          topic: 'Árvores AVL',
+          title: 'Usando a fórmula dos slides (FB = alt(esq) - alt(dir), com folha = 0 e NULL = -1), qual é o FB da raiz 20 abaixo?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 260 125" width="240" aria-label="Cálculo de FB da raiz 20">
+            <line x1="130" y1="28" x2="72" y2="85" stroke="#1a6bb5" stroke-width="2.2" />
+            <line x1="130" y1="28" x2="188" y2="85" stroke="#9a968b" stroke-width="2" stroke-dasharray="5,4" />
+            <circle cx="130" cy="28" r="18" fill="#1a6bb5" /><text x="130" y="33" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">20</text>
+            <circle cx="72" cy="85" r="18" fill="#0d7a5f" /><text x="72" y="90" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">10</text>
+            <text x="188" y="90" text-anchor="middle" fill="#d64535" font-weight="bold" font-size="13">NULL</text>
+            <text x="72" y="116" text-anchor="middle" fill="#6b4200" font-size="11" font-weight="bold">alt = 0</text>
+            <text x="188" y="116" text-anchor="middle" fill="#6b4200" font-size="11" font-weight="bold">alt = -1</text>
+          </svg></div>`,
           options: [
-            'Ela fica perfeitamente balanceada com altura 2.',
-            'Os valores menores vão todos para a direita e os maiores para a esquerda.',
-            'Ela vira uma árvore degenerada (em linha reta para a direita), fazendo a busca cair para O(n).',
-            'A ABB recusa inserir a partir do 3º elemento.',
-            'A raiz muda automaticamente para 30.',
+            'FB = -1',
+            'FB = 0',
+            'FB = +1',
+            'FB = +2',
           ],
           correct: 2,
-          correctExplain: 'Como cada novo valor é maior que o anterior, todos descem sempre para o filho direito: vira uma "lista ligada torta" chamada <strong>árvore degenerada</strong>, com busca <code>O(n)</code> (Aula 9, slide 26).',
+          correctExplain: 'Aplicando a fórmula direto: <code>FB(20) = alt(esq) - alt(dir) = 0 - (-1) = 0 + 1 = +1</code>! Como está entre <code>-1</code> e <code>+1</code>, está equilibrada.',
           wrongReasons: {
-            0: '<strong>A:</strong> ABB comum não se balanceia sozinha.',
-            1: '<strong>B:</strong> Os maiores vão para a direita.',
-            3: '<strong>D:</strong> Só duplicados são recusados.',
-            4: '<strong>E:</strong> Sem rotações (AVL), a raiz continua sendo o 10.',
+            0: '<strong>A:</strong> Cuidado com o sinal: <code>0 - (-1)</code> vira <code>+1</code>, pois o lado mais pesado está na esquerda.',
+            1: '<strong>B:</strong> Só seria <code>0</code> se o lado direito também tivesse uma folha.',
+            3: '<strong>D:</strong> Para dar <code>+2</code>, o lado esquerdo precisaria ter altura <code>1</code> contra <code>-1</code> da direita.',
           },
         },
         {
           id: 'q19',
-          topic: 'Árvores & ABB',
-          title: 'Qual é a diferença entre uma árvore ESTRITAMENTE binária e uma árvore binária COMPLETA?',
-          extraHtml: '',
+          topic: 'Árvores AVL',
+          title: 'Ao inserir 30, 20, 10, a árvore entortou em linha reta para a esquerda (FB do pai = +2 e FB do filho = +1, mesmos sinais). Qual rotação resolve esse caso?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 260 150" width="240" aria-label="Caso LL 30 20 10">
+            <line x1="185" y1="26" x2="125" y2="76" stroke="#1a6bb5" stroke-width="2.2" />
+            <line x1="125" y1="76" x2="65" y2="126" stroke="#1a6bb5" stroke-width="2.2" />
+            <circle cx="185" cy="26" r="17" fill="#d64535" /><text x="185" y="31" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">30</text>
+            <text x="210" y="30" fill="#d64535" font-size="11" font-weight="bold">FB: +2</text>
+            <circle cx="125" cy="76" r="17" fill="#1a6bb5" /><text x="125" y="81" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">20</text>
+            <text x="150" y="80" fill="#1a6bb5" font-size="11" font-weight="bold">FB: +1</text>
+            <circle cx="65" cy="126" r="17" fill="#0d7a5f" /><text x="65" y="131" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">10</text>
+            <text x="90" y="130" fill="#0d7a5f" font-size="11" font-weight="bold">FB: 0</text>
+          </svg></div>`,
           options: [
-            'Estritamente binária: cada nó tem 0 ou 2 filhos (nunca 1); Completa: todos os nós folha estão no mesmo nível.',
-            'Estritamente binária: cada nó tem no máximo 1 filho; Completa: tem infinitos níveis.',
-            'São exatamente a mesma coisa.',
-            'Completa permite ter 3 filhos na raiz; Estritamente binária só permite 2.',
-            'Estritamente binária não pode ter folhas.',
+            'Rotação Simples à Esquerda no 30.',
+            'Rotação Simples à Direita no 30 (caso LL, o 20 sobe para a raiz).',
+            'Rotação Dupla, porque sinais iguais exigem duas rotações.',
+            'Nenhuma rotação, pois +2 é permitido.',
           ],
-          correct: 0,
-          correctExplain: 'Definição exata do slide 17 da Aula 9: <strong>Estritamente binária</strong> = cada nó tem 0 ou 2 filhos. <strong>Binária completa</strong> = todos os nós folha estão no mesmo nível.',
+          correct: 1,
+          correctExplain: 'Sinais iguais (<code>+2</code> e <code>+1</code>) formam uma linha reta (caso <strong>LL</strong>) → resolve com apenas <strong>1 Rotação Simples à Direita</strong> no <code>30</code>, fazendo o <code>20</code> subir para o topo!',
           wrongReasons: {
-            1: '<strong>B:</strong> Árvore binária permite até 2 filhos.',
-            2: '<strong>C:</strong> Uma árvore estritamente binária pode ter folhas em níveis diferentes (não sendo completa).',
-            3: '<strong>D:</strong> Nenhuma árvore binária pode ter 3 filhos.',
-            4: '<strong>E:</strong> Toda árvore finita tem folhas.',
+            0: '<strong>A:</strong> O peso caiu para a <em>esquerda</em>, então giramos para o lado contrário: à <strong>Direita</strong>.',
+            2: '<strong>C:</strong> Sinais <em>iguais</em> = rotação simples. Sinais <em>opostos</em> (joelho) = rotação dupla.',
+            3: '<strong>D:</strong> <code>FB = +2</code> está fora do limite <code>[-1, +1]</code> e sempre exige rotação.',
           },
         },
         {
           id: 'q20',
-          topic: 'Árvores & ABB',
-          title: 'Na remoção de um nó com DOIS filhos em uma ABB seguindo a estratégia dos slides (Predecessor), o que o código abaixo faz?',
-          extraHtml: `<pre class="code-block"><code>No* p = maximo(r->esq);
-r->chave = p->chave;
-r->esq = removeRec(r->esq, p->chave);</code></pre>`,
-          options: [
-            'Acha o menor valor da direita, apaga a árvore inteira e retorna NULL.',
-            'Acha o maior valor da subárvore esquerda (nó mais à direita dela), copia sua chave para r, e remove o nó original desse predecessor.',
-            'Troca r pelo seu filho direito diretamente sem verificar os netos.',
-            'Cria um nó duplicado na subárvore direita e mantém o antigo.',
-            'Apenas apaga r com free(r) deixando os dois filhos soltos.',
-          ],
-          correct: 1,
-          correctExplain: '<code>maximo(r-&gt;esq)</code> busca o <strong>predecessor</strong> (maior da esquerda). Copiamos o valor dele para <code>r</code> e depois removemos o nó original <code>p</code> da subárvore esquerda para não deixar valor duplicado!',
-          wrongReasons: {
-            0: '<strong>A:</strong> <code>maximo(r-&gt;esq)</code> pega o maior da esquerda, não o menor da direita.',
-            2: '<strong>C:</strong> Isso perderia os filhos ou quebraria o invariante.',
-            3: '<strong>D:</strong> Justamente a 3ª linha evita que fique duplicado.',
-            4: '<strong>E:</strong> Causaria perda de metade da árvore.',
-          },
-        },
-
-        // --- ÁRVORES AVL (5) ---
-        {
-          id: 'q21',
           topic: 'Árvores AVL',
-          title: 'Seguindo a convenção oficial da Aula 10 (folha = altura 0; subárvore vazia = -1), se um nó X tem filho esquerdo folha e subárvore direita vazia (NULL), qual é o FB(X)?',
-          extraHtml: '',
-          options: ['0', '+1', '-1', '+2', '-2'],
-          correct: 1,
-          correctExplain: '<code>altura(esq) = 0</code> (folha) e <code>altura(dir) = -1</code> (vazia). Pela fórmula <code>FB = altura(esq) - altura(dir) = 0 - (-1) = +1</code>! A árvore ainda está balanceada.',
-          wrongReasons: {
-            0: '<strong>A (0):</strong> Seria 0 se ambos os lados tivessem a mesma altura.',
-            2: '<strong>C (-1):</strong> Seria -1 se a folha estivesse à direita e a esquerda vazia.',
-            3: '<strong>D (+2):</strong> Só daria +2 se a subárvore esquerda tivesse altura 1 (ex: neto na esquerda) e a direita vazia (-1).',
-            4: '<strong>E (-2):</strong> Penderia para a direita.',
-          },
-        },
-        {
-          id: 'q22',
-          topic: 'Árvores AVL',
-          title: 'Em uma árvore AVL vazia, inserimos na ordem: 30, depois 10, depois 20. Qual desbalanceamento ocorre e qual rotação resolve?',
-          extraHtml: '',
+          title: 'No desenho abaixo (10 → direita 30 → esquerda 20), o pai tem FB = -2 e o filho tem FB = +1 (sinais opostos, formando um "joelho"). O que fazer?',
+          extraHtml: `<div class="diagram-wrap" style="margin: 10px 0;"><svg viewBox="0 0 260 150" width="240" aria-label="Caso RL joelho 10 30 20">
+            <line x1="75" y1="26" x2="180" y2="76" stroke="#1a6bb5" stroke-width="2.2" />
+            <line x1="180" y1="76" x2="120" y2="126" stroke="#1a6bb5" stroke-width="2.2" />
+            <circle cx="75" cy="26" r="17" fill="#d64535" /><text x="75" y="31" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">10</text>
+            <text x="100" y="30" fill="#d64535" font-size="11" font-weight="bold">FB: -2</text>
+            <circle cx="180" cy="76" r="17" fill="#1a6bb5" /><text x="180" y="81" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">30</text>
+            <text x="205" y="80" fill="#1a6bb5" font-size="11" font-weight="bold">FB: +1</text>
+            <circle cx="120" cy="126" r="17" fill="#0d7a5f" /><text x="120" y="131" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">20</text>
+            <text x="145" y="130" fill="#0d7a5f" font-size="11" font-weight="bold">FB: 0</text>
+          </svg></div>`,
           options: [
-            'Caso LL → Rotação simples à direita no 30.',
-            'Caso RR → Rotação simples à esquerda no 30.',
-            'Caso LR → Rotação dupla à direita (esquerda no 10, depois direita no 30).',
-            'Caso RL → Rotação dupla à esquerda (direita no 10, depois esquerda no 30).',
-            'Não ocorre desbalanceamento; todos os nós ficam com |FB| ≤ 1.',
+            'Rotação Simples à Esquerda, deixando o 30 na raiz.',
+            'Rotação Simples à Direita, mantendo o 10 na raiz.',
+            'Rotação Dupla à Esquerda (caso RL), fazendo o 20 subir para a raiz.',
+            'Não precisa rotacionar porque 10, 20 e 30 são pequenos.',
           ],
           correct: 2,
-          correctExplain: '20 é menor que 30 (vai à esquerda) e maior que 10 (vai à direita do filho esquerdo). Então <code>FB(30) = +2</code> e <code>FB(10) = -1</code>: sinais opostos = caso <strong>LR (joelho)</strong>! Gira 10 à esquerda e depois 30 à direita → 20 vira raiz!',
+          correctExplain: 'Sinais opostos (<code>-2</code> e <code>+1</code>) formam um "joelho" (caso <strong>RL</strong>). Como uma rotação simples não endireita joelho, aplicamos a <strong>Rotação Dupla à Esquerda</strong> (Direita no 30, depois Esquerda no 10), e o <strong>20</strong> sobe para a raiz!',
           wrongReasons: {
-            0: '<strong>A:</strong> LL seria se inseríssemos 30, 20, 10.',
-            1: '<strong>B:</strong> RR seria 10, 20, 30.',
-            3: '<strong>D:</strong> RL seria 10, 30, 20.',
-            4: '<strong>E:</strong> O nó 30 fica com <code>FB = +2</code> (desbalanceado!).',
-          },
-        },
-        {
-          id: 'q23',
-          topic: 'Árvores AVL',
-          title: 'Após inserir um elemento em uma AVL, percebemos que três ancestrais ficaram com |FB| = 2 ao mesmo tempo (ex: nós 7, 6 e 4, da folha para a raiz). Onde devemos aplicar a rotação?',
-          extraHtml: '',
-          options: [
-            'Sempre na raiz global da árvore (nó 4) primeiro.',
-            'Nos três nós de cima para baixo ao mesmo tempo.',
-            'Apenas no primeiro nó ancestral desbalanceado encontrado de baixo para cima (nó 7).',
-            'Na folha recém-inserida.',
-            'Em AVL não é permitido mais de um nó ter |FB| = 2, então a árvore é descartada.',
-          ],
-          correct: 2,
-          correctExplain: 'Regra exata da Aula 10 (slides 17–18 e 28): na volta da recursão (<strong>de baixo para cima</strong>), rebalanceamos <strong>apenas o primeiro nó ancestral</strong> com <code>|FB| ≥ 2</code>. Ao corrigi-lo, todos os ancestrais acima voltam a ficar balanceados!',
-          wrongReasons: {
-            0: '<strong>A:</strong> Girar a raiz direto não resolve o desbalanceamento local lá embaixo.',
-            1: '<strong>B:</strong> Na inserção, apenas 1 ponto precisa ser rotacionado.',
-            3: '<strong>D:</strong> Folha tem sempre <code>FB = 0</code>.',
-            4: '<strong>E:</strong> É super comum vários ancestrais ficarem com ±2 antes da rotação do primeiro corrigir tudo.',
-          },
-        },
-        {
-          id: 'q24',
-          topic: 'Árvores AVL',
-          title: 'Inserindo 10, depois 30, depois 20 em uma AVL vazia, qual será a raiz da árvore após o balanceamento?',
-          extraHtml: '',
-          options: ['10', '30', '20', 'NULL', 'Depende da altura do nó 10'],
-          correct: 2,
-          correctExplain: '10 → dir 30 → esq 20 gera o caso <strong>RL</strong> (<code>FB(10) = -2</code>, <code>FB(30) = +1</code>). A rotação dupla à esquerda (direita no 30, depois esquerda no 10) coloca <strong>20 como nova raiz</strong>, com 10 à esquerda e 30 à direita!',
-          wrongReasons: {
-            0: '<strong>A (10):</strong> Era a raiz antes da rotação; desce para a esquerda.',
-            1: '<strong>B (30):</strong> Fica como filho direito do 20.',
-            3: '<strong>D:</strong> A árvore tem 3 nós.',
-            4: '<strong>E:</strong> O resultado é determinístico: raiz 20.',
-          },
-        },
-        {
-          id: 'q25',
-          topic: 'Árvores AVL',
-          title: 'Sobre a REMOÇÃO em uma Árvore AVL, qual afirmação está correta?',
-          extraHtml: '',
-          options: [
-            'É totalmente diferente da ABB e não usa os casos de folha, 1 filho ou 2 filhos.',
-            'Segue os 3 casos clássicos da ABB e, na rota de volta da recursão, recalcula alturas e aplica rotações para restaurar o balanceamento.',
-            'Nunca precisa de rotações porque remover nós sempre deixa a árvore mais equilibrada.',
-            'Atualiza as alturas de cima para baixo antes mesmo de encontrar o nó a remover.',
-            'Exige reiniciar a árvore inteira do zero com malloc a cada remoção.',
-          ],
-          correct: 1,
-          correctExplain: 'Aula 10 (slide 29): a remoção em AVL usa os mesmos 3 casos da ABB e restaura o balanceamento <strong>na rota de volta da recursão</strong>, atualizando alturas de baixo para cima e rotacionando onde <code>|FB| ≥ 2</code>.',
-          wrongReasons: {
-            0: '<strong>A:</strong> A remoção base é idêntica à da ABB.',
-            2: '<strong>C:</strong> Remover um nó de um lado pode fazer o outro lado ficar 2 níveis mais alto (desbalanceando!).',
-            3: '<strong>D:</strong> Alturas só podem ser recalculadas <strong>de baixo para cima</strong> (na volta).',
-            4: '<strong>E:</strong> Apenas ajusta localmente na volta da recursão.',
+            0: '<strong>A:</strong> Se fizer só rotação simples à esquerda, a árvore continua torta para o outro lado!',
+            1: '<strong>B:</strong> Uma rotação simples à direita no <code>10</code> não resolve um desbalanceamento vindo da direita.',
+            3: '<strong>D:</strong> O tamanho dos números não importa; o que manda é o <code>FB = -2</code>.',
           },
         },
       ];
@@ -2211,7 +2126,7 @@ r->esq = removeRec(r->esq, p->chave);</code></pre>`,
       StudyGuide.init({
         lang: 'c',
         quizQuestions,
-        quizSubtitle: 'Aulas 6 a 10',
+        quizSubtitle: 'Aulas 6 a 10 · Fixação de Conceitos',
       });
       renderListLab(
         'Comece clicando nos botões acima para ver os ponteiros da <strong>Lista Simples</strong> mudando em tempo real!'
