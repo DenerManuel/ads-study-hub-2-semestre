@@ -78,6 +78,21 @@
         return '';
       },
     },
+    java: {
+      regex:
+        /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("[^"]*"|'[^']*')|(@Override)\b|\b(public|private|protected|class|extends|super|this|new|return|if|else|static|final|void|import|package)\b|\b(int|double|float|long|short|byte|boolean|char|String|Scanner|Math|System)\b|\b(true|false|null)\b|\b(\d+(?:\.\d+)?)\b/g,
+      mapGroups(match) {
+        const [, com, str, ann, kw, typ, nul, num] = match;
+        if (com) return 'tok-com';
+        if (str) return 'tok-str';
+        if (ann) return 'tok-num';
+        if (kw) return 'tok-kw';
+        if (typ) return 'tok-type';
+        if (nul) return 'tok-null';
+        if (num) return 'tok-num';
+        return '';
+      },
+    },
   };
 
   function registerLanguage(name, config) {
