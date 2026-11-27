@@ -1,0 +1,1658 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orientação a Objetos e UML — Guia Completo para Prova</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/study-guide.css" />
+    <style>
+      .mem-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      @media (min-width: 720px) {
+        .mem-grid {
+          grid-template-columns: 1fr 1.35fr;
+        }
+      }
+      .mem-panel {
+        background: #faf9f5;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px;
+      }
+      .mem-panel h4 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .mem-slot {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--blue);
+        border-radius: 6px;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+      }
+      .mem-slot.null-slot {
+        border-left-color: var(--error);
+        background: var(--error-soft);
+      }
+      .mem-obj {
+        background: var(--surface);
+        border: 2px solid var(--green);
+        border-radius: 8px;
+        padding: 9px 11px;
+        margin-bottom: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+      }
+      .mem-obj.shared {
+        border-color: var(--purple);
+        box-shadow: 0 0 0 2px var(--purple-soft);
+      }
+      .mem-obj.static-box {
+        border-color: var(--amber);
+        background: var(--amber-soft);
+      }
+      .mem-obj-head {
+        font-weight: 700;
+        font-size: 12px;
+        margin-bottom: 4px;
+        color: var(--text);
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .sim-log.ok {
+        background: var(--green-soft);
+        border-left-color: var(--green);
+        color: var(--green-text);
+      }
+      .sim-log.err {
+        background: var(--error-soft);
+        border-left-color: var(--error);
+        color: var(--error-text);
+      }
+      .layer-box {
+        border: 2px solid var(--blue);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--blue-soft);
+        text-align: center;
+      }
+      .layer-inner {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-top: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+      }
+    </style>
+  </head>
+  <body data-lang="java">
+    <div class="topbar">
+      <div class="header">
+        <div class="header-top-row">
+          <a class="hub-back" href="../index.html">← Voltar ao Hub</a>
+          <div class="header-tag">Faculdade Donaduzzi · POO &amp; UML · Prof. Vinícius Tessele</div>
+        </div>
+        <h1>Orientação a Objetos e UML Sem Mistério (Java)</h1>
+        <p>
+          Guia direto para prova objetiva (Unidade 2 — Aulas 5 a 10 + Aula 20 Herança): explicação simples do zero,
+          código Java traduzido, pegadinhas de compilação, 3 simuladores visuais e 20 questões comentadas.
+        </p>
+      </div>
+
+      <div class="nav-container">
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" onclick="showTab('teoria', this)">📚 Teoria</button>
+          <button class="tab-btn" onclick="showTab('exemplos', this)">💡 Exemplos &amp; Labs</button>
+          <button class="tab-btn" onclick="showTab('resumo', this)">📋 Resumo</button>
+          <button class="tab-btn" onclick="showTab('quiz', this)">🎯 Quiz (20)</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- =================== ABA 1: TEORIA =================== -->
+      <div id="teoria" class="tab-panel active">
+        <div class="subtabs" id="teoria-subtabs">
+          <button class="subtab-btn active" onclick="showSubtab('teoria', 't-classes', this)">
+            1. Classes, Objetos &amp; Memória (Aulas 5–6)
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-metodos', this)">
+            2. Métodos, Sobrecarga &amp; this (Aula 7) ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-construtores', this)">
+            3. Construtores &amp; this() (Aula 8) ⭐
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-static', this)">
+            4. static, final &amp; Biblioteca (Aulas 9–10)
+          </button>
+          <button class="subtab-btn" onclick="showSubtab('teoria', 't-heranca', this)">
+            5. Herança, super &amp; UML (Aula 20) ⭐
+          </button>
+        </div>
+
+        <!-- ========== SUB 1: CLASSES, OBJETOS & MEMÓRIA ========== -->
+        <div id="t-classes" class="subpanel active">
+          <div class="card">
+            <h2>1. Classe × Objeto × Abstração (A Planta e a Casa!)</h2>
+            <p>
+              Na Programação Orientada a Objetos (POO), a gente para de jogar tudo solto dentro do <code>main</code> e
+              passa a modelar coisas do mundo real (um carro, uma conta bancária, um aluno, um produto).
+            </p>
+            <div class="grid-3">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">📐 Classe (O Molde)</h4>
+                <p>
+                  É a <strong>planta da casa</strong> ou a forma de bolo. Ela <strong>não é</strong> o objeto em si: ela
+                  apenas descreve quais dados e ações os objetos daquele tipo terão.
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">🏠 Objeto / Instância</h4>
+                <p>
+                  É a <strong>casa construída</strong> a partir da planta! A partir de 1 classe <code>Carro</code>,
+                  podemos criar vários objetos independentes: <code>meuCarro</code> e <code>carroDoPaulo</code>.
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--purple)">
+                <h4 style="color: var(--purple)">🎯 Abstração</h4>
+                <p>
+                  É <strong>simplificar focando no que importa</strong> para o sistema. Para um app de multas, o Carro
+                  precisa de <code>placa, cor, modelo</code>; para um jogo de corrida, de <code>velocidade, acelerar()</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="flow-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))">
+              <div class="flow-step" style="background: var(--blue-soft); border-color: var(--blue); color: #0c3a68">
+                <span class="flow-num" style="background: var(--blue)">A</span>
+                <span><strong>Atributos (Estado):</strong> variáveis da classe que guardam dados (<code>modelo</code>, <code>saldo</code>).</span>
+              </div>
+              <div class="flow-step" style="background: var(--green-soft); border-color: var(--green); color: var(--green-text)">
+                <span class="flow-num" style="background: var(--green)">M</span>
+                <span><strong>Métodos (Comportamento):</strong> ações que o objeto faz (<code>acelerar()</code>, <code>sacar()</code>).</span>
+              </div>
+            </div>
+
+            <div class="box box-dica">
+              <div class="box-icon">📝</div>
+              <div class="box-content">
+                <div class="box-label">Boas Práticas que Caem em Questão Teórica</div>
+                <ul>
+                  <li><strong>Classe</strong> começa com letra maiúscula (<code>PascalCase</code>): <code>ContaBancaria</code>, <code>Celular</code>.</li>
+                  <li><strong>Atributo e método</strong> começam com minúscula (<code>camelCase</code>): <code>calcularMedia()</code>.</li>
+                  <li><strong>Uma classe pública por arquivo <code>.java</code></strong> com o mesmo nome: <code>Carro.java</code> e <code>Principal.java</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. Criando Objetos com <code>new</code>, Operador Ponto (<code>.</code>) e Stack × Heap</h2>
+            <p>
+              Quando você escreve <code>Carro c1 = new Carro();</code>, duas regiões diferentes da memória trabalham juntas:
+            </p>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 650 185" width="600" aria-label="Memória Stack e Heap em Java">
+                <defs>
+                  <marker id="arr-mem" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 z" fill="#1a6bb5" />
+                  </marker>
+                </defs>
+                <!-- Stack -->
+                <rect x="18" y="16" width="235" height="152" rx="10" fill="#ebf3fb" stroke="#1a6bb5" stroke-width="2" />
+                <text x="135" y="39" text-anchor="middle" fill="#0c3a68" font-weight="bold" font-size="14">STACK (Pilha · LIFO)</text>
+                <text x="135" y="56" text-anchor="middle" fill="#4a4740" font-size="11">Variáveis locais, primitivos e referências</text>
+                <rect x="34" y="70" width="202" height="34" rx="6" fill="#fff" stroke="#1a6bb5" />
+                <text x="46" y="92" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="bold">c1 ──► (endereço #1)</text>
+                <rect x="34" y="114" width="202" height="34" rx="6" fill="#fff" stroke="#7c5fd4" />
+                <text x="46" y="136" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="bold">c2 ──► (endereço #1!)</text>
+
+                <!-- Seta -->
+                <line x1="255" y1="87" x2="345" y2="87" stroke="#1a6bb5" stroke-width="2.5" marker-end="url(#arr-mem)" />
+                <path d="M 255 131 C 295 131, 300 98, 345 98" fill="none" stroke="#7c5fd4" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#arr-mem)" />
+
+                <!-- Heap -->
+                <rect x="352" y="16" width="280" height="152" rx="10" fill="#fef7e8" stroke="#e8a020" stroke-width="2" />
+                <text x="492" y="39" text-anchor="middle" fill="#6b4200" font-weight="bold" font-size="14">HEAP (Monte · Garbage Collector)</text>
+                <text x="492" y="56" text-anchor="middle" fill="#4a4740" font-size="11">Objetos criados com new ficam aqui</text>
+                <rect x="372" y="68" width="240" height="82" rx="8" fill="#fff" stroke="#0d7a5f" stroke-width="2" />
+                <text x="384" y="88" fill="#0d7a5f" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="bold">Objeto Carro (#1)</text>
+                <text x="384" y="109" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12">cor = "azul"  (era prata!)</text>
+                <text x="384" y="128" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12">modelo = "Civic" | vel = 10</text>
+              </svg>
+              <div class="diagram-caption"><code>c2 = c1</code> copia apenas o endereço na Stack — ambos apontam para o mesmo objeto no Heap!</div>
+            </div>
+
+            <pre class="code-block"><code>Carro c1 = new Carro();    // cria objeto #1 no Heap e guarda o endereço em c1
+c1.cor = "prata";          // operador ponto (.) acessa atributo do objeto
+c1.acelerar();             // operador ponto (.) chama método do objeto
+
+Carro c2 = c1;             // NÃO cria carro novo! Copia a referência!
+c2.cor = "azul";
+System.out.println(c1.cor); // Imprime "azul" (é o mesmo carro!)
+
+Carro c3 = null;           // não aponta para nenhum objeto
+c3.acelerar();             // ERRO em execução: NullPointerException!</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinhas Clássicas de Stack × Heap e Referência</div>
+                <ul>
+                  <li><strong>Tipos primitivos</strong> (<code>int</code>, <code>double</code>) guardam o valor na <strong>Stack</strong>; <strong>objetos</strong> ficam sempre no <strong>Heap</strong> (gerenciados pelo Garbage Collector).</li>
+                  <li><strong><code>c2 = c1</code></strong> não duplica o objeto — apenas cria outro ponteiro para o mesmo objeto. Para ter dois carros independentes, precisa de dois <code>new Carro()</code>!</li>
+                  <li><strong>Esquecer o <code>new</code> ou usar <code>null</code>:</strong> <code>Carro c = null; c.cor = "azul";</code> gera <strong><code>NullPointerException</code></strong>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>3. Valores Padrão de Atributos (Quando Você Usa <code>new</code>)</h2>
+            <p>
+              Ao criar um objeto com <code>new</code>, o Java inicializa automaticamente todos os <strong>atributos</strong> da classe.
+              Mas atenção: isso <strong>não</strong> vale para variáveis locais dentro de métodos!
+            </p>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Tipo do Atributo</th>
+                    <th>Valor Padrão</th>
+                    <th>Exemplo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>int</code>, <code>long</code>, <code>short</code>, <code>byte</code></td>
+                    <td><code>0</code></td>
+                    <td><code>int idade;</code> → <code>0</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>double</code>, <code>float</code></td>
+                    <td><code>0.0</code></td>
+                    <td><code>double saldo;</code> → <code>0.0</code> (imprime com <code>.0</code>!)</td>
+                  </tr>
+                  <tr>
+                    <td><code>boolean</code></td>
+                    <td><code>false</code></td>
+                    <td><code>boolean ativo;</code> → <code>false</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>char</code></td>
+                    <td><code>'\u0000'</code></td>
+                    <td>caractere vazio</td>
+                  </tr>
+                  <tr>
+                    <td><code>String</code> (e qualquer objeto)</td>
+                    <td><code>null</code></td>
+                    <td><code>String nome;</code> → <code>null</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="box box-conceito">
+              <div class="box-icon">📘</div>
+              <div class="box-content">
+                <div class="box-label">Atributo × Variável Local</div>
+                <p>
+                  Um <strong>atributo</strong> da classe nasce com valor padrão (<code>0</code>, <code>0.0</code>, <code>false</code>, <code>null</code>).
+                  Já uma <strong>variável local</strong> (declarada dentro de um método ou <code>main</code>) <strong>precisa ser inicializada manualmente</strong> antes de ser usada, senão não compila!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 2: MÉTODOS, SOBRECARGA & THIS ========== -->
+        <div id="t-metodos" class="subpanel">
+          <div class="card">
+            <h2>1. Métodos <code>void</code> × Métodos com Retorno + Parâmetros</h2>
+            <p>
+              Métodos são as ações do objeto. Em Java, a primeira palavra da assinatura diz se o método devolve alguma resposta ou só executa uma tarefa.
+            </p>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">⚙️ <code>void</code> — Só executa</h4>
+                <p>Não devolve nenhum valor. Usado para imprimir ou alterar atributos do próprio objeto.</p>
+                <pre class="code-block"><code>void depositar(double valor) {
+    saldo += valor;
+}</code></pre>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">↩️ Com Tipo — Devolve valor</h4>
+                <p>O tipo (<code>double</code>, <code>boolean</code>, <code>String</code>) substitui <code>void</code> e usa <code>return</code>.</p>
+                <pre class="code-block"><code>boolean sacar(double valor) {
+    if (valor &lt;= saldo) {
+        saldo -= valor;
+        return true;
+    }
+    return false;
+}</code></pre>
+              </div>
+            </div>
+            <div class="box box-analogia">
+              <div class="box-icon">💡</div>
+              <div class="box-content">
+                <div class="box-label">Detalhes Importantes dos Slides (Aulas 6 e 7)</div>
+                <ul>
+                  <li><strong><code>return</code> encerra o método imediatamente</strong> e devolve o resultado para quem chamou (pode guardar em variável ou imprimir direto).</li>
+                  <li><strong>Método chama método:</strong> dentro da mesma classe, <code>situacao()</code> pode chamar <code>calcularMedia()</code> diretamente.</li>
+                  <li><strong>Objeto como parâmetro:</strong> um método pode receber outro objeto! Ex: <code>atacar(Jogador alvo)</code> chama <code>alvo.receberDano(this.ataque)</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. Sobrecarga de Métodos (Overloading)</h2>
+            <p>
+              <strong>Sobrecarga</strong> é criar <strong>dois ou mais métodos com o mesmo nome na mesma classe</strong>, mas com
+              <strong>lista de parâmetros diferente</strong> (quantidade diferente ou tipos diferentes). O Java escolhe qual chamar olhando os argumentos!
+            </p>
+            <pre class="code-block"><code>class Calculadora {
+    int somar(int a, int b) { return a + b; }          // 2 inteiros
+    double somar(double a, double b) { return a + b; } // tipos diferentes -> OK!
+    int somar(int a, int b, int c) { return a + b + c; } // quantidade diferente -> OK!
+}
+
+class ContaBancaria {
+    void depositar(double valor) { ... }
+    void depositar(double valor, String descricao) { ... } // sobrecarga válida!
+}</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha Clássica de Prova: Só Mudar o Retorno NÃO Compila!</div>
+                <p>
+                  Se você tiver <code>int somar(int a, int b)</code> e <code>double somar(int a, int b)</code> na mesma classe,
+                  <strong>dá ERRO DE COMPILAÇÃO</strong>! Mudar apenas o tipo de retorno (mantendo nome e parâmetros idênticos)
+                  <strong>NÃO</strong> é sobrecarga válida.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>3. A Palavra-chave <code>this</code> (Os 3 Usos)</h2>
+            <p>
+              <code>this</code> significa <strong>"este objeto aqui"</strong> (é a referência para o próprio objeto que está executando o método).
+            </p>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--error)">
+                <h4 style="color: var(--error)">❌ Sem <code>this</code> — Armadilha!</h4>
+                <pre class="code-block"><code>void setNome(String nome) {
+    nome = nome; // atribui o parâmetro a ele mesmo!
+} // o atributo da classe NÃO muda!</code></pre>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">✅ Com <code>this</code> — Correto!</h4>
+                <pre class="code-block"><code>void setNome(String nome) {
+    this.nome = nome; // atributo = parâmetro
+}</code></pre>
+              </div>
+            </div>
+            <ul>
+              <li><strong>1. Resolver ambiguidade:</strong> quando o parâmetro tem o mesmo nome do atributo (<code>this.nome = nome</code>).</li>
+              <li><strong>2. Encadear construtores:</strong> <code>this(...)</code> dentro de um construtor chama outro construtor da mesma classe.</li>
+              <li><strong>3. Passar o próprio objeto:</strong> <code>metodo(this)</code> envia a referência do objeto atual para outro método.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ========== SUB 3: CONSTRUTORES & THIS(...) ========== -->
+        <div id="t-construtores" class="subpanel">
+          <div class="card">
+            <h2>1. O que é um Construtor? (E as 2 Regras de Sintaxe!)</h2>
+            <p>
+              Sem construtor, você precisa criar o objeto vazio e preencher atributo por atributo em várias linhas (e corre o risco de esquecer algum).
+              O <strong>construtor</strong> é um bloco especial chamado <strong>automaticamente no momento do <code>new</code></strong> para o objeto já nascer inicializado!
+            </p>
+            <div class="flow-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))">
+              <div class="flow-step" style="background: var(--blue-soft); border-color: var(--blue); color: #0c3a68">
+                <span class="flow-num" style="background: var(--blue)">1</span>
+                <span><strong>Mesmo nome da classe:</strong> classe <code>Carro</code> → construtor <code>Carro(...)</code>.</span>
+              </div>
+              <div class="flow-step" style="background: var(--error-soft); border-color: var(--error); color: var(--error-text)">
+                <span class="flow-num" style="background: var(--error)">2</span>
+                <span><strong>NÃO tem retorno — nem <code>void</code>!</strong> Se colocar <code>void</code>, vira método comum!</span>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>public class Carro {
+    String modelo;
+    String cor;
+    int velocidade;
+
+    // Construtor parametrizado: mesmo nome da classe, SEM void!
+    Carro(String modelo, String cor) {
+        this.modelo = modelo;
+        this.cor = cor;
+        this.velocidade = 0;
+    }
+}
+// No main:
+Carro c = new Carro("Fusca", "azul"); // já nasce pronto!</code></pre>
+          </div>
+
+          <div class="card">
+            <h2>2. Construtor Padrão (Default) × Construtor Parametrizado</h2>
+            <p>
+              Esta é uma das questões mais clássicas de prova objetiva em Java. Entenda o comportamento automático do compilador:
+            </p>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--blue)">
+                <h4 style="color: var(--blue)">🤖 Quando você NÃO escreve nenhum</h4>
+                <p>
+                  Se a classe não tiver nenhum construtor escrito, o Java cria um <strong>construtor padrão implícito</strong> sem parâmetros (<code>public Carro() {}</code>). Os atributos ficam com valores padrão (<code>null</code>, <code>0</code>, <code>false</code>).
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--error)">
+                <h4 style="color: var(--error)">💥 Quando você escreve UM parametrizado</h4>
+                <p>
+                  O construtor padrão implícito <strong>DESAPARECE</strong>! Se você criou <code>Carro(String m)</code> e não escreveu <code>Carro() {}</code>, chamar <code>new Carro()</code> vazio dá <strong>ERRO DE COMPILAÇÃO</strong>!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>3. Sobrecarga de Construtores e Encadeamento <code>this(...)</code></h2>
+            <p>
+              Assim como métodos, uma classe pode ter <strong>vários construtores</strong> com parâmetros diferentes (sobrecarga de construtores).
+              Para não repetir código entre eles, um construtor pode chamar outro da mesma classe usando <code>this(...)</code>.
+            </p>
+            <pre class="code-block"><code>public class Produto {
+    String nome;
+    double preco;
+    int estoque;
+
+    Produto() {
+        this("Sem nome", 0.0, 0); // chama o construtor de 3 parâmetros!
+    }
+
+    Produto(String nome, double preco) {
+        this(nome, preco, 0); // DEVE ser a 1a linha do construtor!
+    }
+
+    Produto(String nome, double preco, int estoque) {
+        this.nome = nome;
+        this.preco = preco;
+        this.estoque = estoque;
+    }
+}</code></pre>
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Regra de Ouro do <code>this(...)</code></div>
+                <p>
+                  A chamada <code>this(...)</code> precisa ser obrigatoriamente a <strong>primeira linha</strong> dentro do construtor.
+                  Se houver qualquer outra linha antes dela, o código <strong>não compila</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SUB 4: STATIC, FINAL & BIBLIOTECA ========== -->
+        <div id="t-static" class="subpanel">
+          <div class="card">
+            <h2>1. Membros de Instância × Membros <code>static</code> (Da Classe)</h2>
+            <p>
+              Atributos normais (de instância) existem uma vez para cada objeto criado. Já um membro <strong><code>static</code> pertence à CLASSE inteira</strong>: existe uma única cópia na memória compartilhada por todos os objetos!
+            </p>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Critério</th>
+                    <th>Membro de Instância (sem <code>static</code>)</th>
+                    <th>Membro <code>static</code> (da Classe)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Pertence a</strong></td>
+                    <td>Cada objeto individual</td>
+                    <td>À classe inteira</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Como acessar</strong></td>
+                    <td><code>objeto.atributo</code> / <code>objeto.metodo()</code></td>
+                    <td><code>Classe.atributo</code> / <code>Classe.metodo()</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Memória</strong></td>
+                    <td>Uma cópia por objeto criado</td>
+                    <td>Uma única cópia compartilhada</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pode usar <code>this</code>?</strong></td>
+                    <td><span class="badge badge-green">Sim</span></td>
+                    <td><span class="badge badge-red">Não</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Exemplos dos slides</strong></td>
+                    <td><code>nome</code>, <code>saldo</code>, <code>cor</code></td>
+                    <td><code>totalCarros</code>, <code>Math.PI</code>, <code>Math.sqrt(4)</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <pre class="code-block"><code>public class Carro {
+    String modelo;                 // de instância (cada carro tem o seu)
+    static int totalCarros = 0;    // da classe (um contador único para todos)
+
+    Carro(String modelo) {
+        this.modelo = modelo;
+        totalCarros++;             // incrementa a cada new Carro()
+    }
+
+    static void exibirTotal() {
+        System.out.println("Total: " + totalCarros);
+        // System.out.println(modelo);     // ERRO! static não acessa atributo de instância!
+        // System.out.println(this.modelo); // ERRO! static não tem this!
+    }
+}</code></pre>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha Nº 1 de <code>static</code></div>
+                <p>
+                  Um método <code>static</code> <strong>NÃO pode acessar atributos de instância nem usar <code>this</code></strong>!
+                  Motivo lógico: você chama <code>Carro.exibirTotal()</code> sem precisar de nenhum objeto — então o método não tem como saber de qual carro seria o <code>this.modelo</code>!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. Constantes com <code>final</code> (<code>static final</code> × <code>final</code> de Instância)</h2>
+            <p>
+              A palavra-chave <code>final</code> transforma um atributo em <strong>imutável depois de atribuído</strong>: tentar alterar seu valor depois gera <strong>erro de compilação</strong>.
+            </p>
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--amber)">
+                <h4 style="color: var(--amber-text)">🔒 <code>static final</code> (Constante de Classe)</h4>
+                <p>
+                  Valor fixo, único para a classe inteira e que nunca muda. Convenção: <code>NOME_EM_MAIUSCULAS</code>.<br />
+                  Ex: <code>static final double TAXA_JUROS = 0.015;</code>, <code>Math.PI</code>, <code>MAX_LIVROS = 100</code>.
+                </p>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--purple)">
+                <h4 style="color: var(--purple)">🪪 <code>final</code> sem <code>static</code> (Constante de Instância)</h4>
+                <p>
+                  Cada objeto tem o seu valor próprio (ex: CPF, matrícula, ISBN, número da conta), definido <strong>uma única vez no construtor</strong> e nunca mais alterado!<br />
+                  Ex: <code>c1.numero = 99; // ERRO!</code>
+                </p>
+              </div>
+            </div>
+
+            <h3>Como tudo se junta no Sistema de Biblioteca (Aula 10)</h3>
+            <pre class="code-block"><code>public class Livro {
+    String titulo, autor;
+    final String isbn;       // constante de instância: cada livro tem o seu, nunca muda
+    boolean emprestado;
+
+    Livro(String titulo, String autor, String isbn) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.isbn = isbn;    // atribuído uma única vez aqui no construtor!
+        this.emprestado = false;
+    }
+
+    void exibir() {
+        System.out.println(titulo + " - " + (emprestado ? "EMPRESTADO" : "DISPONÍVEL"));
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- ========== SUB 5: HERANÇA, SUPER & UML ========== -->
+        <div id="t-heranca" class="subpanel">
+          <div class="card">
+            <h2>1. Por que Herança? E a Regra de Ouro: "É UM" × "TEM UM"</h2>
+            <p>
+              Imagine escrever <code>nome</code>, <code>cpf</code> e <code>apresentar()</code> repetidos em <code>Aluno</code>, <code>Professor</code> e <code>Funcionario</code>.
+              A <strong>herança</strong> coloca o que é comum em uma <strong>superclasse</strong> (classe geral, ex: <code>Pessoa</code>) e deixa apenas o que é específico nas <strong>subclasses</strong> (classes filhas).
+            </p>
+
+            <div class="grid-2">
+              <div class="mini-card" style="border-top: 3px solid var(--green)">
+                <h4 style="color: var(--green)">✅ Regra do "É UM" → Use Herança (<code>extends</code>)</h4>
+                <ul>
+                  <li><code>Carro</code> <strong>É UM</strong> <code>Veículo</code></li>
+                  <li><code>Aluno</code> <strong>É UMA</strong> <code>Pessoa</code></li>
+                  <li><code>Cachorro</code> <strong>É UM</strong> <code>Animal</code></li>
+                  <li><code>ContaCorrente</code> <strong>É UMA</strong> <code>Conta</code></li>
+                </ul>
+              </div>
+              <div class="mini-card" style="border-top: 3px solid var(--error)">
+                <h4 style="color: var(--error)">❌ Relação "TEM UM" → Use Composição!</h4>
+                <ul>
+                  <li><code>Motor É UM Carro</code> ✗ (Carro <strong>TEM UM</strong> Motor)</li>
+                  <li><code>Endereço É UMA Pessoa</code> ✗ (Pessoa <strong>TEM UM</strong> Endereço)</li>
+                  <li><code>Livro É UMA Biblioteca</code> ✗ (Biblioteca <strong>TEM</strong> Livros)</li>
+                  <li><code>Teclado É UM Computador</code> ✗</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Pegadinha Conceitual da Aula 20</div>
+                <p>
+                  <strong>Reaproveitar código sozinho NÃO justifica herança!</strong> Só use <code>extends</code> quando a subclasse for realmente uma versão especializada da superclasse ("É UM"). Além disso, <strong>Java NÃO permite herança múltipla de classes</strong>: <code>class Smartphone extends Camera, Telefone</code> é <strong>inválido (erro de compilação)</strong>!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. Notação UML de Herança (Como Aparece nos Slides)</h2>
+            <p>
+              Nos diagramas UML das aulas, cada classe é um retângulo dividido em 3 partes e a herança é desenhada com uma seta que aponta <strong>do filho para o pai</strong>:
+            </p>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 640 240" width="580" aria-label="Diagrama UML de Herança">
+                <defs>
+                  <marker id="uml-tri" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto">
+                    <path d="M0,1 L11,6 L0,11 z" fill="#ffffff" stroke="#0d7a5f" stroke-width="1.5" />
+                  </marker>
+                </defs>
+                <!-- Superclasse Animal -->
+                <rect x="200" y="14" width="240" height="82" rx="4" fill="#fff" stroke="#1c2f4a" stroke-width="2" />
+                <rect x="200" y="14" width="240" height="28" rx="4" fill="#1c2f4a" />
+                <text x="320" y="33" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">Animal (Superclasse)</text>
+                <text x="212" y="60" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5">- nome: String</text>
+                <line x1="200" y1="70" x2="440" y2="70" stroke="#e2e0d6" />
+                <text x="212" y="87" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5">+ emitirSom()</text>
+
+                <!-- Seta para cima (triângulo na superclasse!) -->
+                <line x1="320" y1="146" x2="320" y2="99" stroke="#0d7a5f" stroke-width="2.5" marker-end="url(#uml-tri)" />
+
+                <!-- Subclasse Cachorro -->
+                <rect x="200" y="146" width="240" height="82" rx="4" fill="#fff" stroke="#0d7a5f" stroke-width="2" />
+                <rect x="200" y="146" width="240" height="28" rx="4" fill="#0d7a5f" />
+                <text x="320" y="165" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">Cachorro (Subclasse)</text>
+                <text x="212" y="192" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5">- raca: String</text>
+                <line x1="200" y1="202" x2="440" y2="202" stroke="#e2e0d6" />
+                <text x="212" y="219" fill="#1c1a17" font-family="JetBrains Mono, monospace" font-size="12.5">+ abanarRabo()</text>
+
+                <!-- Legendas -->
+                <text x="458" y="45" fill="#1c2f4a" font-size="12.5" font-weight="bold">Símbolos UML nos slides:</text>
+                <text x="458" y="65" fill="#4a4740" font-size="12">-  = private (privado)</text>
+                <text x="458" y="83" fill="#4a4740" font-size="12">+  = public (público)</text>
+                <text x="458" y="124" fill="#0d7a5f" font-size="12.5" font-weight="bold">Triângulo aponta p/ o PAI!</text>
+                <text x="458" y="142" fill="#4a4740" font-size="12">Lê-se: Cachorro É UM Animal</text>
+              </svg>
+              <div class="diagram-caption">Não erre na prova: a seta/triângulo de herança UML aponta sempre para a classe MAIS GERAL (superclasse).</div>
+            </div>
+            <ul>
+              <li><strong>Herança em vários níveis:</strong> <code>Pessoa</code> → <code>Funcionario</code> → <code>Professor</code> (Professor É UM Funcionario e também É UMA Pessoa).</li>
+              <li><strong>Herança hierárquica:</strong> várias subclasses compartilham a mesma superclasse (<code>Cachorro</code>, <code>Gato</code> e <code>Passaro</code> estendem <code>Animal</code>).</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>3. <code>extends</code>, <code>private</code> × <code>protected</code> e Construtores com <code>super(...)</code></h2>
+            <p>
+              Com <code>class Aluno extends Pessoa</code>, o objeto <code>Aluno</code> contém a <strong>parte <code>Pessoa</code> + a parte específica de <code>Aluno</code></strong>.
+              Mas existem 3 regras fundamentais que sempre caem em prova:
+            </p>
+            <div class="box box-conceito">
+              <div class="box-icon">🔐</div>
+              <div class="box-content">
+                <div class="box-label">Regra 1: Acesso a Atributos <code>private</code> vs <code>protected</code></div>
+                <p>
+                  Uma subclasse <strong>NÃO acessa diretamente</strong> atributos <code>private</code> da superclasse (preserva o encapsulamento — tentar <code>nome = "Ana"</code> direto em <code>Aluno</code> dá <strong>erro</strong>!).<br />
+                  <strong>Duas soluções:</strong> (1) usar métodos públicos <code>getNome()</code> / <code>setNome()</code> da superclasse, ou (2) declarar o atributo como <strong><code>protected</code></strong> (visível para a própria classe e suas subclasses).
+                </p>
+              </div>
+            </div>
+
+            <div class="box box-pegadinha">
+              <div class="box-icon">⚠️</div>
+              <div class="box-content">
+                <div class="box-label">Regra 2: Construtores NÃO São Herdados — Ordem e <code>super(...)</code>!</div>
+                <ul>
+                  <li><strong>Ordem de execução:</strong> ao rodar <code>new B()</code> (onde <code>B extends A</code>), o Java inicializa <strong>primeiro a superclasse (A) e depois a subclasse (B)</strong>!</li>
+                  <li><strong><code>super()</code> automático:</strong> se você não escrever, o Java tenta inserir <code>super()</code> vazio na 1ª linha do construtor do filho.</li>
+                  <li><strong>Erro clássico:</strong> se <code>Pessoa</code> só tem <code>Pessoa(String nome)</code> (sem construtor vazio), um construtor <code>Aluno() {}</code> <strong>NÃO COMPILA</strong>! Você precisa escrever <code>super(nome);</code> na <strong>primeira instrução</strong> do construtor do filho.</li>
+                  <li><strong><code>this(...)</code> × <code>super(...)</code>:</strong> nunca podem ser usados juntos no mesmo construtor como primeira chamada!</li>
+                </ul>
+              </div>
+            </div>
+
+            <pre class="code-block"><code>class Pessoa {
+    private String nome;
+    Pessoa(String nome) { this.nome = nome; }
+    void apresentar() { System.out.println("Nome: " + nome); }
+}
+
+class Aluno extends Pessoa {
+    private int matricula;
+    Aluno(String nome, int matricula) {
+        super(nome);               // 1a linha! Inicializa a parte Pessoa
+        this.matricula = matricula; // depois inicializa a parte Aluno
+    }
+
+    @Override
+    void apresentar() {
+        super.apresentar();        // chama a versão da superclasse ("Nome: ...")
+        System.out.println("Matrícula: " + matricula);
+    }
+}</code></pre>
+          </div>
+
+          <div class="card">
+            <h2>4. Sobrescrita (<code>@Override</code>) × Sobrecarga (<code>Overload</code>)</h2>
+            <p>
+              Os nomes são parecidos e as provas adoram misturar os dois! Decorando esta tabela você não cai mais nessa pegadinha:
+            </p>
+            <div class="table-scroll">
+              <table class="resumo-table">
+                <thead>
+                  <tr>
+                    <th>Característica</th>
+                    <th>Sobrescrita (<code>@Override</code>)</th>
+                    <th>Sobrecarga (<code>Overload</code>)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Exige herança?</strong></td>
+                    <td><span class="badge badge-green">Sim</span> (superclasse → subclasse)</td>
+                    <td><span class="badge badge-amber">Não</span> (ocorre na mesma classe)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Assinatura (nome + parâmetros)</strong></td>
+                    <td><strong>Mesma</strong> assinatura da superclasse</td>
+                    <td><strong>Mesmo nome</strong>, parâmetros <strong>diferentes</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Objetivo</strong></td>
+                    <td>Trocar / especializar comportamento herdado</td>
+                    <td>Oferecer formas diferentes de chamar um método</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Papel de <code>@Override</code></strong></td>
+                    <td>Faz o compilador avisar se o método não existir no pai (evita erro de digitação)</td>
+                    <td>Não se aplica</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 2: EXEMPLOS & LABS =================== -->
+      <div id="exemplos" class="tab-panel">
+        <!-- LAB 1: STACK x HEAP -->
+        <div class="card">
+          <h2>🧠 Simulador 1: Lab Stack × Heap, Referências e <code>null</code></h2>
+          <p>
+            Clique passo a passo nos comandos Java abaixo e veja ao vivo o que acontece com as variáveis na <strong>Stack</strong> e os objetos no <strong>Heap</strong>!
+          </p>
+
+          <div class="sim-controls">
+            <button class="sim-btn primary" onclick="memStep(1)">1. Carro c1 = new Carro("Fusca")</button>
+            <button class="sim-btn primary" onclick="memStep(2)">2. Carro c2 = c1 (Cópia de ref!)</button>
+            <button class="sim-btn" onclick="memStep(3)">3. c2.modelo = "Civic"</button>
+            <button class="sim-btn primary" onclick="memStep(4)">4. c2 = new Carro("Gol")</button>
+            <button class="sim-btn danger" onclick="memStep(5)">5. Carro c3 = null; c3.acelerar()</button>
+            <button class="sim-btn" onclick="memStep(0)">↺ Resetar</button>
+          </div>
+
+          <div class="mem-grid">
+            <div class="mem-panel">
+              <h4 style="color: var(--blue)"><span>📚 STACK (Variáveis / Referências)</span></h4>
+              <div id="memStackView"></div>
+            </div>
+            <div class="mem-panel">
+              <h4 style="color: var(--amber-text)"><span>📦 HEAP (Objetos criados com new)</span></h4>
+              <div id="memHeapView"></div>
+            </div>
+          </div>
+          <div id="memLog" class="sim-log"></div>
+
+          <div class="box box-dica" style="margin-top: 12px">
+            <div class="box-icon">🧪</div>
+            <div class="box-content">
+              <div class="box-label">Teste de 20s para a Prova</div>
+              <p>
+                Clique em <strong>1</strong>, depois <strong>2</strong> e depois <strong>3</strong>: repare que mudar <code>c2.modelo</code> também alterou <code>c1.modelo</code> para <code>"Civic"</code>, porque na Stack os dois guardam o mesmo endereço <code>#obj1</code>! Só no passo <strong>4</strong> (com outro <code>new</code>) nasce o <code>#obj2</code> independente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAB 2: RASTREADOR DE CONSTRUTORES & SUPER -->
+        <div class="card">
+          <h2>🧱 Simulador 2: Rastreador de Construtores, <code>super(...)</code> &amp; Erros de Compilação</h2>
+          <p>
+            Escolha um dos 5 cenários clássicos de prova para testar na hora se o código <strong>compila</strong>, se dá <strong>erro</strong> e qual é a ordem exata da saída no console!
+          </p>
+
+          <div class="sim-controls">
+            <button class="sim-btn active" id="ctor-btn-1" onclick="selectCtorCase(1)">1. Ordem A → B (new B())</button>
+            <button class="sim-btn" id="ctor-btn-2" onclick="selectCtorCase(2)">2. Erro: Sem super(nome)</button>
+            <button class="sim-btn" id="ctor-btn-3" onclick="selectCtorCase(3)">3. Correção com super(nome)</button>
+            <button class="sim-btn" id="ctor-btn-4" onclick="selectCtorCase(4)">4. Erro: super() na 2ª linha</button>
+            <button class="sim-btn" id="ctor-btn-5" onclick="selectCtorCase(5)">5. Erro: Construtor padrão sumiu</button>
+          </div>
+
+          <div class="grid-2" style="align-items: start">
+            <div>
+              <pre class="code-block" style="margin-top: 0"><code id="ctorCodeView"></code></pre>
+            </div>
+            <div>
+              <div id="ctorLayersView"></div>
+              <div id="ctorLogView" class="sim-log"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAB 3: STATIC/FINAL + OVERRIDE/OVERLOAD -->
+        <div class="card">
+          <h2>⚡ Simulador 3: <code>static</code> × Instância e <code>@Override</code> × Sobrecarga</h2>
+          <p>
+            Alterne entre os dois laboratórios abaixo para fixar as diferenças que mais derrubam em questões objetivas:
+          </p>
+
+          <div class="sim-controls">
+            <button class="sim-btn active" id="lab3-mode-a" onclick="setLab3Mode('static')">Modo A: static &amp; final (ContaBancaria)</button>
+            <button class="sim-btn" id="lab3-mode-b" onclick="setLab3Mode('override')">Modo B: @Override × Sobrecarga</button>
+          </div>
+
+          <!-- Modo A -->
+          <div id="lab3StaticPanel">
+            <div class="sim-controls">
+              <button class="sim-btn primary" onclick="staticOp('addAna')">+ new ContaBancaria("Ana", 1000)</button>
+              <button class="sim-btn primary" onclick="staticOp('addBia')">+ new ContaBancaria("Bia", 2000)</button>
+              <button class="sim-btn" onclick="staticOp('taxa1')">c1.aplicarTaxa() (-1%)</button>
+              <button class="sim-btn danger" onclick="staticOp('editFinal')">c1.numero = 99 (final!)</button>
+              <button class="sim-btn danger" onclick="staticOp('staticThis')">static acessar this.saldo</button>
+              <button class="sim-btn" onclick="staticOp('reset')">↺ Resetar</button>
+            </div>
+            <div id="staticStage" class="mem-grid"></div>
+            <div id="staticLog" class="sim-log"></div>
+          </div>
+
+          <!-- Modo B -->
+          <div id="lab3OverridePanel" style="display: none">
+            <div class="sim-controls">
+              <button class="sim-btn primary" onclick="ovOp('pessoa')">Pessoa p.apresentar()</button>
+              <button class="sim-btn primary" onclick="ovOp('alunoSuper')">Aluno a.apresentar() (com super)</button>
+              <button class="sim-btn" onclick="ovOp('alunoSemSuper')">Aluno a.apresentar() (sem super)</button>
+              <button class="sim-btn" onclick="ovOp('overloadOk')">Calculadora.somar(2.5, 3.0)</button>
+              <button class="sim-btn danger" onclick="ovOp('overloadErr')">Sobrecarga só mudando retorno</button>
+            </div>
+            <div id="ovStage"></div>
+            <div id="ovLog" class="sim-log"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 3: RESUMO =================== -->
+      <div id="resumo" class="tab-panel">
+        <div class="card">
+          <h2>⏱️ Roteiro Express para Prova Objetiva</h2>
+          <p>Se precisar revisar tudo em 15 minutos antes da prova, concentre-se exatamente nestes 2 blocos:</p>
+          <div class="grid-2" style="margin-top: 12px">
+            <div class="mini-card" style="border-top: 3px solid var(--error)">
+              <h4 style="color: var(--error)">🔥 Top Pegadinhas de Código (Certeza de Cair!)</h4>
+              <ul>
+                <li><strong>Construtores:</strong> NÃO têm retorno (nem <code>void</code>); ao criar um parametrizado, o padrão vazio <strong>desaparece</strong>.</li>
+                <li><strong>Herança + Construtor:</strong> ordem é <strong>Pai → Filho</strong>; se o pai não tem construtor vazio, o filho <strong>precisa</strong> chamar <code>super(param)</code> na <strong>1ª linha</strong>.</li>
+                <li><strong>Sobrecarga:</strong> mudar <em>apenas</em> o tipo de retorno dá <strong>erro de compilação</strong>.</li>
+                <li><strong><code>static</code>:</strong> método <code>static</code> <strong>não acessa</strong> atributo de instância nem <code>this</code>.</li>
+                <li><strong><code>c2 = c1</code>:</strong> copia a referência (mesmo objeto no Heap); <code>null.metodo()</code> dá <code>NullPointerException</code>.</li>
+              </ul>
+            </div>
+            <div class="mini-card" style="border-top: 3px solid var(--blue)">
+              <h4 style="color: var(--blue)">⚡ Conceitos &amp; UML (Pontos Garantidos!)</h4>
+              <ul>
+                <li><strong>Classe × Objeto:</strong> classe é o molde/planta; objeto é a instância no Heap.</li>
+                <li><strong>Atributos vs Locais:</strong> atributos recebem padrão (<code>0</code>, <code>0.0</code>, <code>false</code>, <code>null</code>); variáveis locais <strong>não</strong>!</li>
+                <li><strong>"É UM" × "TEM UM":</strong> Herança só vale para "É UM" (<code>Aluno É UMA Pessoa</code>). <code>Carro/Motor</code> é composição ("TEM UM").</li>
+                <li><strong>UML dos slides:</strong> seta com triângulo aponta para a <strong>superclasse</strong>; <code>-</code> = <code>private</code>, <code>+</code> = <code>public</code>.</li>
+                <li><strong>Herança múltipla:</strong> Java <strong>não permite</strong> <code>class A extends B, C</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🗺️ Cola Rápida de Véspera de Prova</h2>
+
+          <h3 class="section-title">1. Palavras-Chave Essenciais</h3>
+          <div class="table-scroll">
+            <table class="resumo-table">
+              <thead>
+                <tr>
+                  <th>Palavra / Símbolo</th>
+                  <th>Para que serve</th>
+                  <th>Pegadinha para não errar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>new</code></td>
+                  <td>Cria o objeto no Heap e devolve referência</td>
+                  <td>Sem <code>new</code> (ou com <code>null</code>), acessar membro dá <code>NullPointerException</code></td>
+                </tr>
+                <tr>
+                  <td><code>this</code></td>
+                  <td>Referência ao objeto atual</td>
+                  <td>Sem <code>this.nome = nome</code>, parâmetro atribui a si mesmo</td>
+                </tr>
+                <tr>
+                  <td><code>this(...)</code></td>
+                  <td>Chama outro construtor da <strong>mesma classe</strong></td>
+                  <td>Deve ser a 1ª linha; não pode conviver com <code>super(...)</code> no mesmo construtor</td>
+                </tr>
+                <tr>
+                  <td><code>static</code></td>
+                  <td>Membro pertence à <strong>classe</strong> (1 cópia única)</td>
+                  <td>Não acessa atributo de instância nem usa <code>this</code></td>
+                </tr>
+                <tr>
+                  <td><code>final</code></td>
+                  <td>Impede alterar o valor após inicialização</td>
+                  <td><code>static final</code> = constante da classe; <code>final</code> = constante da instância (no construtor)</td>
+                </tr>
+                <tr>
+                  <td><code>extends</code></td>
+                  <td>Declara herança (<code>Sub extends Super</code>)</td>
+                  <td>Java só aceita 1 superclasse por vez (sem herança múltipla de classes)</td>
+                </tr>
+                <tr>
+                  <td><code>super(...)</code></td>
+                  <td>Chama o construtor da <strong>superclasse</strong></td>
+                  <td>Deve ser a 1ª linha; obrigatório se o pai não tiver construtor vazio</td>
+                </tr>
+                <tr>
+                  <td><code>super.metodo()</code></td>
+                  <td>Chama versão da superclasse dentro de método</td>
+                  <td>Útil quando você sobrescreveu o método mas quer aproveitar a parte geral do pai</td>
+                </tr>
+                <tr>
+                  <td><code>@Override</code></td>
+                  <td>Indica sobrescrita de método herdado</td>
+                  <td>Faz o compilador checar se a assinatura bate com a do pai</td>
+                </tr>
+                <tr>
+                  <td><code>protected</code> / <code>-</code> / <code>+</code></td>
+                  <td>Visibilidade (<code>-</code> private, <code>+</code> public)</td>
+                  <td>Subclasse não acessa <code>private</code> direto; usa getters públicos ou <code>protected</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="section-title">2. Checklist Final Antes de Marcar a Alternativa</h3>
+          <div class="grid-2">
+            <div class="mini-card">
+              <h4>🔍 Ao ler código Java na questão</h4>
+              <ul>
+                <li>Tem construtor com parâmetro e chamaram <code>new Classe()</code> vazio? → <strong>Erro de compilação!</strong></li>
+                <li>Tem construtor com <code>void</code> na frente? → <strong>Não é construtor</strong>, é método comum!</li>
+                <li><code>super(...)</code> ou <code>this(...)</code> está depois de outra linha? → <strong>Erro de compilação!</strong></li>
+                <li>Subclasse acessando atributo <code>private</code> do pai direto? → <strong>Erro de compilação!</strong></li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <h4>📐 Ao ler questão de UML e Conceitos</h4>
+              <ul>
+                <li>Para onde aponta o triângulo da seta UML? → Sempre para a <strong>superclasse</strong> (mais geral).</li>
+                <li><code>c2 = c1</code> criou novo objeto? → <strong>Não</strong>, apenas copiou o endereço na Stack.</li>
+                <li><code>double</code> sem inicialização em atributo imprime o quê? → <code>0.0</code> (com decimal!).</li>
+                <li><code>Motor</code> herda de <code>Carro</code>? → <strong>Falso!</strong> Motor NÃO É UM Carro (é composição: "tem um").</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================== ABA 4: QUIZ =================== -->
+      <div id="quiz" class="tab-panel">
+        <div class="score-bar">
+          <div class="score-top">
+            <div class="score-stats">
+              <div class="score-display" id="scoreDisplay">0/20</div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text)">Seu placar no simulado</div>
+                <div class="score-label" id="scoreSubtitle" data-subtitle="POO & UML (Aulas 5–10 e 20)">
+                  0 de 20 respondidas · POO &amp; UML (Aulas 5–10 e 20)
+                </div>
+              </div>
+            </div>
+            <button class="reset-btn" onclick="resetQuiz()">↺ Reiniciar Tudo</button>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="subtabs" id="quiz-filters">
+          <button class="subtab-btn active" onclick="filterQuiz('all', this)">Todas (20)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Classes & Memória', this)">Classes &amp; Memória (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Métodos & this', this)">Métodos &amp; this (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Construtores', this)">Construtores (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('static & final', this)">static &amp; final (4)</button>
+          <button class="subtab-btn" onclick="filterQuiz('Herança & UML', this)">Herança &amp; UML (4)</button>
+        </div>
+
+        <div id="quiz-container"></div>
+      </div>
+    </div>
+
+    <script src="../assets/js/study-guide.js"></script>
+    <script>
+      // ====== SIMULADOR 1: STACK x HEAP ======
+      let memState = 0;
+
+      function memStep(step) {
+        memState = step;
+        const stackEl = document.getElementById('memStackView');
+        const heapEl = document.getElementById('memHeapView');
+        const logEl = document.getElementById('memLog');
+
+        if (step === 0) {
+          stackEl.innerHTML = '<div class="mem-slot" style="border-left-color:var(--text3)">(vazia — execute passo 1)</div>';
+          heapEl.innerHTML = '<div class="mem-obj" style="border-color:var(--border)">(nenhum objeto alocado)</div>';
+          logEl.className = 'sim-log';
+          logEl.innerHTML = 'Clique nos passos acima em sequência para ver como a Stack e o Heap se comportam.';
+          return;
+        }
+
+        if (step === 1) {
+          stackEl.innerHTML = `<div class="mem-slot"><strong>c1</strong> ──► <code>#obj1</code></div>`;
+          heapEl.innerHTML = `<div class="mem-obj"><div class="mem-obj-head"><span>Carro #obj1</span><span>new Carro()</span></div>modelo = "Fusca"<br/>cor = null | vel = 0</div>`;
+          logEl.className = 'sim-log ok';
+          logEl.innerHTML = '<strong>Passo 1:</strong> <code>new Carro()</code> criou <code>#obj1</code> no <strong>Heap</strong> (com valores padrão <code>null</code> e <code>0</code>) e guardou o endereço dele em <code>c1</code> na <strong>Stack</strong>.';
+        } else if (step === 2) {
+          stackEl.innerHTML = `<div class="mem-slot"><strong>c1</strong> ──► <code>#obj1</code></div><div class="mem-slot" style="border-left-color:var(--purple)"><strong>c2</strong> ──► <code>#obj1</code></div>`;
+          heapEl.innerHTML = `<div class="mem-obj shared"><div class="mem-obj-head"><span>Carro #obj1</span><span>2 referências!</span></div>modelo = "Fusca"<br/>cor = null | vel = 0</div>`;
+          logEl.className = 'sim-log';
+          logEl.innerHTML = '<strong>Passo 2:</strong> <code>Carro c2 = c1;</code> <strong>NÃO</strong> cria um novo objeto! Apenas copia o endereço <code>#obj1</code>. Agora <code>c1</code> e <code>c2</code> apontam para o <strong>mesmo</strong> carro no Heap.';
+        } else if (step === 3) {
+          stackEl.innerHTML = `<div class="mem-slot"><strong>c1</strong> ──► <code>#obj1</code></div><div class="mem-slot" style="border-left-color:var(--purple)"><strong>c2</strong> ──► <code>#obj1</code></div>`;
+          heapEl.innerHTML = `<div class="mem-obj shared"><div class="mem-obj-head"><span>Carro #obj1</span><span>Alterado via c2!</span></div>modelo = <strong>"Civic"</strong><br/>cor = null | vel = 0</div>`;
+          logEl.className = 'sim-log ok';
+          logEl.innerHTML = '<strong>Passo 3:</strong> Alteramos <code>c2.modelo = "Civic"</code>, e como <code>c1</code> aponta para o mesmo <code>#obj1</code>, <code>System.out.println(c1.modelo)</code> também imprime <strong>"Civic"</strong>!';
+        } else if (step === 4) {
+          stackEl.innerHTML = `<div class="mem-slot"><strong>c1</strong> ──► <code>#obj1</code></div><div class="mem-slot"><strong>c2</strong> ──► <code>#obj2</code></div>`;
+          heapEl.innerHTML = `<div class="mem-obj"><div class="mem-obj-head"><span>Carro #obj1</span><span>c1</span></div>modelo = "Civic" | vel = 0</div><div class="mem-obj"><div class="mem-obj-head"><span>Carro #obj2</span><span>new Carro()</span></div>modelo = "Gol" | vel = 0</div>`;
+          logEl.className = 'sim-log ok';
+          logEl.innerHTML = '<strong>Passo 4:</strong> Agora houve um segundo <code>new Carro()</code>! Nasceu o <code>#obj2</code> independente. Mexer em <code>c2</code> não afeta mais <code>c1</code>.';
+        } else if (step === 5) {
+          stackEl.innerHTML = `<div class="mem-slot"><strong>c1</strong> ──► <code>#obj1</code></div><div class="mem-slot null-slot"><strong>c3</strong> ──► <code>null</code> (sem objeto!)</div>`;
+          heapEl.innerHTML = `<div class="mem-obj"><div class="mem-obj-head"><span>Carro #obj1</span><span>c1</span></div>modelo = "Civic" | vel = 0</div>`;
+          logEl.className = 'sim-log err';
+          logEl.innerHTML = '<strong>Passo 5 — NullPointerException!</strong> <code>c3</code> vale <code>null</code> (não aponta para nenhum objeto no Heap). Chamar <code>c3.acelerar()</code> explode em tempo de execução!';
+        }
+      }
+
+      // ====== SIMULADOR 2: CONSTRUTORES & SUPER ======
+      const ctorCases = {
+        1: {
+          code: `class A {\n    A() { System.out.println("A"); }\n}\n\nclass B extends A {\n    B() { System.out.println("B"); }\n}\n\n// No main:\nnew B();`,
+          ok: true,
+          layers: `<div class="layer-box"><strong>Objeto B na Memória</strong><div class="layer-inner" style="border-color:var(--blue)"><strong>1º) Parte A (Superclasse)</strong><br/>Java inseriu <code>super()</code> automático → imprime <code>"A"</code></div><div class="layer-inner" style="border-color:var(--green)"><strong>2º) Parte B (Subclasse)</strong><br/>Executa corpo de <code>B()</code> → imprime <code>"B"</code></div></div>`,
+          log: '✅ <strong>Compila e imprime:</strong> <code>A</code> depois <code>B</code>. A construção sempre acontece da classe mais geral para a mais específica!',
+        },
+        2: {
+          code: `class Pessoa {\n    Pessoa(String nome) { }\n}\n\nclass Aluno extends Pessoa {\n    Aluno() {\n        // ERRO! Java tenta inserir super() invisível aqui!\n        System.out.println("Aluno");\n    }\n}`,
+          ok: false,
+          layers: `<div class="layer-box" style="background:var(--error-soft); border-color:var(--error)"><strong>❌ Falha na Compilação</strong><div class="layer-inner"><code>Pessoa</code> não tem construtor vazio <code>Pessoa()</code>.<br/>O compilador tentou chamar <code>super()</code> e não encontrou!</div></div>`,
+          log: '❌ <strong>Erro de Compilação!</strong> Quando a superclasse só tem construtor com parâmetros, a subclasse é obrigada a chamar <code>super(argumento)</code> explicitamente.',
+        },
+        3: {
+          code: `class Pessoa {\n    private String nome;\n    Pessoa(String nome) { this.nome = nome; }\n}\n\nclass Aluno extends Pessoa {\n    private int matricula;\n    Aluno(String nome, int matricula) {\n        super(nome); // 1a linha!\n        this.matricula = matricula;\n    }\n}`,
+          ok: true,
+          layers: `<div class="layer-box"><strong>Objeto Aluno ("Ana", 123)</strong><div class="layer-inner" style="border-color:var(--blue)"><strong>1º) Parte Pessoa</strong><br/><code>super("Ana")</code> → <code>nome = "Ana"</code></div><div class="layer-inner" style="border-color:var(--green)"><strong>2º) Parte Aluno</strong><br/><code>this.matricula = 123</code></div></div>`,
+          log: '✅ <strong>Compila perfeitamente!</strong> <code>super(nome)</code> está na 1ª linha, inicializa a parte <code>Pessoa</code> e depois <code>Aluno</code> inicializa a <code>matricula</code>.',
+        },
+        4: {
+          code: `class Aluno extends Pessoa {\n    Aluno(String nome) {\n        System.out.println("Iniciando...");\n        super(nome); // ERRO! Não está na 1a linha!\n    }\n}`,
+          ok: false,
+          layers: `<div class="layer-box" style="background:var(--error-soft); border-color:var(--error)"><strong>❌ Falha na Compilação</strong><div class="layer-inner"><code>call to super must be first statement in constructor</code><br/>Nenhuma instrução pode vir antes de <code>super(...)</code> ou <code>this(...)</code>!</div></div>`,
+          log: '❌ <strong>Erro de Compilação!</strong> Regra fixa do Java: <code>super(...)</code> precisa ser obrigatoriamente a <strong>primeira instrução</strong> do construtor.',
+        },
+        5: {
+          code: `class Carro {\n    String modelo;\n    Carro(String modelo) {\n        this.modelo = modelo;\n    }\n}\n\n// No main:\nCarro c = new Carro(); // ERRO!`,
+          ok: false,
+          layers: `<div class="layer-box" style="background:var(--error-soft); border-color:var(--error)"><strong>❌ Falha na Compilação</strong><div class="layer-inner">Ao declarar <code>Carro(String modelo)</code>, o construtor padrão <code>Carro()</code> <strong>desapareceu</strong>!</div></div>`,
+          log: '❌ <strong>Erro de Compilação!</strong> Se você criar qualquer construtor parametrizado e ainda quiser usar <code>new Carro()</code> vazio, precisa escrever <code>Carro() { }</code> explicitamente.',
+        },
+      };
+
+      function selectCtorCase(id) {
+        const c = ctorCases[id];
+        for (let i = 1; i <= 5; i++) {
+          document.getElementById('ctor-btn-' + i).classList.toggle('active', i === id);
+        }
+        const codeEl = document.getElementById('ctorCodeView');
+        codeEl.textContent = c.code;
+        delete codeEl.dataset.highlighted;
+        StudyGuide.highlightAllBlocks(codeEl.parentElement);
+        document.getElementById('ctorLayersView').innerHTML = c.layers;
+        const logEl = document.getElementById('ctorLogView');
+        logEl.className = 'sim-log ' + (c.ok ? 'ok' : 'err');
+        logEl.innerHTML = c.log;
+      }
+
+      // ====== SIMULADOR 3: STATIC/FINAL & OVERRIDE/OVERLOAD ======
+      let contas = [];
+      let totalContas = 0;
+
+      function setLab3Mode(mode) {
+        document.getElementById('lab3-mode-a').classList.toggle('active', mode === 'static');
+        document.getElementById('lab3-mode-b').classList.toggle('active', mode === 'override');
+        document.getElementById('lab3StaticPanel').style.display = mode === 'static' ? 'block' : 'none';
+        document.getElementById('lab3OverridePanel').style.display = mode === 'override' ? 'block' : 'none';
+      }
+
+      function renderStaticLab(msg, status) {
+        const stage = document.getElementById('staticStage');
+        const objsHtml = contas.length
+          ? contas
+              .map(
+                (c, i) =>
+                  `<div class="mem-obj"><div class="mem-obj-head"><span>c${i + 1} (Instância)</span><span>final numero = ${c.numero}</span></div>titular = "${c.titular}"<br/>saldo = <strong>${c.saldo.toFixed(1)}</strong></div>`
+              )
+              .join('')
+          : '<div class="mem-obj" style="border-color:var(--border)">Nenhum objeto criado ainda. Clique nos botões acima!</div>';
+
+        stage.innerHTML = `
+          <div class="mem-panel">
+            <h4 style="color:var(--amber-text)">🏛️ ÁREA DA CLASSE (static)</h4>
+            <div class="mem-obj static-box">
+              <div class="mem-obj-head"><span>ContaBancaria (1 cópia única)</span></div>
+              <code>static int totalContas</code> = <strong>${totalContas}</strong><br/>
+              <code>static final double TAXA</code> = <strong>0.01</strong> (imutável)
+            </div>
+          </div>
+          <div class="mem-panel">
+            <h4 style="color:var(--green)">📦 OBJETOS NO HEAP (cada um tem o seu)</h4>
+            ${objsHtml}
+          </div>`;
+
+        const logEl = document.getElementById('staticLog');
+        logEl.className = 'sim-log' + (status ? ' ' + status : '');
+        logEl.innerHTML = msg;
+      }
+
+      function staticOp(op) {
+        if (op === 'reset') {
+          contas = [];
+          totalContas = 0;
+          renderStaticLab('Estado zerado. Crie contas e teste as regras de <code>static</code> e <code>final</code>!');
+        } else if (op === 'addAna') {
+          totalContas++;
+          contas.push({ numero: totalContas, titular: 'Ana', saldo: 1000 });
+          renderStaticLab('<strong>new ContaBancaria("Ana", 1000):</strong> <code>totalContas</code> subiu para <strong>' + totalContas + '</strong> e gerou <code>final numero = ' + totalContas + '</code> para Ana.', 'ok');
+        } else if (op === 'addBia') {
+          totalContas++;
+          contas.push({ numero: totalContas, titular: 'Bia', saldo: 2000 });
+          renderStaticLab('<strong>new ContaBancaria("Bia", 2000):</strong> <code>totalContas</code> agora vale <strong>' + totalContas + '</strong> para toda a classe!', 'ok');
+        } else if (op === 'taxa1') {
+          if (!contas.length) {
+            renderStaticLab('Crie pelo menos uma conta (Ana ou Bia) antes de chamar <code>c1.aplicarTaxa()</code>!', 'err');
+            return;
+          }
+          contas[0].saldo -= contas[0].saldo * 0.01;
+          renderStaticLab('<strong>c1.aplicarTaxa():</strong> usou a constante <code>TAXA (0.01)</code> da classe para descontar 1% apenas do saldo de <code>c1</code> (agora <strong>' + contas[0].saldo.toFixed(1) + '</strong>).', 'ok');
+        } else if (op === 'editFinal') {
+          renderStaticLab('❌ <strong>ERRO DE COMPILAÇÃO!</strong> <code>numero</code> é <code>final</code> (constante de instância). Depois de definido no construtor, não pode mais ser alterado!', 'err');
+        } else if (op === 'staticThis') {
+          renderStaticLab('❌ <strong>ERRO DE COMPILAÇÃO!</strong> Um método <code>static</code> pertence à classe e <strong>não pode</strong> acessar atributos de instância (<code>saldo</code>) nem usar <code>this</code>.', 'err');
+        }
+      }
+
+      function ovOp(op) {
+        const stage = document.getElementById('ovStage');
+        const log = document.getElementById('ovLog');
+        if (op === 'pessoa') {
+          stage.innerHTML = `<div class="layer-inner"><strong>Chamada:</strong> <code>Pessoa p = new Pessoa("Carlos"); p.apresentar();</code><br/><strong>Executado:</strong> <code>Pessoa.apresentar()</code><br/><strong>Saída no console:</strong> <code>Nome: Carlos</code></div>`;
+          log.className = 'sim-log ok';
+          log.innerHTML = 'Sem sobrescrita envolvida: executa diretamente o método da superclasse <code>Pessoa</code>.';
+        } else if (op === 'alunoSuper') {
+          stage.innerHTML = `<div class="layer-inner"><strong>Chamada:</strong> <code>Aluno a = new Aluno("Ana", 123); a.apresentar();</code><br/><strong>Executado:</strong> <code>Aluno.apresentar()</code> (<code>@Override</code>) → chama <code>super.apresentar()</code> + imprime matrícula<br/><strong>Saída no console:</strong><br/><code>Nome: Ana</code><br/><code>Matrícula: 123</code></div>`;
+          log.className = 'sim-log ok';
+          log.innerHTML = '<strong>@Override + super.apresentar():</strong> reaproveita o comportamento do pai e acrescenta a parte específica do filho!';
+        } else if (op === 'alunoSemSuper') {
+          stage.innerHTML = `<div class="layer-inner"><strong>Chamada:</strong> <code>Aluno a = new Aluno("Ana", 123); a.apresentar();</code> (sem <code>super.apresentar()</code>)<br/><strong>Saída no console:</strong> <code>Matrícula: 123</code></div>`;
+          log.className = 'sim-log';
+          log.innerHTML = 'Sem <code>super.apresentar()</code>, a versão do pai é totalmente substituída e o nome não é impresso!';
+        } else if (op === 'overloadOk') {
+          stage.innerHTML = `<div class="layer-inner"><strong>Chamada:</strong> <code>calc.somar(2.5, 3.0)</code><br/><strong>Assinaturas na classe:</strong> <code>somar(int, int)</code> | <code>somar(double, double)</code> | <code>somar(int, int, int)</code><br/><strong>Resultado:</strong> <code>5.5</code> (Java escolheu pelos tipos <code>double</code>!)</div>`;
+          log.className = 'sim-log ok';
+          log.innerHTML = '<strong>Sobrecarga (Overload):</strong> mesma classe, mesmo nome, parâmetros diferentes.';
+        } else if (op === 'overloadErr') {
+          stage.innerHTML = `<div class="layer-inner" style="border-color:var(--error); background:var(--error-soft)"><strong>Código inválido:</strong><br/><code>int somar(int a, int b) { ... }</code><br/><code>double somar(int a, int b) { ... }</code></div>`;
+          log.className = 'sim-log err';
+          log.innerHTML = '❌ <strong>Erro de Compilação!</strong> Mudar apenas o tipo de retorno (<code>int</code> para <code>double</code>) com os mesmos parâmetros <strong>NÃO</strong> é sobrecarga!';
+        }
+      }
+
+      // ====== QUIZ DE 20 QUESTÕES COMENTADAS ======
+      const quizQuestions = [
+        // TÓPICO 1: CLASSES & MEMÓRIA (4)
+        {
+          id: 'q1',
+          topic: 'Classes & Memória',
+          title: 'Qual afirmação define corretamente a diferença entre Classe e Objeto em POO?',
+          extraHtml: '',
+          options: [
+            'A classe é o molde (a planta) que define atributos e métodos; o objeto é uma instância concreta criada a partir dela com new.',
+            'O objeto é o arquivo .java salvo no disco; a classe é uma variável primitiva armazenada na Stack.',
+            'A classe guarda os valores específicos de cada aluno; o objeto define apenas os nomes dos métodos sem valores.',
+            'Classe e objeto são exatamente sinônimos em Java, mudando apenas o nome na hora de criar o arquivo.',
+          ],
+          correct: 0,
+          correctExplain: 'Exato! A classe é o molde/planta que descreve a estrutura (atributos e métodos), enquanto o objeto é cada instância real construída na memória com new.',
+          wrongReasons: {
+            1: '<strong>B está errada:</strong> o arquivo .java contém a classe; objetos ficam no Heap, não são variáveis primitivas.',
+            2: '<strong>C está errada:</strong> é o inverso — a classe define o molde geral e cada objeto guarda seus próprios valores de atributos.',
+            3: '<strong>D está errada:</strong> classe é o projeto/tipo e objeto é a instância criada em memória.',
+          },
+        },
+        {
+          id: 'q2',
+          topic: 'Classes & Memória',
+          title: 'Observe o código Java abaixo. O que será impresso no console?',
+          extraHtml: `<pre class="code-block"><code>Carro c1 = new Carro();\nc1.cor = "prata";\nCarro c2 = c1;\nc2.cor = "azul";\nSystem.out.println(c1.cor);</code></pre>`,
+          options: ['prata', 'azul', 'null', 'Erro de compilação porque c2 não usou new'],
+          correct: 1,
+          correctExplain: 'c2 = c1 não cria um novo carro no Heap: copia apenas a referência! Como c1 e c2 apontam para o mesmo objeto, mudar c2.cor altera o objeto enxergado por c1.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> só imprimiria "prata" se c2 tivesse sido criado com um novo new Carro().',
+            2: '<strong>C está errada:</strong> o atributo cor recebeu "prata" e depois "azul".',
+            3: '<strong>D está errada:</strong> copiar uma referência existente com c2 = c1 é totalmente válido em Java.',
+          },
+        },
+        {
+          id: 'q3',
+          topic: 'Classes & Memória',
+          title: 'Sobre Stack × Heap e valores padrão em Java, assinale a alternativa CORRETA:',
+          extraHtml: '',
+          options: [
+            'Objetos criados com new ficam na Stack; tipos primitivos como int ficam sempre no Heap.',
+            'Ao criar um objeto com new, atributos double recebem 0.0, boolean recebe false e String recebe null; já variáveis locais precisam ser inicializadas antes do uso.',
+            'Todo atributo int sem valor explícito começa valendo null até receber um número.',
+            'Variáveis locais declaradas dentro de métodos recebem automaticamente 0 e null do Java.',
+          ],
+          correct: 1,
+          correctExplain: 'Perfeito! Objetos sempre ficam no Heap (atributos recebem valores padrão: 0, 0.0, false, \'\\u0000\', null). Variáveis locais ficam na Stack e não recebem valor padrão automático.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> inverteu tudo! Primitivos locais e referências ficam na Stack; objetos ficam no Heap.',
+            2: '<strong>C está errada:</strong> int é primitivo e tem valor padrão 0 (nunca null).',
+            3: '<strong>D está errada:</strong> apenas atributos da classe recebem valores padrão; variáveis locais exigem inicialização manual.',
+          },
+        },
+        {
+          id: 'q4',
+          topic: 'Classes & Memória',
+          title: 'O que acontece quando executamos o trecho abaixo?',
+          extraHtml: `<pre class="code-block"><code>Celular cel = null;\ncel.carregar();</code></pre>`,
+          options: [
+            'O Java cria um Celular automaticamente na memória e soma 20 na bateria.',
+            'O método carregar() executa normalmente deixando bateria igual a 0.',
+            'Ocorre uma NullPointerException em tempo de execução, pois cel não aponta para nenhum objeto.',
+            'O código não compila porque null não pode ser atribuído a variáveis de classe.',
+          ],
+          correct: 2,
+          correctExplain: 'null significa que a referência não aponta para nenhum objeto no Heap. Tentar acessar um atributo ou método usando essa referência gera NullPointerException.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> o Java só cria objeto na memória quando usamos new.',
+            1: '<strong>B está errada:</strong> não existe objeto no Heap para executar o método.',
+            3: '<strong>D está errada:</strong> o código compila normalmente; o erro acontece na execução (NullPointerException).',
+          },
+        },
+
+        // TÓPICO 2: MÉTODOS & THIS (4)
+        {
+          id: 'q5',
+          topic: 'Métodos & this',
+          title: 'Qual opção representa uma SOBRECARGA (overload) VÁLIDA na classe Calculadora?',
+          extraHtml: '',
+          options: [
+            'int somar(int a, int b) e double somar(int a, int b)',
+            'int somar(int a, int b) e double somar(double a, double b)',
+            'void exibir() e String exibir()',
+            'double calcular(double x) em Calculadora e double calcular(double x) na mesma classe',
+          ],
+          correct: 1,
+          correctExplain: 'Sobrecarga exige mesmo nome com parâmetros diferentes (em quantidade ou tipo). int somar(int, int) e double somar(double, double) têm tipos de parâmetros diferentes!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> pegadinha clássica! Mudar apenas o tipo de retorno com os mesmos parâmetros dá erro de compilação.',
+            2: '<strong>C está errada:</strong> mesmos parâmetros (nenhum) mudando só o retorno não é sobrecarga — não compila.',
+            3: '<strong>D está errada:</strong> duas assinaturas idênticas na mesma classe dão erro de método duplicado.',
+          },
+        },
+        {
+          id: 'q6',
+          topic: 'Métodos & this',
+          title: 'Analise o método setNome da classe Pessoa abaixo. Após rodar p.setNome("Ana"), qual será o valor de p.nome?',
+          extraHtml: `<pre class="code-block"><code>class Pessoa {\n    String nome = "Sem nome";\n    void setNome(String nome) {\n        nome = nome;\n    }\n}</code></pre>`,
+          options: ['"Ana"', '"Sem nome"', 'null', 'Erro de compilação por nome duplicado'],
+          correct: 1,
+          correctExplain: 'Sem o this., o parâmetro nome esconde o atributo! A linha nome = nome apenas copia o parâmetro para ele mesmo, deixando o atributo da classe intacto como "Sem nome".',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> só mudaria para "Ana" se estivesse escrito this.nome = nome;.',
+            2: '<strong>C está errada:</strong> o atributo foi inicializado com "Sem nome" e não foi alterado.',
+            3: '<strong>D está errada:</strong> o código compila (é um erro lógico clássico, não de sintaxe).',
+          },
+        },
+        {
+          id: 'q7',
+          topic: 'Métodos & this',
+          title: 'Sobre métodos com retorno e passagem de parâmetros em Java, é CORRETO afirmar que:',
+          extraHtml: '',
+          options: [
+            'Um método declarado como void deve obrigatoriamente terminar com return 0;.',
+            'Um método não pode chamar outro método da mesma classe.',
+            'A instrução return encerra a execução do método e devolve um valor compatível com o tipo declarado na assinatura.',
+            'Não é possível passar outro objeto como parâmetro de um método, apenas int, double e String.',
+          ],
+          correct: 2,
+          correctExplain: 'Exato! O tipo de retorno (double, boolean, String etc.) substitui void na assinatura, e return encerra o método devolvendo o resultado.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> métodos void não retornam valor nenhum.',
+            1: '<strong>B está errada:</strong> métodos chamam outros métodos da mesma classe o tempo todo (ex: situacao() chamando calcularMedia()).',
+            3: '<strong>D está errada:</strong> é totalmente comum passar objetos como parâmetro, como atacar(Jogador alvo) ou pegarLivro(Livro l).',
+          },
+        },
+        {
+          id: 'q8',
+          topic: 'Métodos & this',
+          title: 'Qual dos itens abaixo NÃO é um uso válido da palavra-chave this em Java?',
+          extraHtml: '',
+          options: [
+            'Diferenciar atributo de parâmetro com mesmo nome (this.nome = nome).',
+            'Chamar outro construtor da mesma classe (this(nome, 0)).',
+            'Enviar a referência do objeto atual como argumento (metodo(this)).',
+            'Acessar atributos dentro de um método declarado como static.',
+          ],
+          correct: 3,
+          correctExplain: 'Métodos static pertencem à classe e não têm objeto atual associado, por isso NÃO podem usar this!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> esse é o uso nº 1 de this.',
+            1: '<strong>B está errada:</strong> this(...) na 1ª linha do construtor chama outro construtor da mesma classe.',
+            2: '<strong>C está errada:</strong> metodo(this) passa a própria instância atual como parâmetro.',
+          },
+        },
+
+        // TÓPICO 3: CONSTRUTORES (4)
+        {
+          id: 'q9',
+          topic: 'Construtores',
+          title: 'Analise a classe Produto abaixo. O que acontece quando executamos Produto p = new Produto(); no main?',
+          extraHtml: `<pre class="code-block"><code>public class Produto {\n    String nome;\n    Produto(String nome) {\n        this.nome = nome;\n    }\n}</code></pre>`,
+          options: [
+            'Compila e cria o produto com nome igual a null.',
+            'Compila e cria o produto com nome igual a "".',
+            'Dá erro de compilação porque o construtor padrão deixou de existir ao criar Produto(String nome).',
+            'Gera NullPointerException em tempo de execução.',
+          ],
+          correct: 2,
+          correctExplain: 'Pegadinha clássica! O Java só cria o construtor padrão vazio se você NÃO escrever nenhum construtor. Ao criar Produto(String nome), o padrão some e new Produto() não compila!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> só existiria construtor vazio se nenhum construtor tivesse sido escrito ou se Produto() {} fosse escrito manualmente.',
+            1: '<strong>B está errada:</strong> nem String padrão é "" (é null), nem o código compila.',
+            3: '<strong>D está errada:</strong> o problema é detectado antes mesmo de rodar, em tempo de compilação.',
+          },
+        },
+        {
+          id: 'q10',
+          topic: 'Construtores',
+          title: 'Qual das opções declara CORRETAMENTE um construtor da classe ContaBancaria?',
+          extraHtml: '',
+          options: [
+            'void ContaBancaria(String titular) { this.titular = titular; }',
+            'ContaBancaria(String titular) { this.titular = titular; }',
+            'public void criarConta(String titular) { this.titular = titular; }',
+            'ContaBancaria(String titular) { return titular; }',
+          ],
+          correct: 1,
+          correctExplain: 'Construtores têm exatamente o mesmo nome da classe e NÃO possuem nenhum tipo de retorno — nem mesmo void!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> colocar void transforma em um método comum, não é um construtor!',
+            2: '<strong>C está errada:</strong> nome diferente da classe e tem void: é um método comum.',
+            3: '<strong>D está errada:</strong> construtor não pode retornar valor com return titular;.',
+          },
+        },
+        {
+          id: 'q11',
+          topic: 'Construtores',
+          title: 'Sobre o encadeamento de construtores com this(...), o que acontece no código abaixo?',
+          extraHtml: `<pre class="code-block"><code>Produto(String nome, double preco) {\n    System.out.println("Criando...");\n    this(nome, preco, 0);\n}</code></pre>`,
+          options: [
+            'Compila e imprime "Criando..." antes de chamar o construtor de 3 parâmetros.',
+            'Não compila porque this(...) deve ser obrigatoriamente a primeira instrução do construtor.',
+            'Compila, mas ignora o estoque 0.',
+            'Entra em loop infinito.',
+          ],
+          correct: 1,
+          correctExplain: 'Tanto this(...) quanto super(...) precisam ser obrigatoriamente a primeira linha executável do construtor. Colocar System.out.println antes causa erro de compilação.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> nenhuma instrução pode vir antes de this(...).',
+            2: '<strong>C está errada:</strong> o compilador nem gera o programa.',
+            3: '<strong>D está errada:</strong> não compila; e mesmo na 1ª linha chamaria o construtor de 3 parâmetros (sem loop).',
+          },
+        },
+        {
+          id: 'q12',
+          topic: 'Construtores',
+          title: 'Por que usamos sobrecarga de construtores em uma classe como Conta ou Aluno?',
+          extraHtml: '',
+          options: [
+            'Porque em Java cada classe só pode ser instanciada uma única vez se tiver um único construtor.',
+            'Para permitir criar objetos dessa classe de formas diferentes (com ou sem valores iniciais), conforme os argumentos passados no new.',
+            'Para que os métodos da classe possam ser chamados sem usar o operador ponto.',
+            'Para transformar todos os atributos da classe em static.',
+          ],
+          correct: 1,
+          correctExplain: 'Sobrecarga de construtores oferece múltiplas formas de inicializar um objeto no momento do new (ex: new Aluno("Ana") ou new Aluno("Bia", 9.0, 5.0)).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> uma classe pode ter quantos objetos (new) forem necessários mesmo com um único construtor.',
+            2: '<strong>C está errada:</strong> acesso a membros de instância continua usando o operador ponto.',
+            3: '<strong>D está errada:</strong> construtores inicializam objetos (instâncias) e não tornam atributos static.',
+          },
+        },
+
+        // TÓPICO 4: STATIC & FINAL (4)
+        {
+          id: 'q13',
+          topic: 'static & final',
+          title: 'O que acontece no código abaixo ao criar 3 carros e chamar Carro.exibirTotal()?',
+          extraHtml: `<pre class="code-block"><code>class Carro {\n    String modelo;\n    static int totalCarros = 0;\n    Carro(String m) { this.modelo = m; totalCarros++; }\n    static void exibirTotal() { System.out.println(totalCarros); }\n}</code></pre>`,
+          options: [
+            'Imprime 1, porque cada carro tem sua própria cópia de totalCarros.',
+            'Imprime 3, pois totalCarros é static (única cópia compartilhada pela classe).',
+            'Dá erro de compilação porque exibirTotal() não pode acessar totalCarros.',
+            'Dá erro porque Carro.exibirTotal() foi chamado sem criar um objeto antes.',
+          ],
+          correct: 1,
+          correctExplain: 'Como totalCarros é static, existe uma única variável compartilhada na classe Carro. Cada new Carro(...) soma +1 nela, chegando a 3!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> isso aconteceria se totalCarros NÃO fosse static.',
+            2: '<strong>C está errada:</strong> método static PODE acessar atributo static sem problema.',
+            3: '<strong>D está errada:</strong> métodos static são feitos justamente para serem chamados pela classe (Classe.metodo()).',
+          },
+        },
+        {
+          id: 'q14',
+          topic: 'static & final',
+          title: 'Qual linha dentro de ContaBancaria causará ERRO DE COMPILAÇÃO?',
+          extraHtml: `<pre class="code-block"><code>class ContaBancaria {\n    static int total = 0;           // Linha 1\n    static final double TAXA = 0.01; // Linha 2\n    String titular;                  // Linha 3\n\n    static void info() {\n        System.out.println(total);   // Linha 4\n        System.out.println(titular); // Linha 5\n    }\n}</code></pre>`,
+          options: ['Linha 2', 'Linha 4', 'Linha 5', 'Nenhuma linha dá erro'],
+          correct: 2,
+          correctExplain: 'Na Linha 5, o método static info() tenta acessar o atributo de instância titular. Métodos static não podem acessar atributos de instância nem usar this!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> Linha 2 declara uma constante de classe static final perfeitamente válida.',
+            1: '<strong>B está errada:</strong> Linha 4 acessa total, que também é static, então é válido.',
+            3: '<strong>D está errada:</strong> a Linha 5 tem erro clássico de acesso não-estático em contexto estático.',
+          },
+        },
+        {
+          id: 'q15',
+          topic: 'static & final',
+          title: 'Qual é a diferença prática entre static final e final (sem static) em atributos?',
+          extraHtml: '',
+          options: [
+            'Nenhuma: os dois têm um único valor compartilhado e podem ser alterados no main.',
+            'static final é uma constante única da classe inteira (ex: TAXA_JUROS); final sem static é constante por objeto, podendo ter um valor diferente por instância definido no construtor (ex: cpf, isbn).',
+            'final sem static permite mudar o valor livremente nos setters; static final impede apenas no construtor.',
+            'static final só funciona para int e final só funciona para String.',
+          ],
+          correct: 1,
+          correctExplain: 'Na mosca! static final é compartilhado e fixo para toda a classe; final sem static é fixo por objeto (definido uma única vez na criação/construtor, como final String isbn ou final int numero).',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> nenhum atributo final pode ser alterado depois de inicializado.',
+            2: '<strong>C está errada:</strong> final proíbe alteração após a inicialização em qualquer lugar.',
+            3: '<strong>D está errada:</strong> ambos funcionam para qualquer tipo (int, double, String etc.).',
+          },
+        },
+        {
+          id: 'q16',
+          topic: 'static & final',
+          title: 'Se na classe ContaBancaria temos final int numero; inicializado no construtor, o que ocorre ao executar c1.numero = 99; no main?',
+          extraHtml: '',
+          options: [
+            'O número da conta c1 passa a ser 99 normalmente.',
+            'O Java ignora a atribuição e mantém o valor antigo.',
+            'O código não compila, pois um atributo final não pode ser alterado após receber valor.',
+            'Todos os objetos passam a ter numero = 99.',
+          ],
+          correct: 2,
+          correctExplain: 'final impede que o valor seja alterado depois de atribuído. Tentar reatribuir no main gera erro de compilação na hora.',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> só funcionaria se numero não fosse final.',
+            1: '<strong>B está errada:</strong> o compilador rejeita o código com erro.',
+            3: '<strong>D está errada:</strong> além de dar erro, numero nem é static.',
+          },
+        },
+
+        // TÓPICO 5: HERANÇA & UML (4)
+        {
+          id: 'q17',
+          topic: 'Herança & UML',
+          title: 'Observe o diagrama UML abaixo. Qual frase representa CORRETAMENTE o que ele indica?',
+          extraHtml: `<div class="diagram-wrap" style="padding:8px"><svg viewBox="0 0 420 155" width="380"><defs><marker id="q17tri" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff" stroke="#1a6bb5" stroke-width="1.5"/></marker></defs><rect x="130" y="8" width="160" height="44" rx="4" fill="#fff" stroke="#1c2f4a" stroke-width="2"/><text x="210" y="27" text-anchor="middle" font-weight="bold" font-size="13" fill="#1c2f4a">Veiculo</text><text x="142" y="44" font-family="JetBrains Mono, monospace" font-size="11" fill="#4a4740">- marca: String</text><line x1="210" y1="98" x2="210" y2="55" stroke="#1a6bb5" stroke-width="2" marker-end="url(#q17tri)"/><rect x="130" y="98" width="160" height="44" rx="4" fill="#fff" stroke="#0d7a5f" stroke-width="2"/><text x="210" y="117" text-anchor="middle" font-weight="bold" font-size="13" fill="#0d7a5f">Carro</text><text x="142" y="134" font-family="JetBrains Mono, monospace" font-size="11" fill="#4a4740">- portas: int</text></svg></div>`,
+          options: [
+            'Veiculo herda de Carro; portas é um atributo público (+).',
+            'Carro é a subclasse (estende Veiculo); os atributos marca e portas são private (-).',
+            'Carro e Veiculo são independentes porque a seta não aponta para Carro.',
+            'Java exige que Carro também estenda Motor nesse diagrama.',
+          ],
+          correct: 1,
+          correctExplain: 'Na notação UML, a seta com triângulo aponta para a superclasse (Veiculo). Logo, Carro É UM Veiculo (class Carro extends Veiculo), e o sinal "-" indica private!',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> o triângulo aponta para o pai (Veiculo), e "-" significa private (público seria "+").',
+            2: '<strong>C está errada:</strong> a seta aponta justamente para a superclasse (relação de herança).',
+            3: '<strong>D está errada:</strong> Motor não é superclasse de Carro ("Motor É UM Carro" é falso).',
+          },
+        },
+        {
+          id: 'q18',
+          topic: 'Herança & UML',
+          title: 'Aplicando a regra de ouro "É UM" vs "TEM UM", qual das relações abaixo NÃO deve usar extends (herança)?',
+          extraHtml: '',
+          options: [
+            'Aluno e Pessoa',
+            'ContaCorrente e Conta',
+            'Motor e Carro',
+            'Guerreiro e Personagem',
+          ],
+          correct: 2,
+          correctExplain: 'Motor NÃO É UM Carro — o Carro TEM UM Motor (composição)! Todas as outras fazem sentido na frase "É UM".',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> "Aluno É UMA Pessoa" faz total sentido → herança válida.',
+            1: '<strong>B está errada:</strong> "ContaCorrente É UMA Conta" faz sentido → herança válida.',
+            3: '<strong>D está errada:</strong> "Guerreiro É UM Personagem" faz sentido → herança válida.',
+          },
+        },
+        {
+          id: 'q19',
+          topic: 'Herança & UML',
+          title: 'Qual será a saída no console ao executar o código abaixo?',
+          extraHtml: `<pre class="code-block"><code>class Pessoa {\n    private String nome;\n    Pessoa(String nome) { this.nome = nome; }\n    void apresentar() { System.out.println("Nome: " + nome); }\n}\nclass Aluno extends Pessoa {\n    private int mat;\n    Aluno(String nome, int mat) { super(nome); this.mat = mat; }\n    @Override\n    void apresentar() {\n        super.apresentar();\n        System.out.println("Mat: " + mat);\n    }\n}\n// No main:\nAluno a = new Aluno("Ana", 123);\na.apresentar();</code></pre>`,
+          options: [
+            'Apenas Mat: 123',
+            'Mat: 123 e depois Nome: Ana',
+            'Nome: Ana e depois Mat: 123',
+            'Erro de compilação porque nome é private em Pessoa',
+          ],
+          correct: 2,
+          correctExplain: 'Aluno sobrescreveu apresentar(), mas chamou super.apresentar() primeiro (imprime "Nome: Ana") e em seguida imprimiu "Mat: 123".',
+          wrongReasons: {
+            0: '<strong>A está errada:</strong> isso ocorreria se super.apresentar() tivesse sido removido.',
+            1: '<strong>B está errada:</strong> a ordem no método chama super.apresentar() antes de imprimir Mat.',
+            3: '<strong>D está errada:</strong> Aluno não acessou nome diretamente! Quem imprimiu nome foi o método apresentar() da própria classe Pessoa.',
+          },
+        },
+        {
+          id: 'q20',
+          topic: 'Herança & UML',
+          title: 'Sobre regras de acesso e herança em Java, assinale a afirmação FALSA:',
+          extraHtml: '',
+          options: [
+            'A anotação @Override ajuda o compilador a avisar se o método sobrescrito não existir na superclasse.',
+            'Java permite herança múltipla de classes, como class Smartphone extends Camera, Telefone.',
+            'Um atributo protected na superclasse pode ser acessado diretamente pela subclasse.',
+            'Na herança em vários níveis (Pessoa → Funcionario → Professor), Professor é um Funcionario e também é uma Pessoa.',
+          ],
+          correct: 1,
+          correctExplain: 'A alternativa B é FALSA (e portanto o gabarito): Java NÃO permite herança múltipla de classes! Uma classe só pode estender uma única superclasse com extends.',
+          wrongReasons: {
+            0: '<strong>A é verdadeira:</strong> @Override protege contra erros de digitação na assinatura.',
+            2: '<strong>C é verdadeira:</strong> protected libera acesso para a própria classe e para as subclasses.',
+            3: '<strong>D é verdadeira:</strong> na herança em vários níveis, a subclasse herda de toda a cadeia acima.',
+          },
+        },
+      ];
+
+      // Inicializa simuladores e motor de Quiz
+      memStep(0);
+      selectCtorCase(1);
+      staticOp('reset');
+      ovOp('alunoSuper');
+
+      StudyGuide.init({
+        lang: 'java',
+        quizQuestions,
+        quizSubtitle: 'POO & UML (Aulas 5–10 e 20)',
+      });
+    </script>
+  </body>
+</html>
